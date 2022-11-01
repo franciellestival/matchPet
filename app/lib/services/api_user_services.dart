@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:matchpet_poc/routes/app_routes.dart';
 import 'package:user_profile/model/user.dart';
 
 class APIUserServices {
@@ -39,7 +37,6 @@ class APIUserServices {
       log(e.toString());
       throw Exception(e);
     }
-    return null;
   }
 
   //Faz a requisição de um usuário pelo seu ID
@@ -49,7 +46,7 @@ class APIUserServices {
       return null;
     }
     try {
-      var url = Uri.parse(baseURL + userEndpoint + "/$id");
+      var url = Uri.parse("$baseURL$userEndpoint/$id");
       var response = await http.get(
         url,
         headers: <String, String>{
@@ -108,7 +105,7 @@ class APIUserServices {
   //
   Future<User?> updateUser(String token, User user) async {
     try {
-      var url = Uri.parse(baseURL + userEndpoint + "/${user.id}");
+      var url = Uri.parse("$baseURL$userEndpoint/${user.id}");
       var response = await http.put(
         url,
         headers: <String, String>{
@@ -140,7 +137,7 @@ class APIUserServices {
     }
 
     try {
-      var url = Uri.parse(baseURL + userEndpoint + "/$id");
+      var url = Uri.parse("$baseURL$userEndpoint/$id");
       var response = await http.delete(
         url,
         headers: <String, String>{
@@ -166,7 +163,7 @@ class APIUserServices {
   //Faz a requisição de login, retornando um User logado (com token)
   //
   Future<User?> loginUser(User user) async {
-    User? _userSignedIn;
+    User? userSignedIn;
 
     try {
       var url = Uri.parse(baseURL + authEndpoint);
@@ -183,16 +180,16 @@ class APIUserServices {
       //
       if (response.statusCode == 200) {
         var responseJson = jsonDecode(response.body);
-        User? _userSignedIn;
+        User? userSignedIn;
         if ((user.id == null) || (user.id! <= 0)) {
-          _userSignedIn = await getUserById(
+          userSignedIn = await getUserById(
               responseJson['token'] as String, responseJson['id'] as int);
         } else {
           user.id = responseJson['id'] as int;
           user.token = responseJson['token'] as String;
-          _userSignedIn = user;
+          userSignedIn = user;
         }
-        return _userSignedIn;
+        return userSignedIn;
       } else {
         // Get.toNamed(Routes.STATUS, arguments: _userSignedIn);
         throw Exception(

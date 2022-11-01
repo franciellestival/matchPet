@@ -5,9 +5,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:matchpet_poc/routes/app_routes.dart';
-import 'package:matchpet_poc/services/api_user_services.dart';
-import 'package:matchpet_poc/extensions/ext_string.dart';
+import 'package:matchpet/routes/app_routes.dart';
+import 'package:matchpet/services/api_user_services.dart';
+import 'package:matchpet/extensions/ext_string.dart';
 import 'package:theme/components/button_component.dart';
 import 'package:theme/components/form_components.dart';
 import 'package:theme/layout/app_assets.dart';
@@ -142,39 +142,39 @@ class _UserRegisterState extends State<UserRegister> {
   //Requisita permissão de acesso para o usuário
   Future<LocationData?> _getUserLocation() async {
     Location location = Location();
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+    LocationData locationData;
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
         log("INFO: Serviço de GPS nao ativado.");
         return null;
       }
     }
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
         log("INFO: Permissão do uso de GPS nao concedida.");
         return null;
       }
     }
-    log("INFO: " + _permissionGranted.toString());
+    log("INFO: " + permissionGranted.toString());
 
-    _locationData = await location.getLocation();
-    return _locationData;
+    locationData = await location.getLocation();
+    return locationData;
   }
 
   //Função de Cadastro do usuário, retornando um User cadastrado e logado
   Future<User?> _signUpUser() async {
-    LocationData? _locationData;
+    LocationData? locationData;
 
-    _locationData = await _getUserLocation();
+    locationData = await _getUserLocation();
 
-    if (_locationData == null) {
+    if (locationData == null) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Erro ao requisitar localização")));
       return null;
@@ -188,15 +188,13 @@ class _UserRegisterState extends State<UserRegister> {
           password: _pwController.text,
           passwordConfirmation: _pwConfirmationController.text,
           location: UserLocation(
-              lat: _locationData.latitude,
-              lng: _locationData.longitude,
+              lat: locationData.latitude,
+              lng: locationData.longitude,
               address: "Rua Teste, 123"));
       try {
         User? user = (await APIUserServices().saveUser(newUser))!;
-        if (user != null) {
-          Get.offAndToNamed(Routes.STATUS, arguments: newUser);
-          return newUser;
-        }
+        Get.offAndToNamed(Routes.statusRoute, arguments: newUser);
+        return newUser;
       } catch (e) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));

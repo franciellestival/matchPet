@@ -1,7 +1,7 @@
 abstract class Routes {
-  static const INITIAL = "/";
-  static const LOGIN = "/login";
-  static const REGISTER = "/register";
-  static const STATUS = "/status";
-  static const PETREGISTER = "/pet_register";
+  static const initialRoute = "/";
+  static const loginRoute = "/login";
+  static const registerRoute = "/register";
+  static const statusRoute = "/status";
+  static const petRegisterRoute = "/pet_register";
 }

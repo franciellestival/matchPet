@@ -108,7 +108,7 @@ class _FormInputBoxPasswordState extends State<FormInputBoxPassword> {
   @override
   void initState() {
     _passwordVisible = false;
-    // super.initState();
+    super.initState();
   }
 
   @override

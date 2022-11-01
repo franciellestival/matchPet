@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:matchpet_poc/routes/app_routes.dart';
-import 'package:matchpet_poc/services/api_user_services.dart';
-import 'package:matchpet_poc/extensions/ext_string.dart';
+import 'package:matchpet/routes/app_routes.dart';
+import 'package:matchpet/services/api_user_services.dart';
+import 'package:matchpet/extensions/ext_string.dart';
 import 'package:theme/components/button_component.dart';
 import 'package:theme/components/form_components.dart';
 import 'package:theme/layout/app_assets.dart';
@@ -159,7 +159,8 @@ class _UserLoginState extends State<UserLogin> {
                   const Text('Não possui conta ainda?'),
                   Center(
                     child: TextButton(
-                      onPressed: () => {Get.offAndToNamed(Routes.REGISTER)},
+                      onPressed: () =>
+                          {Get.offAndToNamed(Routes.registerRoute)},
                       child: const Text(
                         'Cadastre-se aqui',
                         style: TextStyle(
@@ -185,13 +186,13 @@ class _UserLoginState extends State<UserLogin> {
         User user = User(
             email: _emailLoginController.text,
             password: _passwordLoginController.text);
-        User? _userSignedIn = await APIUserServices().loginUser(user);
+        User? userSignedIn = await APIUserServices().loginUser(user);
 
-        if (_userSignedIn != null) {
-          log("Token: ${_userSignedIn.token}");
-          Get.offAndToNamed(Routes.STATUS, arguments: _userSignedIn);
+        if (userSignedIn != null) {
+          log("Token: ${userSignedIn.token}");
+          Get.offAndToNamed(Routes.statusRoute, arguments: userSignedIn);
         }
-        return _userSignedIn;
+        return userSignedIn;
       } catch (e) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));

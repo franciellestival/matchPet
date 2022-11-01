@@ -2,6 +2,7 @@ name: pet_profile
 description: A new Flutter package project.
 version: 0.0.1
 homepage:
+publish_to: none
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
@@ -12,7 +13,7 @@ dependencies:
     sdk: flutter
 
   #Modules
-  matchpet_poc:
+  matchpet:
     path: ../../app
   user_profile:
     path: ../user_profile

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:matchpet_poc/routes/app_routes.dart';
+import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/components/button_component.dart';
 import 'package:theme/layout/app_assets.dart';
 import 'package:theme/layout/app_config.dart';
@@ -59,7 +59,7 @@ class InitialPage extends StatelessWidget {
                               height: 20,
                             ),
                             PrimaryButton(
-                              onTap: () => {Get.toNamed(Routes.REGISTER)},
+                              onTap: () => {Get.toNamed(Routes.registerRoute)},
                               text: AppStrings.registerButton,
                               backgroundColor: AppColors.blueButton,
                               borderRadius: AppRadius.blueButtonRadius,
@@ -67,7 +67,8 @@ class InitialPage extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.all(16),
                               child: TextButton(
-                                onPressed: () => {Get.toNamed(Routes.LOGIN)},
+                                onPressed: () =>
+                                    {Get.toNamed(Routes.loginRoute)},
                                 child: const Text('Já tenho cadastro'),
                               ),
                             )
