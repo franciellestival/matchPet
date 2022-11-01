@@ -162,7 +162,7 @@ class _UserRegisterState extends State<UserRegister> {
         return null;
       }
     }
-    log("INFO: " + permissionGranted.toString());
+    log("INFO: $permissionGranted");
 
     locationData = await location.getLocation();
     return locationData;
@@ -192,7 +192,7 @@ class _UserRegisterState extends State<UserRegister> {
               lng: locationData.longitude,
               address: "Rua Teste, 123"));
       try {
-        User? user = (await APIUserServices().saveUser(newUser))!;
+        await APIUserServices().saveUser(newUser);
         Get.offAndToNamed(Routes.statusRoute, arguments: newUser);
         return newUser;
       } catch (e) {

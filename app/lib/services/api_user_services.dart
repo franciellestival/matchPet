@@ -163,8 +163,6 @@ class APIUserServices {
   //Faz a requisição de login, retornando um User logado (com token)
   //
   Future<User?> loginUser(User user) async {
-    User? userSignedIn;
-
     try {
       var url = Uri.parse(baseURL + authEndpoint);
       var requestBody =
@@ -199,7 +197,6 @@ class APIUserServices {
       log(e.toString());
       throw Exception(e);
     }
-    return null;
   }
 }
 

@@ -7,13 +7,13 @@ import 'package:theme/components/form_components.dart';
 import 'package:theme/layout/app_assets.dart';
 import 'package:theme/layout/app_config.dart';
 
-enum Sexo { MACHO, FEMEA }
+enum Sexo { macho, femea }
 
-enum Porte { PEQUENO, MEDIO, GRANDE }
+enum Porte { pequeno, medio, grande }
 
-enum Especie { CAO, GATO, PASSARO, ROEDOR, OUTRO }
+enum Especie { cao, gato, ave, roedor, outro }
 
-enum Status { DISPONIVEL, ADOTADO, DESAPARECIDO }
+enum Status { disponivel, adotado, desaparecido }
 
 class PetRegisterPage extends StatelessWidget {
   final List<String> sexo = Sexo.values.map((e) => e.toString()).toList();
