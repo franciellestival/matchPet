@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_svg/svg.dart';
-import 'package:theme/components/button_component.dart';
 
-import 'package:theme/components/form_components.dart';
-import 'package:theme/layout/app_assets.dart';
-import 'package:theme/layout/app_config.dart';
+import 'package:theme/export_theme.dart';
 
 enum Sexo { MACHO, FEMEA }
 
