@@ -16,7 +16,7 @@ class StatusPage extends StatelessWidget {
   Widget build(BuildContext context) {
     if (user != null) {
       msg =
-          'Olá ${user!.fullName} você está cadastrado com o e-mail ${user!.email} \n\n Logo você poderá encontrar um pet para chamar de seu!';
+          'Olá ${user!.name} você está cadastrado com o e-mail ${user!.email} \n\n Logo você poderá encontrar um pet para chamar de seu!';
     } else {
       msg = 'Vish! Algo deu errado. \n\n  Chamaremos os universitários!';
     }

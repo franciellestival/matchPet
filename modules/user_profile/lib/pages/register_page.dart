@@ -182,7 +182,7 @@ class _UserRegisterState extends State<UserRegister> {
 
     if (_formKey.currentState!.validate()) {
       User newUser = User(
-          fullName: _nameController.text,
+          name: _nameController.text,
           phone: _phoneController.text,
           email: _emailController.text,
           password: _pwController.text,
