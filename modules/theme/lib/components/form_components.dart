@@ -177,7 +177,7 @@ class FormDropDownInput extends StatelessWidget {
   final Color backgroundColor;
   final EdgeInsets padding;
   final String hintText;
-  Rx<String> selectedValue = ''.obs;
+  final Rx<String> selectedValue = ''.obs;
 
   @override
   Widget build(BuildContext context) {

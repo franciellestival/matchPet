@@ -1,5 +1,9 @@
 {
-  "cSpell.words": [
-    "matchpet"
-  ]
+  "cSpell.words": ["matchpet"],
+  "cSpell.diagnosticLevel": "Hint",
+  "workbench.colorCustomizations": {
+    // will change the color of three dots to red
+    "editorHint.border": "#f00",
+    "editorHint.foreground": "#f000",
+  }
 }
