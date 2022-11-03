@@ -1,9 +1,9 @@
 import 'package:api_services/api_services.dart';
 import 'package:dio/dio.dart';
 import 'package:user_profile/model/new_user.dart';
-import 'package:user_profile/services/user_endpoints.dart';
 
 class UserServices {
+  static const String _userEndpoint = "/user";
   final APIServices apiClient;
 
   UserServices({required this.apiClient});
@@ -12,7 +12,7 @@ class UserServices {
   Future<Response> createUser(NewUser user) async {
     try {
       final Response response = await apiClient.post(
-        UserEndpoints.endpoint,
+        _userEndpoint,
         data: user,
       );
       return response;
@@ -24,8 +24,7 @@ class UserServices {
   //Retorna os dados de um usuario a partir do seu ID
   Future<Response> getUserById(int id) async {
     try {
-      final Response response =
-          await apiClient.get("${UserEndpoints.endpoint}/$id");
+      final Response response = await apiClient.get("$_userEndpoint/$id");
       return response;
     } catch (e) {
       rethrow;
@@ -36,7 +35,7 @@ class UserServices {
   Future<Response> getAllUsers() async {
     try {
       final Response response = await apiClient.get(
-        UserEndpoints.endpoint,
+        _userEndpoint,
       );
       return response;
     } catch (e) {
@@ -48,7 +47,7 @@ class UserServices {
   Future<Response> updateUser(NewUser user) async {
     try {
       final Response response = await apiClient.put(
-        UserEndpoints.endpoint,
+        _userEndpoint,
         data: user,
       );
       return response;
@@ -60,8 +59,7 @@ class UserServices {
   //Deleta um usuario
   Future<Response> deleteUser(int id) async {
     try {
-      final Response response =
-          await apiClient.delete("${UserEndpoints.endpoint}/$id");
+      final Response response = await apiClient.delete("$_userEndpoint/$id");
       return response;
     } catch (e) {
       rethrow;
