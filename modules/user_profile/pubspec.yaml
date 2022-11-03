@@ -5,7 +5,7 @@ homepage:
 publish_to: none
 
 environment:
-  sdk: '>=2.18.2 <3.0.0'
+  sdk: ">=2.18.2 <3.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
@@ -14,16 +14,17 @@ dependencies:
   cupertino_icons: ^1.0.2
   location: ^4.4.0
   mask_text_input_formatter: ^2.4.0
-  http: ^0.13.5
-  get: ^4.6.5
+  # http: ^0.13.5
+  # get: ^4.6.5
   flutter_svg: ^1.1.4
 
-  matchpet:
-    path: ../../app
   theme:
     path: ../theme
-  pet_profile:  
+  pet_profile:
     path: ../pet_profile
+  api_services:
+    path: ../api_services
+  dio: ^4.0.6
 
 dev_dependencies:
   flutter_test:

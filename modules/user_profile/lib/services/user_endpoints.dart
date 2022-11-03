@@ -1,8 +1,8 @@
-class Endpoints {
-  Endpoints._();
+class UserEndpoints {
+  UserEndpoints._();
 
-  //Base URL
-  static const String baseURL = "https://matchpet-api-staging.herokuapp.com";
+  //Base User Endpoint
+  static const String endpoint = "/user";
 
   //Receive Timeout
   static const int receiveTimeout = 15000;
