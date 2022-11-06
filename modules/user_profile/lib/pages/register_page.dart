@@ -2,22 +2,22 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:matchpet/routes/app_routes.dart';
-import 'package:matchpet/services/api_user_services.dart';
-import 'package:matchpet/extensions/ext_string.dart';
 import 'package:theme/components/button_component.dart';
 import 'package:theme/components/form_components.dart';
 import 'package:theme/layout/app_assets.dart';
 import 'package:theme/layout/app_config.dart';
 import 'package:theme/layout/appbar.dart';
+import 'package:user_profile/di/service_locator.dart';
+import 'package:user_profile/model/new_user.dart';
 import 'package:user_profile/model/user.dart';
 import 'package:user_profile/model/user_location.dart';
 
 class UserRegister extends StatefulWidget {
-  const UserRegister({Key? key}) : super(key: key);
+  UserRegister({Key? key}) : super(key: key) {
+    setup();
+  }
 
   @override
   State<UserRegister> createState() => _UserRegisterState();
@@ -181,7 +181,7 @@ class _UserRegisterState extends State<UserRegister> {
     }
 
     if (_formKey.currentState!.validate()) {
-      User newUser = User(
+      NewUser newUser = NewUser(
           name: _nameController.text,
           phone: _phoneController.text,
           email: _emailController.text,
@@ -192,7 +192,8 @@ class _UserRegisterState extends State<UserRegister> {
               lng: locationData.longitude,
               address: "Rua Teste, 123"));
       try {
-        await APIUserServices().saveUser(newUser);
+        final
+        // await APIUserServices().saveUser(newUser);
         Get.offAndToNamed(Routes.statusRoute, arguments: newUser);
         return newUser;
       } catch (e) {

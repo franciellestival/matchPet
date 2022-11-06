@@ -39,6 +39,8 @@ dependencies:
   http: ^0.13.5
   get: ^4.6.5
   flutter_svg: ^1.1.4
+  get_it: ^7.2.0
+  dio: ^4.0.6
 
   #Modules
   user_profile:
@@ -47,6 +49,8 @@ dependencies:
     path: ../modules/theme
   pet_profile:
     path: ../modules/pet_profile
+  api_services:
+    path: ../modules/api_services
 
 dev_dependencies:
   flutter_test:

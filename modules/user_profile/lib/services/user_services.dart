@@ -44,10 +44,10 @@ class UserServices {
   }
 
   //Atualiza os dados de um usuario
-  Future<Response> updateUser(NewUser user) async {
+  Future<Response> updateUser(int id, NewUser user) async {
     try {
       final Response response = await apiClient.put(
-        _userEndpoint,
+        "$_userEndpoint/$id",
         data: user,
       );
       return response;
