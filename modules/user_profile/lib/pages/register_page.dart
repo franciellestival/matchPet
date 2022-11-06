@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:location/location.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:theme/components/button_component.dart';
-import 'package:theme/components/form_components.dart';
-import 'package:theme/layout/app_assets.dart';
-import 'package:theme/layout/app_config.dart';
-import 'package:theme/layout/appbar.dart';
+
+import 'package:theme/export_theme.dart';
+
 import 'package:user_profile/di/service_locator.dart';
 import 'package:user_profile/model/new_user.dart';
 import 'package:user_profile/model/user.dart';

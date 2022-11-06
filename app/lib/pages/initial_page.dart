@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+<<<<<<< HEAD
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/components/button_component.dart';
 import 'package:theme/layout/app_assets.dart';
 import 'package:theme/layout/app_config.dart';
+=======
+import 'package:matchpet_poc/routes/app_routes.dart';
+
+import 'package:theme/export_theme.dart';
+>>>>>>> origin/master
 
 class InitialPage extends StatelessWidget {
   const InitialPage({Key? key}) : super(key: key);
