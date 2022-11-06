@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet_poc/routes/app_routes.dart';
-import 'package:theme/components/button_component.dart';
-import 'package:theme/layout/app_config.dart';
+
+import 'package:theme/export_theme.dart';
+
 import 'package:user_profile/model/user.dart';
 
 class StatusPage extends StatelessWidget {
@@ -15,11 +16,8 @@ class StatusPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (user != null) {
-      msg = 'Olá ' +
-          user!.fullName.toString() +
-          ' você está cadastrado com o e-mail ' +
-          user!.email.toString() +
-          ' \n\n Logo você poderá encontrar um pet para chamar de seu!';
+      msg =
+          'Olá ${user!.fullName.toString()} você está cadastrado com o e-mail ${user!.email.toString()} \n\n Logo você poderá encontrar um pet para chamar de seu!';
     } else {
       msg = 'Vish! Algo deu errado. \n\n  Chamaremos os universitários!';
     }

@@ -8,11 +8,9 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:matchpet_poc/routes/app_routes.dart';
 import 'package:matchpet_poc/services/api_user_services.dart';
 import 'package:matchpet_poc/extensions/ext_string.dart';
-import 'package:theme/components/button_component.dart';
-import 'package:theme/components/form_components.dart';
-import 'package:theme/layout/app_assets.dart';
-import 'package:theme/layout/app_config.dart';
-import 'package:theme/layout/appbar.dart';
+
+import 'package:theme/export_theme.dart';
+
 import 'package:user_profile/model/user.dart';
 import 'package:user_profile/model/user_location.dart';
 
