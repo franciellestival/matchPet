@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:api_services/api_services.dart';
 import 'package:user_profile/model/new_user.dart';
 import 'package:user_profile/model/token.dart';
 import 'package:user_profile/model/user.dart';
 import 'package:user_profile/services/login_service.dart';
+import 'package:user_profile/services/user_api_exceptions.dart';
 import 'package:user_profile/services/user_services.dart';
 
 class UserRepository {
@@ -30,7 +33,15 @@ class UserRepository {
       final response = await userAPIServices.createUser(user);
       return response.data["message"].toString();
     } on DioError catch (e) {
-      final errorMessage = APIExceptions.fromDioError(e).toString();
+      // final errorMessage = e.message;
+      var errorMessage = "";
+      if (e.type == DioErrorType.response) {
+        errorMessage =
+            UserAPIExceptions.mapFromJson(e.response?.data).toString();
+      } else {
+        errorMessage = APIExceptions.fromDioError(e).toString();
+      }
+      log(errorMessage);
       throw errorMessage;
     }
   }
