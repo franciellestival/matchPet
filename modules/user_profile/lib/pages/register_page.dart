@@ -1,16 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:location/location.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-
 import 'package:theme/export_theme.dart';
-
+import 'package:user_profile/controller/sign_up.dart';
 import 'package:user_profile/di/service_locator.dart';
-import 'package:user_profile/model/new_user.dart';
-import 'package:user_profile/model/user.dart';
-import 'package:user_profile/model/user_location.dart';
+import 'package:extensions/extensions.dart';
 
 class UserRegister extends StatefulWidget {
   UserRegister({Key? key}) : super(key: key) {
@@ -123,7 +117,18 @@ class _UserRegisterState extends State<UserRegister> {
                         ),
                         Center(
                             child: PrimaryButton(
-                                onTap: _signUpUser, text: 'Salvar')),
+                                onTap: () => {
+                                      if (_formKey.currentState!.validate())
+                                        {
+                                          SignUp.signUpUser(
+                                              _nameController.text,
+                                              _phoneController.text,
+                                              _emailController.text,
+                                              _pwController.text,
+                                              _pwConfirmationController.text)
+                                        }
+                                    },
+                                text: 'Salvar')),
                         const SizedBox(height: 10),
                       ],
                     ),
@@ -135,70 +140,5 @@ class _UserRegisterState extends State<UserRegister> {
         ),
       ),
     );
-  }
-
-  //Requisita permissão de acesso para o usuário
-  Future<LocationData?> _getUserLocation() async {
-    Location location = Location();
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-    LocationData locationData;
-
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        log("INFO: Serviço de GPS nao ativado.");
-        return null;
-      }
-    }
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        log("INFO: Permissão do uso de GPS nao concedida.");
-        return null;
-      }
-    }
-    log("INFO: $permissionGranted");
-
-    locationData = await location.getLocation();
-    return locationData;
-  }
-
-  //Função de Cadastro do usuário, retornando um User cadastrado e logado
-  Future<User?> _signUpUser() async {
-    LocationData? locationData;
-
-    locationData = await _getUserLocation();
-
-    if (locationData == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Erro ao requisitar localização")));
-      return null;
-    }
-
-    if (_formKey.currentState!.validate()) {
-      NewUser newUser = NewUser(
-          name: _nameController.text,
-          phone: _phoneController.text,
-          email: _emailController.text,
-          password: _pwController.text,
-          passwordConfirmation: _pwConfirmationController.text,
-          location: UserLocation(
-              lat: locationData.latitude,
-              lng: locationData.longitude,
-              address: "Rua Teste, 123"));
-      try {
-        final
-        // await APIUserServices().saveUser(newUser);
-        Get.offAndToNamed(Routes.statusRoute, arguments: newUser);
-        return newUser;
-      } catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
-    }
-    return null;
   }
 }

@@ -1,8 +1,12 @@
 library api_services;
 
+// import 'package:api_services/endpoints.dart';
 import 'package:dio/dio.dart';
 
-import 'package:api_services/endpoints.dart';
+export './api_exceptions.dart';
+export 'package:dio/dio.dart';
+
+part './endpoints.dart';
 
 class APIServices {
   final Dio _dio;

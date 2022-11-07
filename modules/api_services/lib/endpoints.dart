@@ -1,3 +1,5 @@
+part of api_services;
+
 class Endpoints {
   Endpoints._();
 

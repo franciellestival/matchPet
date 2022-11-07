@@ -1,5 +1,4 @@
 import 'package:api_services/api_services.dart';
-import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:user_profile/repository/user_repository.dart';
 import 'package:user_profile/services/login_service.dart';

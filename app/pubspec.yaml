@@ -51,6 +51,8 @@ dependencies:
     path: ../modules/pet_profile
   api_services:
     path: ../modules/api_services
+  extensions:
+    path: ../modules/extensions
 
 dev_dependencies:
   flutter_test:

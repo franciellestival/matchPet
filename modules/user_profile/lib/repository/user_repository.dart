@@ -1,5 +1,4 @@
-import 'package:api_services/api_exceptions.dart';
-import 'package:dio/dio.dart';
+import 'package:api_services/api_services.dart';
 import 'package:user_profile/model/new_user.dart';
 import 'package:user_profile/model/token.dart';
 import 'package:user_profile/model/user.dart';
@@ -29,7 +28,7 @@ class UserRepository {
   Future<String> addNewUserRequested(NewUser user) async {
     try {
       final response = await userAPIServices.createUser(user);
-      return "Usuário criado com sucesso!";
+      return response.data["message"].toString();
     } on DioError catch (e) {
       final errorMessage = APIExceptions.fromDioError(e).toString();
       throw errorMessage;

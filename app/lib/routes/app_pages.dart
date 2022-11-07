@@ -18,7 +18,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.registerRoute,
-      page: () => const UserRegister(),
+      page: () => UserRegister(),
     ),
     GetPage(
       name: Routes.statusRoute,

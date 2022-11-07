@@ -1,5 +1,4 @@
 import 'package:api_services/api_services.dart';
-import 'package:dio/dio.dart';
 import 'package:user_profile/model/new_user.dart';
 
 class UserServices {

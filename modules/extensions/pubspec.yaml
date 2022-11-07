@@ -1,31 +1,16 @@
-name: user_profile
+name: extensions
 description: A new Flutter package project.
 version: 0.0.1
 homepage:
 publish_to: none
 
 environment:
-  sdk: ">=2.18.2 <3.0.0"
+  sdk: '>=2.18.2 <3.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  location: ^4.4.0
-  mask_text_input_formatter: ^2.4.0
-  get_it: ^7.2.0
-  dio: ^4.0.6
-  flutter_svg: ^1.1.4
-
-  theme:
-    path: ../theme
-  pet_profile:
-    path: ../pet_profile
-  api_services:
-    path: ../api_services
-  extensions:
-    path: ../extensions
 
 dev_dependencies:
   flutter_test:

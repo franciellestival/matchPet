@@ -1,5 +1,4 @@
 import 'package:api_services/api_services.dart';
-import 'package:dio/dio.dart';
 
 class LoginService {
   static const String _loginEndpoint = "/auth/login";

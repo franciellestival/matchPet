@@ -1,5 +1,4 @@
 import 'package:api_services/api_services.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:user_profile/services/login_service.dart';
 
