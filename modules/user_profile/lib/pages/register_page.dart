@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:theme/export_theme.dart';
-import 'package:user_profile/controller/sign_up.dart';
+import 'package:user_profile/controller/user_controller.dart';
 import 'package:user_profile/di/service_locator.dart';
 import 'package:extensions/extensions.dart';
 
@@ -120,12 +120,13 @@ class _UserRegisterState extends State<UserRegister> {
                                 onTap: () => {
                                       if (_formKey.currentState!.validate())
                                         {
-                                          SignUp.signUpUser(
+                                          UserController.signUpUser(
                                               _nameController.text,
                                               _phoneController.text,
                                               _emailController.text,
                                               _pwController.text,
-                                              _pwConfirmationController.text)
+                                              _pwConfirmationController.text);
+                                          Login.loginUser(_nameController.text, _pwController.text);
                                         }
                                     },
                                 text: 'Salvar')),

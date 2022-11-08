@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 class APIExceptions implements Exception {
   late String message;
+  late Map<String, List<String>> erros;
 
   APIExceptions.fromDioError(DioError dioError) {
     switch (dioError.type) {
@@ -37,6 +38,8 @@ class APIExceptions implements Exception {
   }
 
   String _handleError(int? statusCode, dynamic error) {
+    _mapFromJson(error);
+
     switch (statusCode) {
       case 400:
         return 'Bad request';
@@ -52,6 +55,24 @@ class APIExceptions implements Exception {
         return 'Bad gateway';
       default:
         return 'Oops something went wrong';
+    }
+  }
+
+  void _mapFromJson(Map<String, dynamic> json) {
+    if (json == null) {
+      return;
+    }
+    erros = {};
+    var novoJson = json["message"] as List;
+    for (var element in novoJson) {
+      element.forEach((key, value) {
+        if (erros.containsKey(key)) {
+          erros[key]?.add(value);
+        } else {
+          erros[key] = <String>[];
+          erros[key]?.add(value);
+        }
+      });
     }
   }
 

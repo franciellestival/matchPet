@@ -1,11 +1,14 @@
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:user_profile/constants/constants.dart';
 import 'package:user_profile/di/service_locator.dart';
+import 'package:user_profile/model/token.dart';
 import 'package:user_profile/repository/user_repository.dart';
 
 import '../model/new_user.dart';
 import '../model/user_location.dart';
 
-class SignUp {
+class UserController {
   static void signUpUser(String name, String phone, String email,
       String password, String passwordConfirmation) async {
     try {
@@ -23,6 +26,20 @@ class SignUp {
               address: "Rua Teste, 123"));
       final userRepository = locator.get<UserRepository>();
       await userRepository.addNewUserRequested(user);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static void loginUser(String email, String password) async {
+    try {
+      final userRepository = locator.get<UserRepository>();
+      Token token = await userRepository.loginRequested(email, password);
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      await preferences.setBool(Constants.shared_logged, true);
+      await preferences.setString(Constants.shared_email, email);
+      await preferences.setString(
+          Constants.shared_token, token.token.toString());
     } catch (e) {
       rethrow;
     }

@@ -26,6 +26,7 @@ dependencies:
     path: ../api_services
   extensions:
     path: ../extensions
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
