@@ -37,7 +37,7 @@ class _UserRegisterState extends State<UserRegister> {
         type: MaskAutoCompletionType.lazy);
 
     return Scaffold(
-      appBar: GenericAppBar(title: 'Cadastro', appBar: AppBar()),
+      appBar: GenericAppBar(title: 'Cadastro de usuário', appBar: AppBar()),
       backgroundColor: AppColors.primaryColor,
       body: SingleChildScrollView(
         child: Column(
@@ -47,25 +47,16 @@ class _UserRegisterState extends State<UserRegister> {
               child: Column(
                 children: [
                   const SizedBox(height: 10),
-                  Center(
-                    child: SvgPicture.asset(
-                      AppSvgs.appIcon,
-                      height: 100,
-                      width: 100,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    'Cadastro de usuário',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 50),
                   Form(
                     key: _formKey,
                     child: Wrap(
                       runSpacing: 22,
                       children: <Widget>[
+                        Center(
+                            child: ImageInput(
+                                ontapIcon: () {},
+                                placeHolderPath: AppSvgs.userIcon)),
+                        const SizedBox(height: 20),
                         const Text(
                           'Informações pessoais',
                           style: TextStyle(fontSize: 16),

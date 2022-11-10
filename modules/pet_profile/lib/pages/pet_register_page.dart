@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
 import 'package:flutter_svg/svg.dart';
 
 import 'package:theme/export_theme.dart';
@@ -24,24 +21,11 @@ class PetRegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const GenericAppBar(title: 'Cadastrar Pet'),
       backgroundColor: AppColors.primaryColor,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            heightSpacer,
-            const Text(
-              'Cadastro de Pet',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-            ),
-            heightSpacer,
-            Center(
-              child: SvgPicture.asset(
-                AppSvgs.appIcon,
-                height: 100,
-                width: 100,
-              ),
-            ),
             heightSpacer,
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -70,17 +54,7 @@ Form _buildPetRegisterForm(GlobalKey<FormState> formKey) {
     child: Wrap(
       runSpacing: 22,
       children: <Widget>[
-        ImageFormField<ImageInputAdapter>(
-            //previewImageBuilder: (_, ImageInputAdapter image) => image.widgetize(),
-            buttonBuilder: (_, int count) => Container(
-                child: Text(count == null || count < 1
-                    ? "Upload Image"
-                    : "Upload More"))
-            //initializeFileAsImage: (File file) => ImageInputAdapter(file: file),
-            //initialValue: existingPhotoUrl == null ? null : (List<ImageInputImageAdapter>()..add(ImageInputImageAdapter(url: existingPhotoUrl))),
-            // Even if `shouldAllowMultiple` is true, images will always be a `List` of the declared type (i.e. `ImageInputAdater`).
-            //onSaved: (images) _images = images,
-            ),
+        ImageInput(ontapIcon: () {}, placeHolderPath: AppSvgs.pawIcon),
         const Text(
           'Informações Gerais',
           style: TextStyle(fontSize: 16),
