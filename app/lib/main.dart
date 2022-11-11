@@ -9,5 +9,6 @@ void main() {
     title: 'MatchPet',
     getPages: AppPages.routes,
     initialRoute: Routes.INITIAL,
+    theme: ThemeData(fontFamily: 'Lato'),
   ));
 }
