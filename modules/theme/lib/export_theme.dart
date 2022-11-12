@@ -12,3 +12,6 @@ export 'widgets/spacer.dart';
 //Layout Configs
 export 'layout/app_assets.dart';
 export 'layout/app_config.dart';
+
+//Theme Data
+export 'layout/theme_data.dart';
