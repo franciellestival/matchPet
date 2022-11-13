@@ -1,15 +1,12 @@
-import 'dart:developer';
-
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:matchpet_poc/routes/app_routes.dart';
-import 'package:matchpet_poc/services/api_user_services.dart';
-import 'package:matchpet_poc/extensions/ext_string.dart';
-
+import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/export_theme.dart';
 
-import 'package:user_profile/model/user.dart';
+import '../controller/user_controller.dart';
+import '../model/token.dart';
 
 class UserLogin extends StatefulWidget {
   const UserLogin({Key? key}) : super(key: key);
@@ -123,7 +120,8 @@ class _UserLoginState extends State<UserLogin> {
                           ),
                           Center(
                             child: PrimaryButton(
-                              onTap: signIn,
+                              // onTap: signIn,
+                              onTap: _signIn,
                               text: AppStrings.loginButton,
                               backgroundColor: AppColors.blueButton,
                             ),
@@ -156,7 +154,8 @@ class _UserLoginState extends State<UserLogin> {
                   const Text('Não possui conta ainda?'),
                   Center(
                     child: TextButton(
-                      onPressed: () => {Get.offAndToNamed(Routes.REGISTER)},
+                      onPressed: () =>
+                          {Get.offAndToNamed(Routes.registerRoute)},
                       child: const Text(
                         'Cadastre-se aqui',
                         style: TextStyle(
@@ -176,25 +175,33 @@ class _UserLoginState extends State<UserLogin> {
     );
   }
 
-  Future<User?> signIn() async {
+  Future<void> _signIn() async {
     if (_formKey.currentState!.validate()) {
-      try {
-        User user = User(
-            email: _emailLoginController.text,
-            password: _passwordLoginController.text);
-        User? _userSignedIn = await APIUserServices().loginUser(user);
-
-        if (_userSignedIn != null) {
-          log("Token: ${_userSignedIn.token}");
-          Get.offAndToNamed(Routes.STATUS, arguments: _userSignedIn);
-        }
-        return _userSignedIn;
-      } catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-        log(e.toString());
-      }
+      Token loggedToken = await UserController.loginUser(
+          _emailLoginController.text, _passwordLoginController.text);
+      Get.offAndToNamed(Routes.statusRoute, arguments: loggedToken);
     }
-    return null;
   }
+
+  // Future<User?> signIn() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     try {
+  //       User user = User(
+  //           email: _emailLoginController.text,
+  //           password: _passwordLoginController.text);
+  //       User? userSignedIn = await APIUserServices().loginUser(user);
+
+  //       if (userSignedIn != null) {
+  //         log("Token: ${userSignedIn.token}");
+  //         Get.offAndToNamed(Routes.statusRoute, arguments: userSignedIn);
+  //       }
+  //       return userSignedIn;
+  //     } catch (e) {
+  //       ScaffoldMessenger.of(context)
+  //           .showSnackBar(SnackBar(content: Text(e.toString())));
+  //       log(e.toString());
+  //     }
+  //   }
+  //   return null;
+  // }
 }

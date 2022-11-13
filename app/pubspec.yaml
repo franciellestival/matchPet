@@ -1,4 +1,4 @@
-name: matchpet_poc
+name: matchpet
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -30,6 +30,17 @@ dependencies:
   flutter:
     sdk: flutter
 
+  #Modules
+  user_profile:
+    path: ../modules/user_profile
+  theme:
+    path: ../modules/theme
+  pet_profile:
+    path: ../modules/pet_profile
+  api_services:
+    path: ../modules/api_services
+  extensions:
+    path: ../modules/extensions
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -39,14 +50,10 @@ dependencies:
   http: ^0.13.5
   get: ^4.6.5
   flutter_svg: ^1.1.4
+  get_it: ^7.2.0
+  dio: ^4.0.6
+  get_storage: ^2.0.3
 
-  #Modules
-  user_profile:
-    path: ../modules/user_profile
-  theme:
-    path: ../modules/theme
-  pet_profile:
-    path: ../modules/pet_profile
 
 dev_dependencies:
   flutter_test:
