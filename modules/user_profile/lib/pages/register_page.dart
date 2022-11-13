@@ -1,15 +1,16 @@
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/export_theme.dart';
 import 'package:user_profile/controller/user_controller.dart';
-import 'package:user_profile/di/service_locator.dart';
-import 'package:extensions/extensions.dart';
+
+import '../model/token.dart';
 
 class UserRegister extends StatefulWidget {
-  UserRegister({Key? key}) : super(key: key) {
-    setup();
-  }
+  const UserRegister({Key? key}) : super(key: key);
 
   @override
   State<UserRegister> createState() => _UserRegisterState();
@@ -22,6 +23,20 @@ class _UserRegisterState extends State<UserRegister> {
   final _emailController = TextEditingController();
   final _pwController = TextEditingController();
   final _pwConfirmationController = TextEditingController();
+
+  Future<void> _registerUser() async {
+    if (_formKey.currentState!.validate()) {
+      UserController.signUpUser(
+          _nameController.text,
+          _phoneController.text,
+          _emailController.text,
+          _pwController.text,
+          _pwConfirmationController.text);
+      Token loggedToken = await UserController.loginUser(
+          _emailController.text, _pwController.text);
+      Get.offAndToNamed(Routes.statusRoute);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,19 +132,7 @@ class _UserRegisterState extends State<UserRegister> {
                         ),
                         Center(
                             child: PrimaryButton(
-                                onTap: () => {
-                                      if (_formKey.currentState!.validate())
-                                        {
-                                          UserController.signUpUser(
-                                              _nameController.text,
-                                              _phoneController.text,
-                                              _emailController.text,
-                                              _pwController.text,
-                                              _pwConfirmationController.text);
-                                          Login.loginUser(_nameController.text, _pwController.text);
-                                        }
-                                    },
-                                text: 'Salvar')),
+                                onTap: _registerUser, text: 'Salvar')),
                         const SizedBox(height: 10),
                       ],
                     ),

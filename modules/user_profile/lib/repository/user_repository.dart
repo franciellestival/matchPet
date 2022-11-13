@@ -1,15 +1,15 @@
+import 'dart:developer';
+
 import 'package:api_services/api_services.dart';
 import 'package:user_profile/model/new_user.dart';
 import 'package:user_profile/model/token.dart';
 import 'package:user_profile/model/user.dart';
-import 'package:user_profile/services/login_service.dart';
 import 'package:user_profile/services/user_services.dart';
 
 class UserRepository {
   final UserServices userAPIServices;
-  final LoginService loginAPIService;
 
-  UserRepository(this.userAPIServices, this.loginAPIService);
+  UserRepository(this.userAPIServices);
 
   //Retorna a lista de usuarios cadastrados
   Future<List<User>> getUsersRequested() async {
@@ -18,6 +18,17 @@ class UserRepository {
       final users =
           (response.data as List).map((e) => User.fromJson(e)).toList();
       return users;
+    } on DioError catch (e) {
+      final erro = APIExceptions.fromDioError(e);
+      throw erro;
+    }
+  }
+
+  //Retorna o usuario pelo id
+  Future<User?> getUserById(int id) async {
+    try {
+      final response = await userAPIServices.getUserById(id);
+      return User.fromJson(response.data);
     } on DioError catch (e) {
       final erro = APIExceptions.fromDioError(e);
       throw erro;
@@ -59,9 +70,11 @@ class UserRepository {
   // Faz o login do usuario a partir do seu email e senha
   Future<Token> loginRequested(String email, String password) async {
     try {
-      final response = await loginAPIService.login(email, password);
+      final response = await userAPIServices.login(email, password);
+      log(response.data.toString());
       return Token.fromJson(response.data);
     } on DioError catch (e) {
+      log(e.toString());
       final erro = APIExceptions.fromDioError(e);
       throw erro;
     }

@@ -5,6 +5,9 @@ import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/export_theme.dart';
 
+import '../controller/user_controller.dart';
+import '../model/token.dart';
+
 class UserLogin extends StatefulWidget {
   const UserLogin({Key? key}) : super(key: key);
 
@@ -118,7 +121,7 @@ class _UserLoginState extends State<UserLogin> {
                           Center(
                             child: PrimaryButton(
                               // onTap: signIn,
-                              onTap: () => {},
+                              onTap: _signIn,
                               text: AppStrings.loginButton,
                               backgroundColor: AppColors.blueButton,
                             ),
@@ -170,6 +173,14 @@ class _UserLoginState extends State<UserLogin> {
         ],
       ),
     );
+  }
+
+  Future<void> _signIn() async {
+    if (_formKey.currentState!.validate()) {
+      Token loggedToken = await UserController.loginUser(
+          _emailLoginController.text, _passwordLoginController.text);
+      Get.offAndToNamed(Routes.statusRoute, arguments: loggedToken);
+    }
   }
 
   // Future<User?> signIn() async {

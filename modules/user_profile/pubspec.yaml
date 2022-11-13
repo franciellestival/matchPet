@@ -14,9 +14,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   location: ^4.4.0
   mask_text_input_formatter: ^2.4.0
-  get_it: ^7.2.0
   dio: ^4.0.6
   flutter_svg: ^1.1.4
+  get: ^4.6.5
 
   theme:
     path: ../theme
@@ -26,7 +26,8 @@ dependencies:
     path: ../api_services
   extensions:
     path: ../extensions
-  shared_preferences: ^2.0.15
+  matchpet:
+    path: ../../app
 
 dev_dependencies:
   flutter_test:

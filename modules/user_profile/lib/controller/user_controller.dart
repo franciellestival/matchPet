@@ -1,46 +1,69 @@
-import 'package:location/location.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:user_profile/constants/constants.dart';
-import 'package:user_profile/di/service_locator.dart';
-import 'package:user_profile/model/token.dart';
-import 'package:user_profile/repository/user_repository.dart';
+import 'dart:developer';
 
+import 'package:get/get.dart';
+import 'package:matchpet/authentication_manager.dart';
+import 'package:user_profile/model/token.dart';
 import '../model/new_user.dart';
+import '../model/user.dart';
 import '../model/user_location.dart';
+import '../repository/user_repository.dart';
 
 class UserController {
   static void signUpUser(String name, String phone, String email,
       String password, String passwordConfirmation) async {
     try {
-      Location location = Location();
-      final locationData = await location.getLocation();
+      // Location location = Location();
+      // final locationData = await location.getLocation();
       NewUser user = NewUser(
           name: name,
           phone: phone,
           email: email,
           password: password,
           passwordConfirmation: passwordConfirmation,
-          location: UserLocation(
-              lat: locationData.latitude,
-              lng: locationData.longitude,
-              address: "Rua Teste, 123"));
-      final userRepository = locator.get<UserRepository>();
+          // location: UserLocation(
+          //     lat: locationData.latitude,
+          //     lng: locationData.longitude,
+          //     address: "Rua Teste, 123"));
+          location:
+              UserLocation(lat: -13.13, lng: -13.13, address: "Rua Teste"));
+      final UserRepository userRepository = Get.find();
       await userRepository.addNewUserRequested(user);
     } catch (e) {
       rethrow;
     }
   }
 
-  static void loginUser(String email, String password) async {
+  static Future<Token> loginUser(String email, String password) async {
     try {
-      final userRepository = locator.get<UserRepository>();
+      final UserRepository userRepository = Get.find();
       Token token = await userRepository.loginRequested(email, password);
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      await preferences.setBool(Constants.shared_logged, true);
-      await preferences.setString(Constants.shared_email, email);
-      await preferences.setString(
-          Constants.shared_token, token.token.toString());
+      final AuthenticationManager authManager = Get.find();
+      authManager.login(token);
+      return token;
     } catch (e) {
+      log("Erro: ${e.toString()}");
+      rethrow;
+    }
+  }
+
+  static Future<void> logoutUser() async {
+    try {
+      final AuthenticationManager authManager = Get.find();
+      authManager.logOut();
+    } catch (e) {
+      log("Erro: ${e.toString()}");
+      rethrow;
+    }
+  }
+
+  static Future<User?> getLoggedUserData(Token userToken) async {
+    try {
+      //Puxa os dados do usuario
+      final UserRepository userRepository = Get.find();
+      final User? user = await userRepository.getUserById(userToken.id!);
+      return user;
+    } catch (e) {
+      log("Erro: ${e.toString()}");
       rethrow;
     }
   }

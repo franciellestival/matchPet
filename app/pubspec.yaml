@@ -30,18 +30,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  location: ^4.4.0
-  mask_text_input_formatter: ^2.4.0
-  http: ^0.13.5
-  get: ^4.6.5
-  flutter_svg: ^1.1.4
-  get_it: ^7.2.0
-  dio: ^4.0.6
-
   #Modules
   user_profile:
     path: ../modules/user_profile
@@ -53,6 +41,19 @@ dependencies:
     path: ../modules/api_services
   extensions:
     path: ../modules/extensions
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+  location: ^4.4.0
+  mask_text_input_formatter: ^2.4.0
+  http: ^0.13.5
+  get: ^4.6.5
+  flutter_svg: ^1.1.4
+  get_it: ^7.2.0
+  dio: ^4.0.6
+  get_storage: ^2.0.3
+
 
 dev_dependencies:
   flutter_test:

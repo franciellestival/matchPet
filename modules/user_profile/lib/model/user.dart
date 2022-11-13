@@ -6,9 +6,8 @@ class User {
   String? email;
   String? phone;
   UserLocation? location;
-  String? token;
 
-  User({this.id, this.name, this.phone, this.email, this.location, this.token});
+  User({this.id, this.name, this.phone, this.email, this.location});
 
   User.empty();
 

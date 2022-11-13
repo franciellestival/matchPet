@@ -38,8 +38,6 @@ class APIExceptions implements Exception {
   }
 
   String _handleError(int? statusCode, dynamic error) {
-    _mapFromJson(error);
-
     switch (statusCode) {
       case 400:
         return 'Bad request';
@@ -54,15 +52,14 @@ class APIExceptions implements Exception {
       case 502:
         return 'Bad gateway';
       default:
+        _mapFromJson(error);
         return 'Oops something went wrong';
     }
   }
 
-  void _mapFromJson(Map<String, dynamic> json) {
-    if (json == null) {
-      return;
-    }
+  void _mapFromJson(Map<String, dynamic>? json) {
     erros = {};
+    if (json == null) return;
     var novoJson = json["message"] as List;
     for (var element in novoJson) {
       element.forEach((key, value) {
