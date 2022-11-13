@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
-import 'package:matchpet/authentication_manager.dart';
-import 'package:user_profile/model/token.dart';
+import 'package:matchpet/services/authentication_manager.dart';
 import '../model/new_user.dart';
+import '../model/token.dart';
 import '../model/user.dart';
 import '../model/user_location.dart';
 import '../repository/user_repository.dart';

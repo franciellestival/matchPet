@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
-import 'package:matchpet/di/home_binding.dart';
-import 'package:matchpet/routes/app_pages.dart';
 
+import 'di/home_binding.dart';
 import 'di/splash_dependency.dart';
+import 'routes/app_pages.dart';
 import 'routes/app_routes.dart';
 
 void main() async {
@@ -21,7 +21,6 @@ class MyApp extends StatelessWidget {
       title: 'MatchPet',
       getPages: AppPages.routes,
       initialRoute: Routes.initialRoute,
-      // home: SplashScreen(),
       theme: ThemeData(fontFamily: 'Lato'),
       initialBinding: HomeBinding(),
     );
