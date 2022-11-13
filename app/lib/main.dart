@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:matchpet/di/home_binding.dart';
-import 'package:matchpet/pages/splash_screen.dart';
 import 'package:matchpet/routes/app_pages.dart';
 
+import 'di/splash_dependency.dart';
 import 'routes/app_routes.dart';
 
 void main() async {
-  await GetStorage.init();
+  WidgetsBinding binding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: binding);
+  await SplashDependency().initializeSettings();
   runApp(MyApp());
 }
 
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'MatchPet',
       getPages: AppPages.routes,
       initialRoute: Routes.initialRoute,
-      home: SplashScreen(),
+      // home: SplashScreen(),
       theme: ThemeData(fontFamily: 'Lato'),
       initialBinding: HomeBinding(),
     );

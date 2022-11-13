@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/Pages/initial_page.dart';
+import 'package:matchpet/authentication_manager.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/pages/pet_register_page.dart';
 import 'package:user_profile/pages/login_page.dart';
@@ -11,6 +13,7 @@ class AppPages {
     GetPage(
       name: Routes.initialRoute,
       page: () => const InitialPage(),
+      middlewares: [AuthMiddleware()],
     ),
     GetPage(
       name: Routes.loginRoute,
@@ -29,4 +32,14 @@ class AppPages {
       page: () => PetRegisterPage(),
     ),
   ];
+}
+
+class AuthMiddleware extends GetMiddleware {
+  @override
+  RouteSettings? redirect(String? route) {
+    final AuthenticationManager _authManager = Get.find();
+    return _authManager.isLogged.value
+        ? const RouteSettings(name: Routes.statusRoute)
+        : null;
+  }
 }
