@@ -1,18 +1,13 @@
-import 'dart:developer';
-
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:location/location.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:matchpet_poc/routes/app_routes.dart';
-import 'package:matchpet_poc/services/api_user_services.dart';
-import 'package:matchpet_poc/extensions/ext_string.dart';
-
+import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/export_theme.dart';
+import 'package:user_profile/controller/user_controller.dart';
 
-import 'package:user_profile/model/user.dart';
-import 'package:user_profile/model/user_location.dart';
+import '../model/token.dart';
 
 class UserRegister extends StatefulWidget {
   const UserRegister({Key? key}) : super(key: key);
@@ -28,6 +23,20 @@ class _UserRegisterState extends State<UserRegister> {
   final _emailController = TextEditingController();
   final _pwController = TextEditingController();
   final _pwConfirmationController = TextEditingController();
+
+  Future<void> _registerUser() async {
+    if (_formKey.currentState!.validate()) {
+      UserController.signUpUser(
+          _nameController.text,
+          _phoneController.text,
+          _emailController.text,
+          _pwController.text,
+          _pwConfirmationController.text);
+      Token loggedToken = await UserController.loginUser(
+          _emailController.text, _pwController.text);
+      Get.offAndToNamed(Routes.statusRoute);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +123,7 @@ class _UserRegisterState extends State<UserRegister> {
                         ),
                         Center(
                             child: PrimaryButton(
-                                onTap: _signUpUser, text: 'Salvar')),
+                                onTap: _registerUser, text: 'Salvar')),
                         const SizedBox(height: 10),
                       ],
                     ),
@@ -126,71 +135,5 @@ class _UserRegisterState extends State<UserRegister> {
         ),
       ),
     );
-  }
-
-  //Requisita permissão de acesso para o usuário
-  Future<LocationData?> _getUserLocation() async {
-    Location location = Location();
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
-
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        log("INFO: Serviço de GPS nao ativado.");
-        return null;
-      }
-    }
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        log("INFO: Permissão do uso de GPS nao concedida.");
-        return null;
-      }
-    }
-    log("INFO: " + _permissionGranted.toString());
-
-    _locationData = await location.getLocation();
-    return _locationData;
-  }
-
-  //Função de Cadastro do usuário, retornando um User cadastrado e logado
-  Future<User?> _signUpUser() async {
-    LocationData? _locationData;
-
-    _locationData = await _getUserLocation();
-
-    if (_locationData == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Erro ao requisitar localização")));
-      return null;
-    }
-
-    if (_formKey.currentState!.validate()) {
-      User newUser = User(
-          fullName: _nameController.text,
-          phone: _phoneController.text,
-          email: _emailController.text,
-          password: _pwController.text,
-          passwordConfirmation: _pwConfirmationController.text,
-          location: UserLocation(
-              lat: _locationData.latitude,
-              lng: _locationData.longitude,
-              address: "Rua Teste, 123"));
-      try {
-        User? user = (await APIUserServices().saveUser(newUser))!;
-        if (user != null) {
-          Get.offAndToNamed(Routes.STATUS, arguments: newUser);
-          return newUser;
-        }
-      } catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
-    }
-    return null;
   }
 }
