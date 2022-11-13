@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       getPages: AppPages.routes,
       initialRoute: Routes.initialRoute,
       home: SplashScreen(),
+      theme: ThemeData(fontFamily: 'Lato'),
       initialBinding: HomeBinding(),
     );
   }
