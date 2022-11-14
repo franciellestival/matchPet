@@ -25,6 +25,6 @@ class WidthSpacer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(height: width);
+    return SizedBox(width: width);
   }
 }
