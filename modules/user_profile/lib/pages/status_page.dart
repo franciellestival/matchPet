@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
-import 'package:matchpet/authentication_manager.dart';
+import 'package:matchpet/services/authentication_manager.dart';
 import 'package:pet_profile/pages/pet_list_page.dart';
-
 import 'package:theme/export_theme.dart';
-import 'package:user_profile/model/token.dart';
+
 import '../controller/user_controller.dart';
+import '../model/token.dart';
 import '../model/user.dart';
 
 class StatusPage extends StatelessWidget {
