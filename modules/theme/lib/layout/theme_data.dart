@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:theme/layout/app_config.dart';
 
-final globalFontFamily = 'Lato';
+const globalFontFamily = 'Lato';
 
 final themeData = ThemeData(
-  shadowColor: const Color(0x33000000),
-  textTheme: TextTheme(
+  textTheme: const TextTheme(
     headline1: TextStyle(
       fontFamily: globalFontFamily,
       fontSize: 50.0,
@@ -13,15 +13,16 @@ final themeData = ThemeData(
       letterSpacing: 3,
     ),
     headline2: TextStyle(
+      color: AppColors.white,
       fontFamily: globalFontFamily,
       fontSize: 30.0,
-      fontWeight: FontWeight.w500,
-      letterSpacing: 3,
+      fontWeight: FontWeight.w900,
+      letterSpacing: 2,
     ),
     headline3: TextStyle(
       fontFamily: globalFontFamily,
-      fontSize: 20.0,
-      fontWeight: FontWeight.w300,
+      fontSize: 25.0,
+      fontWeight: FontWeight.w600,
       letterSpacing: 2,
     ),
     headline4: TextStyle(

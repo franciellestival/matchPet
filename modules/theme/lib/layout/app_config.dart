@@ -4,6 +4,7 @@ class AppColors {
   static const Color primaryColor = Color(0xFFFAEACD);
   static const Color buttonColor = Color(0xFFEF8801);
   static const Color editTextColor = Color(0xFFFDF7EC);
+  static const Color primaryLightColor = Color(0xFFFDF7EC);
   static Color hintTextColor = Colors.black.withOpacity(0.25);
   static const Color black = Colors.black;
   static const Color white = Colors.white;

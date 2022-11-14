@@ -9,12 +9,14 @@ class PetProfile {
   final String image;
   final String location;
   final String idade;
+  final bool isMacho;
 
   PetProfile({
     required this.name,
     required this.image,
     required this.location,
     required this.idade,
+    this.isMacho = true,
   });
 }
 
@@ -35,115 +37,133 @@ class PetCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return cardScaffold(
-        child: Container(
-      padding: const EdgeInsets.only(left: 8, right: 8, top: 10, bottom: 8),
-      height: 258,
-      decoration: cardBoxDecoration,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
-            alignment: AlignmentDirectional.bottomStart,
-            children: [
-              petImage(),
-              favoriteIcon(),
-            ],
+      child: Container(
+        height: 300,
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(20),
           ),
-          const SizedBox(height: 8),
-          petInfo(context),
-        ],
+          border: Border.all(
+            color: AppColors.black,
+            width: 1,
+          ),
+          image: DecorationImage(
+            colorFilter: ColorFilter.mode(
+                AppColors.black.withOpacity(0.3), BlendMode.darken),
+            fit: BoxFit.cover,
+            image: NetworkImage(pet.image),
+          ),
+        ),
+        child: Stack(
+          alignment: AlignmentDirectional.bottomStart,
+          children: [
+            Align(alignment: Alignment.topRight, child: favoriteIcon()),
+            Positioned(bottom: 70, child: petName()),
+            Positioned(bottom: 45, child: petInfo()),
+            Positioned(bottom: 1, child: buildButton()),
+          ],
+        ),
       ),
-    ));
+    );
   }
 
-  final BoxDecoration cardBoxDecoration = BoxDecoration(
-    color: AppColors.primaryColor,
-    borderRadius: const BorderRadius.all(
-      Radius.circular(2),
-    ),
-    border: Border.all(
-      color: AppColors.black,
-      width: 1,
-    ),
-  );
+  Widget buildButton() {
+    return Center(
+      child: PrimaryButton(
+        onTap: () {},
+        backgroundColor: AppColors.white.withOpacity(0.5),
+        text: 'Saiba Mais',
+        padding: const EdgeInsets.all(1),
+        height: 10,
+        width: 160,
+        fontSize: 15,
+      ),
+    );
+  }
 
   Widget cardScaffold({
     required Widget child,
   }) {
-    return Stack(
-      clipBehavior: Clip.none,
-      fit: StackFit.passthrough,
-      children: <Widget>[
-        GestureDetector(
-          onTap: onTap as void Function()?,
-          child: child,
-        ),
-      ],
-    );
-  }
-
-  Widget petImage() {
-    double size = 140.0;
-
-    final image = pet.image;
-
-    return SizedBox(
-      width: size,
-      child: FadeInImage.memoryNetwork(
-        placeholder: kTransparentImage,
-        image: image,
-        fit: BoxFit.contain,
-        alignment: Alignment.topCenter,
+    return Center(
+      child: GestureDetector(
+        onTap: onTap as void Function()?,
+        child: child,
       ),
     );
   }
 
-  Widget petInfo(context, {Widget? favoriteButton}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        petName(),
-        SizedBox(),
-        Row(
-          children: [
-            petLocation(),
-            petAge(),
-          ],
+  Widget petName() {
+    return Row(
+      children: [
+        SvgPicture.asset(AppSvgs.maleIcon,
+            color: AppColors.white, height: 24.0),
+        const WidthSpacer(width: 2),
+        Text(
+          pet.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: AppColors.white,
+            fontFamily: globalFontFamily,
+            fontSize: 20.0,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 2,
+          ),
         ),
       ],
     );
   }
 
-  Widget petName() {
-    return Text('${pet.name}',
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-        style: themeData.textTheme.headline2);
-  }
-
-  Widget petLocation() {
-    return Text('${pet.location}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: themeData.textTheme.bodyMedium);
-  }
-
-  Widget petAge() {
-    return Text('${pet.idade}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: themeData.textTheme.bodyMedium);
+  Widget petInfo() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        SvgPicture.asset(
+          AppSvgs.locationIcon,
+          color: AppColors.white,
+          height: 10,
+          width: 10,
+        ),
+        Text(
+          ' ${pet.location}',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: AppColors.white,
+            fontFamily: globalFontFamily,
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 2,
+          ),
+        ),
+        const WidthSpacer(width: 12),
+        Text(
+          pet.idade,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: AppColors.white,
+            fontFamily: globalFontFamily,
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 2,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget favoriteIcon() {
     return GestureDetector(
       onTap: onTapFavorite as void Function()?,
-      child: SvgPicture.asset(
-        isFavorited ? AppSvgs.heartIcon : AppSvgs.heartIcon,
-        height: 24.0,
-        color: AppColors.black,
+      child: CircleAvatar(
+        backgroundColor: AppColors.white.withOpacity(0.5),
+        child: SvgPicture.asset(
+          isFavorited ? AppSvgs.heartIcon : AppSvgs.heartIcon,
+          height: 24.0,
+          color: Colors.red,
+        ),
       ),
     );
   }

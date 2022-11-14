@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'package:pet_profile/widgets/pet_card.dart';
+import 'package:pet_profile/widgets/pet_list.dart';
 import 'package:theme/export_theme.dart';
-import 'package:theme/layout/app_config.dart';
 
 class PetListPage extends StatefulWidget {
   final String listTitle;
-  final List<PetProfile> petList;
+  final List<PetCard> petList;
   final VoidCallback? onTapCallTapAction;
 
   PetListPage({
@@ -28,44 +27,48 @@ class _PetListPageState extends State<PetListPage> {
   PetProfile pet = PetProfile(
       name: 'Bobzinho', image: image, location: 'Curitiba', idade: '2 anos');
   PetProfile pet2 = PetProfile(
-      name: 'Tiruruzinho', image: image, location: 'Curitiba', idade: '2 anos');
+      name: 'Major',
+      image: image,
+      location: 'Fazenda Rio Grande',
+      idade: '10 anos');
+  PetProfile pet3 = PetProfile(
+      name: 'Kite', image: image, location: 'Canada', idade: '7 anos');
+  PetProfile pet4 = PetProfile(
+      name: 'Laika', image: image, location: 'Curitiba', idade: '2 anos');
+  PetProfile pet5 = PetProfile(
+      name: 'Ruby', image: image, location: 'Curitiba', idade: '10 meses');
 
   @override
   Widget build(BuildContext context) {
-    List<PetProfile> petList2 = [];
+    List<PetCard> petList2 = [
+      PetCard(pet: pet),
+      PetCard(pet: pet2),
+      PetCard(pet: pet3),
+      PetCard(pet: pet4),
+      PetCard(pet: pet5),
+    ];
 
-    return Container(
-      color: AppColors.black,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          Column(
-            children: [
-              const SizedBox(height: 16),
-              Container(
-                child: SectionDivider(
-                  title: widget.listTitle,
-                  onTapCallToAction: () => {},
-                ),
-              ),
-              SizedBox(height: 16),
-            ],
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              children: <Widget>[
-                widget.petList.map(
-                  (e) {
-                  return Padding(padding: EdgeInsets.only(bottom: 16),
-                  child: Obx(
-                    () => PetCard(pet: e),
-                  ),)
-                }).toList(),
-              ],
+    return Scaffold(
+      appBar: GenericAppBar(title: widget.listTitle),
+      backgroundColor: AppColors.primaryLightColor,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const HeightSpacer(),
+            Container(
+              color: AppColors.white,
+              height: 50,
+              width: 500,
+              child: Center(
+                  child: const Text('Aqui uma barra de pesquisa futuramente')),
             ),
-          )
-        ],
+            PetList(
+              title: widget.listTitle,
+              onTapCallTapAction: () => {},
+              children: petList2,
+            ),
+          ],
+        ),
       ),
     );
   }
