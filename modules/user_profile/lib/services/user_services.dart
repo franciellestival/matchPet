@@ -14,7 +14,8 @@ class UserServices {
   //Cria um novo usuario no backend
   Future<Response> createUser(NewUser user) async {
     try {
-      final Response response = await apiClient.post(_userEndpoint, data: user);
+      final Response response =
+          await apiClient.post(_userEndpoint, data: user.toJson());
       return response;
     } catch (e) {
       rethrow;
@@ -50,7 +51,7 @@ class UserServices {
     try {
       final Token token = getx.Get.find(tag: "userToken");
       final Response response = await apiClient.put("$_userEndpoint/$id",
-          data: user,
+          data: user.toJson(),
           options: Options(headers: {"Authorization": token.token.toString()}));
       return response;
     } catch (e) {

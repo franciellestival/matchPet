@@ -34,4 +34,9 @@ class NewUser {
         },
         "location": location?.toJson()
       };
+
+  @override
+  String toString() {
+    return "NewUser(Name: $name, Phone: $phone, Email: $email, Password: $password, Password_Confirmation: $passwordConfirmation, Location: ${location.toString()}";
+  }
 }

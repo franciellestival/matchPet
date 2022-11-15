@@ -45,21 +45,21 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  location: ^4.4.0
   mask_text_input_formatter: ^2.4.0
-  http: ^0.13.5
   get: ^4.6.5
   flutter_svg: ^1.1.4
   get_it: ^7.2.0
   dio: ^4.0.6
   get_storage: ^2.0.3
   flutter_native_splash: ^2.0.1+1 
+  geolocator: ^9.0.2
+  permission_handler: ^10.2.0
+  geocoding: ^2.0.5
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_native_splash: ^2.0.1+1 
 
 flutter_native_splash:
   color: "#EF8801"
@@ -67,11 +67,6 @@ flutter_native_splash:
   fullscreen: false
   ios_disable_fullscreen: true
 
-flutter_native_splash:
-  color: "#EF8801"
-  image: "assets/logo.png"
-  fullscreen: false
-  ios_disable_fullscreen: true
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

@@ -1,13 +1,11 @@
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/export_theme.dart';
 import 'package:user_profile/controller/user_controller.dart';
-
-import '../model/token.dart';
+import 'package:user_profile/model/token.dart';
 
 class UserRegister extends StatefulWidget {
   const UserRegister({Key? key}) : super(key: key);
@@ -26,7 +24,7 @@ class _UserRegisterState extends State<UserRegister> {
 
   Future<void> _registerUser() async {
     if (_formKey.currentState!.validate()) {
-      UserController.signUpUser(
+      await UserController.signUpUser(
           _nameController.text,
           _phoneController.text,
           _emailController.text,
