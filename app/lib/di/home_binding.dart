@@ -16,6 +16,6 @@ class HomeBinding extends Bindings {
 
     PetServices petServices = PetServices(petApi: api);
     PetRepository petRepository = PetRepository(petServices);
-    Get.put(petRepository, permanent: true);
+    Get.put(petRepository, permanent: true, tag: 'pet_repository');
   }
 }
