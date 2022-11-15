@@ -12,9 +12,13 @@ class PetServices {
   PetServices({required this.petApi});
 
   Future<Response> createPet(NewPet pet) async {
+    var formData = FormData.fromMap(pet.toJson());
     try {
-      return await petApi.post(_petEndpoint,
-          data: pet, options: Options(headers: {"Authorization": token.token}));
+      final response = await petApi.post(_petEndpoint,
+          data: formData,
+          options: Options(headers: {"Authorization": token.token}));
+      print('RESPOSTA ${response.statusCode}');
+      return response;
     } catch (e) {
       rethrow;
     }

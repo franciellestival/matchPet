@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:api_services/api_services.dart';
 import 'package:flutter/material.dart';
@@ -13,44 +14,40 @@ import 'package:user_profile/model/user.dart';
 import 'pet_data.dart';
 
 void main() {
-  NewPet petnew = NewPet.fromJson(jsonDecode(petSucess));
-  final api = PetServices(petApi: APIServices(Dio()));
+  NewPet petnew = NewPet.fromJson(jsonDecode(newPet));
 
-  test('Pet From Json Sucess Parsing', () {
-    final petTest = NewPet.fromJson(jsonDecode(petSucess));
-    expect(petTest.gender, Gender.male);
+  test('New Pet from Json Parsing', () {
+    expect(petnew.name, "Major");
   });
-  test('Pet to Json Parsing', () {
-    print(petnew.toJson());
-  });
+
   test('Pet PROFILE to Json Parsing', () {
-    //final petTest = PetProfile.fromJson(jsonDecode(petSucess));
+    petnew.toJson();
   });
 
-  test('Api Test', () async {
-    try {
-      final response = await api.getAllPets();
-      debugPrint(response.data.toString());
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  });
+  test('Another Post Test', () async {
+    final APIServices petApi = APIServices(Dio());
+    var formData = FormData.fromMap({
+      "name": "Laika",
+      "species": 1,
+      "gender": 2,
+      "size": 2,
+      "status": 1,
+      "breed": "Vira Latas",
+      "age": 4,
+      "weight": 30.0,
+      "description": "teste",
+      "neutered": 1,
+      "specialNeeds": 0,
+      "lat": 0,
+      "lng": 0,
+      "adress": "Rua Fake"
+    });
 
-  test('Post Test', () async {
-    try {
-      final response = await api.createPet(petnew);
-      print(response.statusCode);
-      debugPrint(response.data.toString());
-    } catch (e) {
-      debugPrint(e.toString());
-    }
+    final response = await petApi.post('/pet',
+        data: formData,
+        options: Options(headers: {
+          "Authorization":
+              "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyNX0.TJHjHaL_8mqEHecpBX3XXAQxSCQi_Gu_naWdXdU5UT0"
+        }));
   });
 }
-
-//     try {
-//       final login = LoginService(apiClient: APIServices(Dio()));
-//       final response = await login.login("teste_fe22@email.com", "teste123");
-//       debugPrint(response.data.toString());
-//     } catch (e) {
-//       debugPrint(e.toString());
-//     }

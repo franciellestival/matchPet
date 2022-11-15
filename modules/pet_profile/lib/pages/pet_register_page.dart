@@ -10,7 +10,7 @@ import 'package:theme/export_theme.dart';
 class PetRegisterPage extends StatefulWidget {
   static const heightSpacer = HeightSpacer();
 
-  PetRegisterPage({super.key});
+  const PetRegisterPage({super.key});
 
   @override
   State<PetRegisterPage> createState() => _PetRegisterPageState();
@@ -143,61 +143,61 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
   }
 
   NewPet petInstance() {
-    Size size = Size.values.first;
-    Status status = Status.registered;
-    Species species = Species.other;
+    int size = 0;
+    var status = 0;
+    var species = 0;
 
     switch (sizeCurrentValue.value) {
       case 'Pequeno':
-        size = Size.small;
+        size = 1;
         break;
-      case 'Medio':
-        size = Size.medium;
+      case 'Médio':
+        size = 2;
         break;
       case 'Grande':
-        size = Size.big;
+        size = 3;
         break;
     }
 
     switch (sizeCurrentValue.value) {
       case 'Disponível':
-        status = Status.available;
+        status = 2;
         break;
       case 'Desaparecido':
-        status = Status.missing;
+        status = 4;
         break;
       default:
-        status = Status.registered;
+        status = 1;
         break;
     }
 
     switch (speciesCurrentValue.value) {
       case 'Cão':
-        species = Species.dog;
+        species = 1;
         break;
       case 'Gato':
-        species = Species.cat;
+        species = 2;
         break;
       default:
-        species = Species.other;
+        species = 3;
         break;
     }
 
     final petToRegister = NewPet(
-      name: _nameController.text,
-      breed: _breedController.text,
-      description: _descriptionController.text,
-      age: int.parse(_ageController.text),
-      neutered: neuteredCurrentValue.value.contains('Não') ? 0 : 1,
-      specialNeeds: specialNeedsCurrentValue.value.contains('Não') ? 0 : 1,
-      gender: genderCurrentValue.value.contains('Macho')
-          ? Gender.male
-          : Gender.female,
-      size: size,
-      status: status,
-      species: species,
-      weight: double.parse(_weightController.text),
-    );
+        name: _nameController.text,
+        species: species,
+        gender: genderCurrentValue.value.contains('Macho') ? 1 : 2,
+        size: size,
+        status: status,
+        breed: _breedController.text,
+        age: int.parse(_ageController.text),
+        weight: double.parse(_weightController.text),
+        description: _descriptionController.text,
+        neutered: neuteredCurrentValue.value.contains('Não') ? 0 : 1,
+        specialNeeds: specialNeedsCurrentValue.value.contains('Não') ? 0 : 1,
+        lat: 0.0,
+        lng: 0.0,
+        adress: 'Rua Fake');
     return petToRegister;
   }
 
