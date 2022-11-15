@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:theme/layout/app_config.dart';
 
 class FormInputBox extends StatelessWidget {
@@ -15,6 +16,8 @@ class FormInputBox extends StatelessWidget {
     this.horizontalAxisAlignment = MainAxisAlignment.start,
     EdgeInsets? padding,
     double? borderRadius,
+    this.textInputType,
+    this.enable,
   })  : backgroundColor = backgroundColor ?? AppColors.editTextColor,
         textColor = textColor ?? AppColors.white,
         borderRadius = borderRadius ?? AppRadius.editTextRadius,
@@ -30,6 +33,8 @@ class FormInputBox extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController controller;
   final String? Function(String?)? validator;
+  final bool? enable;
+  final TextInputType? textInputType;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +49,8 @@ class FormInputBox extends StatelessWidget {
           Padding(
             padding: padding,
             child: TextFormField(
+              keyboardType: textInputType,
+              enabled: enable ?? true,
               cursorColor: AppColors.buttonColor,
               decoration: InputDecoration(
                 border: InputBorder.none,

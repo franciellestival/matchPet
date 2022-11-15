@@ -27,24 +27,26 @@ class StatusPage extends StatelessWidget {
           children: [
             const SizedBox(height: 200),
             Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FutureBuilder<User?>(
-                    future: _getUser(),
-                    builder: ((context, snapshot) {
-                      String msg =
-                          'Vish! Algo deu errado. \n\n  Chamaremos os universitários!';
-                      if (snapshot.hasData) {
-                        User? user = snapshot.data;
-                        if (user != null) {
-                          msg =
-                              "Usuário ${user.name} conectado com sucesso - email: ${user.email}";
-                        }
-                      }
-                      return Text(msg,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontSize: 28, color: AppColors.buttonColor));
-                    }))),
+              padding: const EdgeInsets.all(8.0),
+              child: FutureBuilder<User?>(
+                future: _getUser(),
+                builder: ((context, snapshot) {
+                  String msg =
+                      'Vish! Algo deu errado. \n\n  Chamaremos os universitários!';
+                  if (snapshot.hasData) {
+                    User? user = snapshot.data;
+                    if (user != null) {
+                      msg =
+                          "Usuário ${user.name} conectado com sucesso - email: ${user.email}";
+                    }
+                  }
+                  return Text(msg,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontSize: 20, color: AppColors.buttonColor));
+                }),
+              ),
+            ),
             const SizedBox(height: 50),
             Center(
               child: PrimaryButton(
@@ -61,6 +63,12 @@ class StatusPage extends StatelessWidget {
               child: PrimaryButton(
                   onTap: () => {Get.to(PetListPage(petList: []))},
                   text: 'Ver Pets'),
+            ),
+            const SizedBox(height: 30),
+            Center(
+              child: PrimaryButton(
+                  onTap: () => {Get.toNamed(Routes.userProfile)},
+                  text: 'Ver meu Perfil'),
             ),
           ],
         ),
