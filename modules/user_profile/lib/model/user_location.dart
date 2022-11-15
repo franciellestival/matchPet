@@ -22,4 +22,9 @@ class UserLocation {
         "lng": lng,
         "address": address,
       };
+
+  @override
+  String toString() {
+    return "UserLocation (Lat: $lat, Lng: $lng, Address: $address)";
+  }
 }

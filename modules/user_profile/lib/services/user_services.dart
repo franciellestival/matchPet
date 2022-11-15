@@ -14,7 +14,8 @@ class UserServices {
   //Cria um novo usuario no backend
   Future<Response> createUser(NewUser user) async {
     try {
-      final Response response = await apiClient.post(_userEndpoint, data: user);
+      final Response response =
+          await apiClient.post(_userEndpoint, data: user.toJson());
       return response;
     } catch (e) {
       rethrow;

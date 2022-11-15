@@ -74,5 +74,5 @@ class APIExceptions implements Exception {
   }
 
   @override
-  String toString() => message;
+  String toString() => "$message: ${erros.toString()}";
 }
