@@ -64,6 +64,28 @@ class UserController {
       rethrow;
     }
   }
+
+  static Future<void> updateUser(int? id, String name, String phone,
+      String email, String password, String passwordConfirmation) async {
+    if (id == null) {
+      throw "Id do usuário inválido!";
+    }
+    try {
+      UserLocation? location = await _getCurrentLocation();
+      NewUser user = NewUser(
+        name: name,
+        phone: phone,
+        email: email,
+        password: password,
+        passwordConfirmation: passwordConfirmation,
+        location: location,
+      );
+      final UserRepository userRepository = Get.find();
+      await userRepository.updateUserRequested(id, user);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 Future<UserLocation?> _getCurrentLocation() async {

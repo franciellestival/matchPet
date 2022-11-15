@@ -2,10 +2,10 @@ import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/export_theme.dart';
-import 'package:user_profile/controller/user_controller.dart';
-import 'package:user_profile/model/token.dart';
+
+import '../controller/user_controller.dart';
+import '../model/user.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -22,6 +22,7 @@ class _ProfilePage extends State<ProfilePage> {
   final _pwController = TextEditingController();
   final _pwConfirmationController = TextEditingController();
   Rx<bool> inputEnabled = Rx<bool>(false);
+  User user = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,9 @@ class _ProfilePage extends State<ProfilePage> {
         mask: '(##) #####-####',
         filter: {'#': RegExp(r'[0-9]')},
         type: MaskAutoCompletionType.lazy);
+    _nameController.text = user.name!;
+    _phoneController.text = user.phone!;
+    _emailController.text = user.email!;
 
     return Obx(() {
       return Scaffold(
@@ -132,9 +136,22 @@ class _ProfilePage extends State<ProfilePage> {
                           ),
                           Center(
                             child: inputEnabled.value
-                                ? PrimaryButton(
-                                    onTap: () => {inputEnabled.value = false},
-                                    text: 'Salvar',
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      PrimaryButton(
+                                        width: 170,
+                                        onTap: () => {_editUser()},
+                                        text: 'Salvar',
+                                      ),
+                                      PrimaryButton(
+                                        width: 170,
+                                        onTap: () =>
+                                            {inputEnabled.value = false},
+                                        text: 'Cancelar',
+                                      ),
+                                    ],
                                   )
                                 : Row(
                                     mainAxisAlignment:
@@ -165,5 +182,23 @@ class _ProfilePage extends State<ProfilePage> {
         ),
       );
     });
+  }
+
+  Future<void> _editUser() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        await UserController.updateUser(
+            user.id,
+            _nameController.text,
+            _phoneController.text,
+            _emailController.text,
+            _pwController.text,
+            _pwConfirmationController.text);
+        Get.snackbar("Sucesso!", "Usuário alterado com sucesso!");
+      } catch (e) {
+        Get.snackbar("Erro!", e.toString());
+      }
+      inputEnabled.value = false;
+    }
   }
 }
