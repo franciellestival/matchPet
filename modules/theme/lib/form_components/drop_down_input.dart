@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:theme/layout/app_config.dart';
 
 class FormDropDownInput extends StatelessWidget {
-  FormDropDownInput(
+  const FormDropDownInput(
       {super.key,
-      required this.items,
-      required this.hintText,
+      required this.child,
       Color? backgroundColor,
       EdgeInsets? padding})
       : backgroundColor = backgroundColor ?? AppColors.editTextColor,
         padding = const EdgeInsets.symmetric(horizontal: 10);
 
-  final List<String> items;
   final Color backgroundColor;
   final EdgeInsets padding;
-  final String hintText;
-  final Rx<String> selectedValue = ''.obs;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -30,20 +26,7 @@ class FormDropDownInput extends StatelessWidget {
         children: [
           Padding(
             padding: padding,
-            child: DropdownButtonFormField(
-              hint: Text(
-                hintText,
-                style: TextStyle(color: Colors.black.withOpacity(0.3)),
-              ),
-              dropdownColor: backgroundColor,
-              items: items.map((item) {
-                return DropdownMenuItem(
-                  value: item,
-                  child: Text(item.toString().split('.').last),
-                );
-              }).toList(),
-              onChanged: (newValue) => {selectedValue.value = newValue!},
-            ),
+            child: child,
           ),
         ],
       ),
