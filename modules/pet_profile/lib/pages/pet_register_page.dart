@@ -53,22 +53,30 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             'Informações Gerais',
             style: TextStyle(fontSize: 16),
           ),
-          FormInputBox(hintText: 'Nome', controller: _nameController),
-          FormDropDownInput(
-            child: buildDropDownItem(
-                currentValue: speciesCurrentValue,
-                items: species,
-                hintText: 'Espécie'),
+          FormInputBox(
+            hintText: 'Nome',
+            controller: _nameController,
           ),
           FormDropDownInput(
             child: buildDropDownItem(
-                currentValue: genderCurrentValue,
-                items: gender,
-                hintText: 'Sexo'),
+              currentValue: speciesCurrentValue,
+              items: species,
+              hintText: 'Espécie',
+            ),
           ),
           FormDropDownInput(
             child: buildDropDownItem(
-                currentValue: sizeCurrentValue, items: size, hintText: 'Porte'),
+              currentValue: genderCurrentValue,
+              items: gender,
+              hintText: 'Sexo',
+            ),
+          ),
+          FormDropDownInput(
+            child: buildDropDownItem(
+              currentValue: sizeCurrentValue,
+              items: size,
+              hintText: 'Porte',
+            ),
           ),
           FormDropDownInput(
             child: buildDropDownItem(
@@ -78,23 +86,40 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
           ),
           FormDropDownInput(
             child: buildDropDownItem(
-                currentValue: neuteredCurrentValue,
-                items: neutered,
-                hintText: 'Castrado(a)?'),
+              currentValue: neuteredCurrentValue,
+              items: neutered,
+              hintText: 'Castrado(a)?',
+            ),
           ),
           FormDropDownInput(
             child: buildDropDownItem(
-                currentValue: specialNeedsCurrentValue,
-                items: specialNeeds,
-                hintText: 'Necessidades Especiais?'),
+              currentValue: specialNeedsCurrentValue,
+              items: specialNeeds,
+              hintText: 'Necessidades Especiais?',
+            ),
           ),
           FormInputBox(
-              hintText: 'Localização', controller: _locationController),
-          FormInputBox(hintText: 'Raça', controller: _breedController),
-          FormInputBox(hintText: 'Idade', controller: _ageController),
-          FormInputBox(hintText: 'Peso', controller: _weightController),
+            hintText: 'Localização',
+            controller: _locationController,
+          ),
           FormInputBox(
-              hintText: 'Descrição', controller: _descriptionController),
+            hintText: 'Raça',
+            controller: _breedController,
+          ),
+          FormInputBox(
+            hintText: 'Idade',
+            controller: _ageController,
+            textInputType: TextInputType.number,
+          ),
+          FormInputBox(
+            hintText: 'Peso',
+            controller: _weightController,
+            textInputType: TextInputType.number,
+          ),
+          FormInputBox(
+            hintText: 'Descrição',
+            controller: _descriptionController,
+          ),
         ],
       ),
     );

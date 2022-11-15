@@ -3,18 +3,19 @@ import 'package:flutter/services.dart';
 import 'package:theme/layout/app_config.dart';
 
 class FormInputBoxPassword extends StatefulWidget {
-  const FormInputBoxPassword({
-    Key? key,
-    required this.hintText,
-    required this.controller,
-    this.inputFormatters,
-    this.validator,
-    Color? backgroundColor,
-    Color? textColor,
-    this.horizontalAxisAlignment = MainAxisAlignment.start,
-    EdgeInsets? padding,
-    double? borderRadius,
-  })  : backgroundColor = backgroundColor ?? AppColors.editTextColor,
+  const FormInputBoxPassword(
+      {Key? key,
+      required this.hintText,
+      required this.controller,
+      this.inputFormatters,
+      this.validator,
+      Color? backgroundColor,
+      Color? textColor,
+      this.horizontalAxisAlignment = MainAxisAlignment.start,
+      EdgeInsets? padding,
+      double? borderRadius,
+      this.inputEnabled})
+      : backgroundColor = backgroundColor ?? AppColors.editTextColor,
         textColor = textColor ?? AppColors.white,
         // borderRadius = borderRadius ?? AppRadius().editTextRadius,
         borderRadius = borderRadius ?? 10.0,
@@ -30,6 +31,7 @@ class FormInputBoxPassword extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController controller;
   final String? Function(String?)? validator;
+  final bool? inputEnabled;
 
   @override
   State<FormInputBoxPassword> createState() => _FormInputBoxPasswordState();
@@ -57,6 +59,7 @@ class _FormInputBoxPasswordState extends State<FormInputBoxPassword> {
           Padding(
             padding: widget.padding,
             child: TextFormField(
+              enabled: widget.inputEnabled ?? true,
               cursorColor: AppColors.buttonColor,
               decoration: InputDecoration(
                   border: InputBorder.none,

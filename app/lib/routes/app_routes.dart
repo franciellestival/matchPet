@@ -4,4 +4,5 @@ abstract class Routes {
   static const registerRoute = "/register";
   static const statusRoute = "/status";
   static const petRegisterRoute = "/pet_register";
+  static const userProfile = "/user_profile";
 }
