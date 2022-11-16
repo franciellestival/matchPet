@@ -20,6 +20,8 @@ class APIServices {
       ..options.receiveTimeout = Endpoints.receiveTimeout
       ..options.responseType = ResponseType.json
       ..interceptors.add(LogInterceptor(
+          requestBody: true,
+          responseBody: true,
           logPrint: ((object) => (debugPrint(object.toString())))));
   }
 
