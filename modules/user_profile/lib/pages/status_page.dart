@@ -61,14 +61,14 @@ class StatusPage extends StatelessWidget {
             const SizedBox(height: 30),
             Center(
               child: PrimaryButton(
-                  onTap: () => {Get.to(PetListPage(petList: []))},
-                  text: 'Ver Pets'),
+                  onTap: () => {Get.toNamed(Routes.userProfile)},
+                  text: 'Ver meu Perfil'),
             ),
             const SizedBox(height: 30),
             Center(
               child: PrimaryButton(
-                  onTap: () => {Get.toNamed(Routes.userProfile)},
-                  text: 'Ver meu Perfil'),
+                  onTap: () => {Get.toNamed(Routes.petListPage)},
+                  text: 'Ver lista de Pets'),
             ),
           ],
         ),
