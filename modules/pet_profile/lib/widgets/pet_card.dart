@@ -2,23 +2,8 @@
 import 'package:flutter_svg/svg.dart';
 
 import 'package:flutter/material.dart';
+import 'package:pet_profile/model/pet_profile.dart';
 import 'package:theme/export_theme.dart';
-
-class PetProfile {
-  final String name;
-  final String image;
-  final String location;
-  final String idade;
-  final bool isMacho;
-
-  PetProfile({
-    required this.name,
-    required this.image,
-    required this.location,
-    required this.idade,
-    this.isMacho = true,
-  });
-}
 
 class PetCard extends StatelessWidget {
   final bool isFavorited;
@@ -52,7 +37,8 @@ class PetCard extends StatelessWidget {
             colorFilter: ColorFilter.mode(
                 AppColors.black.withOpacity(0.3), BlendMode.darken),
             fit: BoxFit.cover,
-            image: NetworkImage(pet.image),
+            image: NetworkImage(pet.photoUrl ??
+                'https://i.pinimg.com/originals/d8/9e/d9/d89ed96e3cda94aff64b574662a621b3.jpg'),
           ),
         ),
         child: Stack(
@@ -100,7 +86,7 @@ class PetCard extends StatelessWidget {
             color: AppColors.white, height: 24.0),
         const WidthSpacer(width: 2),
         Text(
-          pet.name,
+          pet.name ?? "Sem nome",
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
@@ -126,7 +112,7 @@ class PetCard extends StatelessWidget {
           width: 10,
         ),
         Text(
-          ' ${pet.location}',
+          ' ${pet.location?.address}' ?? 'Cidade Ficticia.',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
@@ -139,7 +125,7 @@ class PetCard extends StatelessWidget {
         ),
         const WidthSpacer(width: 12),
         Text(
-          pet.idade,
+          pet.age.toString() ?? "0",
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(

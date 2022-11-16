@@ -1,8 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/foundation.dart';
-import 'package:pet_profile/model/new_pet.dart';
 import 'package:user_profile/model/user.dart';
 import 'package:user_profile/model/user_location.dart';
+
+enum Gender { male, female }
+
+enum Size { small, medium, big }
+
+enum Species { dog, cat, other }
+
+enum Status { registered, available, adopted, missing, adoptionProcess }
 
 class PetProfile {
   int? id;
@@ -59,7 +66,6 @@ class PetProfile {
         specialNeeds: json['special_need'],
         photoUrl: json['photoUrl'],
         //owner: User.fromJson(json['owner']),
-        //location: UserLocation.fromJson(json['location'])
       );
 
   Map<String, dynamic> toJson() => {
@@ -77,6 +83,5 @@ class PetProfile {
         "specialNeeds": specialNeeds,
         "photoUrl": photoUrl,
         //"owner": owner?.toJson(),
-        //"location": location?.toJson(),
       };
 }
