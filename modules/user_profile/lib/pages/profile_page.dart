@@ -2,6 +2,7 @@ import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/export_theme.dart';
 
 import '../controller/user_controller.dart';
@@ -164,8 +165,7 @@ class _ProfilePage extends State<ProfilePage> {
                                           text: 'Editar'),
                                       PrimaryButton(
                                           width: 170,
-                                          onTap: () =>
-                                              {inputEnabled.value = true},
+                                          onTap: () => {_deleteUser()},
                                           text: 'Excluir'),
                                     ],
                                   ),
@@ -196,9 +196,36 @@ class _ProfilePage extends State<ProfilePage> {
             _pwConfirmationController.text);
         Get.snackbar("Sucesso!", "Usuário alterado com sucesso!");
       } catch (e) {
-        Get.snackbar("Erro!", e.toString());
+        Get.snackbar("Erro!", e.toString(),
+            duration: const Duration(seconds: 5));
       }
       inputEnabled.value = false;
     }
+  }
+
+  Future<void> _deleteUser() async {
+    inputEnabled.value = false;
+    Get.defaultDialog(
+      title: "Atenção!",
+      middleText: "Deseja realmente remover seu usuário?",
+      textCancel: "Cancelar",
+      textConfirm: "Remover",
+      backgroundColor: AppColors.primaryLightColor,
+      buttonColor: AppColors.buttonColor,
+      barrierDismissible: false,
+      cancelTextColor: AppColors.black,
+      confirmTextColor: AppColors.black,
+      onConfirm: () {
+        try {
+          //TODO Desabilitado para testes
+          //TODO UserController.deleteUser(user.id);
+          UserController.logoutUser();
+          Get.offAndToNamed(Routes.initialRoute);
+        } catch (e) {
+          Get.snackbar("Erro!", e.toString(),
+              duration: const Duration(seconds: 5));
+        }
+      },
+    );
   }
 }

@@ -86,6 +86,15 @@ class UserController {
       rethrow;
     }
   }
+
+  static Future<void> deleteUser(int? id) async {
+    try {
+      final UserRepository userRepository = Get.find();
+      await userRepository.deleteUserRequested(id!);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 Future<UserLocation?> _getCurrentLocation() async {

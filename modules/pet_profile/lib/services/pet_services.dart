@@ -5,19 +5,20 @@ import 'package:user_profile/model/token.dart';
 
 class PetServices {
   static const String _petEndpoint = "/pet";
-  final Token token = getx.Get.find(tag: "userToken");
 
   final APIServices petApi;
+
+  late Token token;
 
   PetServices({required this.petApi});
 
   Future<Response> createPet(NewPet pet) async {
+    token = getx.Get.find(tag: "userToken");
     var formData = FormData.fromMap(pet.toJson());
     try {
       final response = await petApi.post(_petEndpoint,
           data: formData,
           options: Options(headers: {"Authorization": token.token}));
-      print('RESPOSTA ${response.statusCode}');
       return response;
     } catch (e) {
       rethrow;
@@ -30,6 +31,7 @@ class PetServices {
 
   Future<Response> getAllPets() async {
     try {
+      token = getx.Get.find(tag: "userToken");
       return await petApi.get(_petEndpoint,
           options: Options(headers: {"Authorization": token.token}));
     } catch (e) {

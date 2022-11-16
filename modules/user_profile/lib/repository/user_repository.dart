@@ -47,10 +47,9 @@ class UserRepository {
   }
 
   //Atualiza o usuario e retorna a lista do mesmo
-  Future<User> updateUserRequested(int id, NewUser user) async {
+  Future<void> updateUserRequested(int id, NewUser user) async {
     try {
-      final response = await userAPIServices.updateUser(id, user);
-      return User.fromJson(response.data);
+      await userAPIServices.updateUser(id, user);
     } on DioError catch (e) {
       final erro = APIExceptions.fromDioError(e);
       throw erro;

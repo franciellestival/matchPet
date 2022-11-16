@@ -12,10 +12,10 @@ class HomeBinding extends Bindings {
     APIServices api = APIServices(Dio());
     UserServices userServices = UserServices(apiClient: api);
     UserRepository userRepository = UserRepository(userServices);
-    Get.put(userRepository, permanent: true);
+    Get.put<UserRepository>(userRepository, permanent: true);
 
     PetServices petServices = PetServices(petApi: api);
     PetRepository petRepository = PetRepository(petServices);
-    Get.put(petRepository, permanent: true, tag: 'pet_repository');
+    Get.put<PetRepository>(petRepository, permanent: true);
   }
 }

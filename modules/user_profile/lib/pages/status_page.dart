@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
-import 'package:pet_profile/pages/pet_list_page.dart';
 import 'package:theme/export_theme.dart';
 
 import '../controller/user_controller.dart';
@@ -58,7 +57,7 @@ class StatusPage extends StatelessWidget {
                   const SizedBox(height: 30),
                   Center(
                     child: PrimaryButton(
-                        onTap: () => {Get.to(const PetListPage(petList: []))},
+                        onTap: () => {Get.toNamed(Routes.petListPage)},
                         text: 'Ver Pets'),
                   ),
                   const SizedBox(height: 30),
