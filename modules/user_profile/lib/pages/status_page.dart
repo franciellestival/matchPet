@@ -58,7 +58,7 @@ class StatusPage extends StatelessWidget {
                   const SizedBox(height: 30),
                   Center(
                     child: PrimaryButton(
-                        onTap: () => {Get.to(PetListPage(petList: const []))},
+                        onTap: () => {Get.to(const PetListPage(petList: []))},
                         text: 'Ver Pets'),
                   ),
                   const SizedBox(height: 30),

@@ -5,14 +5,9 @@ import 'package:theme/export_theme.dart';
 class PetList extends StatelessWidget {
   final String? title;
   final List<Widget> children;
-  final VoidCallback onTapCallTapAction;
   final String? titleCallToAction;
 
-  const PetList(
-      {required this.children,
-      required this.onTapCallTapAction,
-      this.title,
-      this.titleCallToAction});
+  const PetList({required this.children, this.title, this.titleCallToAction});
 
   @override
   Widget build(BuildContext context) {
