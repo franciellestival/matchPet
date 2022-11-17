@@ -17,7 +17,12 @@ class APIServices {
       ..options.baseUrl = Endpoints.baseURL
       ..options.connectTimeout = Endpoints.connectTimeout
       ..options.receiveTimeout = Endpoints.receiveTimeout
-      ..options.responseType = ResponseType.json;
+      ..options.responseType = ResponseType.json
+      ..interceptors.add(LogInterceptor(
+        requestBody: true,
+        responseBody: true,
+        // logPrint: ((object) => (debugPrint(object.toString())))
+      ));
   }
 
   // Get:-----------------------------------------------------------------------

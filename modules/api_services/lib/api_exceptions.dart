@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 class APIExceptions implements Exception {
   late String message;
-  late Map<String, List<String>> erros;
+  late Map<String, List<String>> erros = {};
 
   APIExceptions.fromDioError(DioError dioError) {
     switch (dioError.type) {
@@ -74,5 +74,5 @@ class APIExceptions implements Exception {
   }
 
   @override
-  String toString() => "$message: ${erros.toString()}";
+  String toString() => "$message${(erros.isEmpty ? "" : ": $erros")}";
 }

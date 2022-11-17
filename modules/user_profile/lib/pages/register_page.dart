@@ -5,7 +5,6 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/export_theme.dart';
 import 'package:user_profile/controller/user_controller.dart';
-import 'package:user_profile/model/token.dart';
 
 class UserRegister extends StatefulWidget {
   const UserRegister({Key? key}) : super(key: key);
@@ -24,15 +23,20 @@ class _UserRegisterState extends State<UserRegister> {
 
   Future<void> _registerUser() async {
     if (_formKey.currentState!.validate()) {
-      await UserController.signUpUser(
-          _nameController.text,
-          _phoneController.text,
-          _emailController.text,
-          _pwController.text,
-          _pwConfirmationController.text);
-      Token loggedToken = await UserController.loginUser(
-          _emailController.text, _pwController.text);
-      Get.offAndToNamed(Routes.statusRoute);
+      try {
+        await UserController.signUpUser(
+            _nameController.text,
+            _phoneController.text,
+            _emailController.text,
+            _pwController.text,
+            _pwConfirmationController.text);
+        await UserController.loginUser(
+            _emailController.text, _pwController.text);
+        Get.offAndToNamed(Routes.statusRoute);
+      } on Exception catch (e) {
+        Get.snackbar("Erro!", e.toString(),
+            duration: const Duration(seconds: 5));
+      }
     }
   }
 

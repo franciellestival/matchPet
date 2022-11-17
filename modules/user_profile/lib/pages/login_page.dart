@@ -1,6 +1,5 @@
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/export_theme.dart';
@@ -176,32 +175,14 @@ class _UserLoginState extends State<UserLogin> {
   }
 
   Future<void> _signIn() async {
-    if (_formKey.currentState!.validate()) {
-      Token loggedToken = await UserController.loginUser(
-          _emailLoginController.text, _passwordLoginController.text);
-      Get.offAndToNamed(Routes.statusRoute, arguments: loggedToken);
+    try {
+      if (_formKey.currentState!.validate()) {
+        Token loggedToken = await UserController.loginUser(
+            _emailLoginController.text, _passwordLoginController.text);
+        Get.offAndToNamed(Routes.statusRoute, arguments: loggedToken);
+      }
+    } on Exception catch (e) {
+      Get.snackbar("Erro!", e.toString(), duration: const Duration(seconds: 5));
     }
   }
-
-  // Future<User?> signIn() async {
-  //   if (_formKey.currentState!.validate()) {
-  //     try {
-  //       User user = User(
-  //           email: _emailLoginController.text,
-  //           password: _passwordLoginController.text);
-  //       User? userSignedIn = await APIUserServices().loginUser(user);
-
-  //       if (userSignedIn != null) {
-  //         log("Token: ${userSignedIn.token}");
-  //         Get.offAndToNamed(Routes.statusRoute, arguments: userSignedIn);
-  //       }
-  //       return userSignedIn;
-  //     } catch (e) {
-  //       ScaffoldMessenger.of(context)
-  //           .showSnackBar(SnackBar(content: Text(e.toString())));
-  //       log(e.toString());
-  //     }
-  //   }
-  //   return null;
-  // }
 }

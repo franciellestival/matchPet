@@ -9,10 +9,6 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-  get_it: ^7.2.0
-
   #Modules
   matchpet:
     path: ../../app
@@ -20,6 +16,15 @@ dependencies:
     path: ../user_profile
   theme:
     path: ../theme
+  api_services:
+    path: ../api_services
+
+  flutter:
+    sdk: flutter
+  get: ^4.6.5
+  geolocator: ^9.0.2
+  geocoding: ^2.0.5
+
 
 dev_dependencies:
   flutter_test:

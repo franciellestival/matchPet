@@ -26,4 +26,10 @@ class User {
         "phone": phone,
         "location": location?.toJson()
       };
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return toJson().toString();
+  }
 }
