@@ -48,7 +48,7 @@ class _PetProfilePageState extends State<PetProfilePage> {
       child: Wrap(
         runSpacing: 22,
         children: <Widget>[
-          ImageInput(ontapIcon: () {}, placeHolderPath: AppSvgs.pawIcon),
+          ImageInput(placeHolderPath: AppSvgs.pawIcon),
           const Text(
             'Informações Gerais',
             style: TextStyle(fontSize: 16),

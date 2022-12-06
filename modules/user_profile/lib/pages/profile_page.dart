@@ -55,7 +55,6 @@ class _ProfilePage extends State<ProfilePage> {
                         children: <Widget>[
                           Center(
                               child: ImageInput(
-                                  ontapIcon: () {},
                                   placeHolderPath: AppSvgs.userIcon)),
                           const SizedBox(height: 20),
                           const Text(

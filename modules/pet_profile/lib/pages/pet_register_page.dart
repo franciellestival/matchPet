@@ -27,6 +27,8 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
   final _weightController = TextEditingController();
   final _descriptionController = TextEditingController();
 
+  final ImageController _imageController = Get.put(ImageController());
+
   //DropDown menu and values set up
   final List<String> gender = ['Macho', 'Fêmea'];
   Rx<String> genderCurrentValue = ''.obs;
@@ -47,7 +49,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
       child: Wrap(
         runSpacing: 22,
         children: <Widget>[
-          ImageInput(ontapIcon: () {}, placeHolderPath: AppSvgs.pawIcon),
+          ImageInput(placeHolderPath: AppSvgs.pawIcon),
           const Text(
             'Informações Gerais',
             style: TextStyle(fontSize: 16),
