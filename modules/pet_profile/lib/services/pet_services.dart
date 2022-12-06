@@ -14,7 +14,10 @@ class PetServices {
 
   Future<Response> createPet(NewPet pet) async {
     token = getx.Get.find(tag: "userToken");
-    var formData = FormData.fromMap(pet.toJson());
+    var formData = FormData.fromMap({
+      ...pet.toJson(),
+      "photo": await MultipartFile.fromFile(pet.photo!, filename: pet.name)
+    });
     try {
       final response = await petApi.post(_petEndpoint,
           data: formData,

@@ -27,7 +27,8 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
   final _weightController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  final ImageController _imageController = Get.put(ImageController());
+  final ImageController _imageController =
+      Get.put<ImageController>(ImageController());
 
   //DropDown menu and values set up
   final List<String> gender = ['Macho', 'Fêmea'];
@@ -223,17 +224,21 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
         specialNeeds: specialNeedsCurrentValue.value.contains('Não') ? 0 : 1,
         lat: 0.0,
         lng: 0.0,
-        adress: 'Rua Fake');
+        address: 'Rua Fake',
+        photo: _imageController.imagePath.value);
     return petToRegister;
   }
 
   Future<void> _registerPet() async {
     if (_formKey.currentState!.validate()) {
-      final petToRegister = petInstance();
-      PetController.registerPet(petToRegister);
-      Get.offAndToNamed(Routes.statusRoute);
-    } else {
-      print('deu ruim tio');
+      try {
+        final petToRegister = petInstance();
+        await PetController.registerPet(petToRegister);
+        Get.offAndToNamed(Routes.statusRoute);
+      } on Exception catch (e) {
+        Get.snackbar("Erro!", e.toString(),
+            duration: const Duration(seconds: 5));
+      }
     }
   }
 }

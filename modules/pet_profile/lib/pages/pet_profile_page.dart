@@ -26,6 +26,7 @@ class _PetProfilePageState extends State<PetProfilePage> {
   final _ageController = TextEditingController();
   final _weightController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _imageController = Get.put<ImageController>(ImageController());
   Rx<bool> inputEnabled = Rx<bool>(false);
 
   //DropDown menu and values set up
@@ -252,7 +253,7 @@ class _PetProfilePageState extends State<PetProfilePage> {
         specialNeeds: specialNeedsCurrentValue.value.contains('Não') ? 0 : 1,
         lat: 0.0,
         lng: 0.0,
-        adress: 'Rua Fake');
+        address: 'Rua Fake');
     return petToRegister;
   }
 

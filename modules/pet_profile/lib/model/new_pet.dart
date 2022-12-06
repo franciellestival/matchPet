@@ -12,24 +12,25 @@ class NewPet {
   final int? specialNeeds;
   final double? lat;
   final double? lng;
-  final String? adress;
+  final String? address;
+  final String? photo;
 
-  NewPet({
-    this.name,
-    this.species,
-    this.gender,
-    this.size,
-    this.status,
-    this.breed,
-    this.age,
-    this.weight,
-    this.description,
-    this.neutered,
-    this.specialNeeds,
-    this.lat,
-    this.lng,
-    this.adress,
-  });
+  NewPet(
+      {this.name,
+      this.species,
+      this.gender,
+      this.size,
+      this.status,
+      this.breed,
+      this.age,
+      this.weight,
+      this.description,
+      this.neutered,
+      this.specialNeeds,
+      this.lat,
+      this.lng,
+      this.address,
+      this.photo});
 
   factory NewPet.fromJson(Map<String, dynamic> json) {
     return NewPet(
@@ -46,7 +47,8 @@ class NewPet {
       specialNeeds: json['special_need'],
       lat: json['lat'] as double,
       lng: json['lng'] as double,
-      adress: json['address'] ?? '',
+      address: json['address'] ?? '',
+      photo: json['photo'] ?? '',
     );
   }
 

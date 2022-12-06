@@ -22,6 +22,7 @@ class _ProfilePage extends State<ProfilePage> {
   final _emailController = TextEditingController();
   final _pwController = TextEditingController();
   final _pwConfirmationController = TextEditingController();
+
   Rx<bool> inputEnabled = Rx<bool>(false);
   User user = Get.arguments;
 
@@ -53,9 +54,10 @@ class _ProfilePage extends State<ProfilePage> {
                       child: Wrap(
                         runSpacing: 22,
                         children: <Widget>[
-                          Center(
-                              child: ImageInput(
-                                  placeHolderPath: AppSvgs.userIcon)),
+                          //Usuário não tem foto
+                          // Center(
+                          //     child: ImageInput(
+                          //         placeHolderPath: AppSvgs.userIcon)),
                           const SizedBox(height: 20),
                           const Text(
                             'Informações pessoais',

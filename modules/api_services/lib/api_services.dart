@@ -21,6 +21,7 @@ class APIServices {
       ..interceptors.add(LogInterceptor(
         requestBody: true,
         responseBody: true,
+        error: true,
         // logPrint: ((object) => (debugPrint(object.toString())))
       ));
   }

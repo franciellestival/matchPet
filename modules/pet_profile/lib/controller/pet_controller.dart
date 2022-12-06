@@ -9,7 +9,6 @@ import 'package:pet_profile/widgets/pet_card.dart';
 class PetController {
   static Future<void> registerPet(NewPet pet) async {
     try {
-      // final PetRepository petRepository = Get.find(tag: 'pet_repository');
       final PetRepository petRepository = Get.find();
       await petRepository.addNewPetRequested(pet);
     } catch (e) {
