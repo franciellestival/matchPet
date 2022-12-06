@@ -17,5 +17,8 @@ export 'widgets/section_divider.dart';
 export 'layout/app_assets.dart';
 export 'layout/app_config.dart';
 
+//Image Controller
+export 'controllers/image_controller.dart';
+
 //Theme Data
 export 'layout/theme_data.dart';
