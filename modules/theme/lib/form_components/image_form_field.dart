@@ -8,6 +8,7 @@ import '../export_theme.dart';
 
 class ImageInput extends StatelessWidget {
   final String placeHolderPath;
+
   File? pickedFile;
   ImagePicker imagePicker = ImagePicker();
 
@@ -124,7 +125,7 @@ class ImageInput extends StatelessWidget {
               ],
             ),
             onTap: () {
-              takePhoto(ImageSource.gallery);
+              getPhoto(ImageSource.gallery);
             },
           ),
           const SizedBox(width: 80),
@@ -143,7 +144,7 @@ class ImageInput extends StatelessWidget {
               ],
             ),
             onTap: () {
-              takePhoto(ImageSource.camera);
+              getPhoto(ImageSource.camera);
             },
           )
         ])
@@ -151,7 +152,7 @@ class ImageInput extends StatelessWidget {
     );
   }
 
-  Future<void> takePhoto(ImageSource source) async {
+  Future<void> getPhoto(ImageSource source) async {
     final pickedImage =
         await imagePicker.pickImage(source: source, imageQuality: 100);
 
