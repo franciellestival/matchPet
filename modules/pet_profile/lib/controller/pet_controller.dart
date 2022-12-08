@@ -1,8 +1,8 @@
 import 'dart:core';
 
 import 'package:get/get.dart';
-import 'package:pet_profile/model/new_pet.dart';
-import 'package:pet_profile/model/pet_profile.dart';
+import 'package:pet_profile/models/new_pet.dart';
+import 'package:pet_profile/models/pet_profile.dart';
 import 'package:pet_profile/repository/pet_repository.dart';
 import 'package:pet_profile/widgets/pet_card.dart';
 

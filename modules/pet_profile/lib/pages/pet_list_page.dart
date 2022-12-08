@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
-import 'package:pet_profile/model/pet_profile.dart';
+import 'package:pet_profile/models/pet_profile.dart';
 
 import 'package:pet_profile/widgets/pet_card.dart';
 import 'package:pet_profile/widgets/pet_list.dart';

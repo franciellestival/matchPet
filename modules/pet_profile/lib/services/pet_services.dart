@@ -1,6 +1,6 @@
 import 'package:api_services/api_services.dart';
 import 'package:get/get.dart' as getx;
-import 'package:pet_profile/model/new_pet.dart';
+import 'package:pet_profile/models/new_pet.dart';
 import 'package:user_profile/model/token.dart';
 
 class PetServices {
@@ -28,7 +28,7 @@ class PetServices {
     }
   }
 
-  Future<Response?> getPetById() async {
+  Future<Response?> getPetById(int id) async {
     return null;
   }
 
@@ -46,7 +46,54 @@ class PetServices {
     return null;
   }
 
-  Future<Response?> deletePet() async {
-    return null;
+  Future<Response?> deletePet(int id) async {
+    try {
+      final Token token = getx.Get.find(tag: "userToken");
+      final Response response = await petApi.delete("$_petEndpoint/$id",
+          options: Options(headers: {"Authorization": token.token.toString()}));
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> getSpecies() async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      return await petApi.get("species",
+          options: Options(headers: {"Authorization": token.token}));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> getSizes() async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      return await petApi.get("sizes",
+          options: Options(headers: {"Authorization": token.token}));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> getGenders() async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      return await petApi.get("genders",
+          options: Options(headers: {"Authorization": token.token}));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> getStatus() async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      return await petApi.get("status",
+          options: Options(headers: {"Authorization": token.token}));
+    } catch (e) {
+      rethrow;
+    }
   }
 }

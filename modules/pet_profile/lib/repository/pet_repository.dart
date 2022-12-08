@@ -1,6 +1,10 @@
 import 'package:api_services/api_services.dart';
-import 'package:pet_profile/model/new_pet.dart';
-import 'package:pet_profile/model/pet_profile.dart';
+import 'package:pet_profile/models/new_pet.dart';
+import 'package:pet_profile/models/pet_gender.dart';
+import 'package:pet_profile/models/pet_profile.dart';
+import 'package:pet_profile/models/pet_size.dart';
+import 'package:pet_profile/models/pet_specie.dart';
+import 'package:pet_profile/models/pet_status.dart';
 import 'package:pet_profile/services/pet_services.dart';
 
 class PetRepository {
@@ -15,13 +19,20 @@ class PetRepository {
           .map((e) => PetProfile.fromJson(e))
           .toList();
     } on DioError catch (e) {
-      final erro = APIExceptions.fromDioError(e);
-      throw erro;
+      final error = APIExceptions.fromDioError(e);
+      throw error;
     }
   }
 
   Future<PetProfile?> getPetByID(int id) async {
-    return null;
+    try {
+      final response = await petAPIServices.getPetById(id);
+      final pet = response?.data as PetProfile;
+      return pet;
+    } on DioError catch (e) {
+      final error = APIExceptions.fromDioError(e);
+      throw error;
+    }
   }
 
   Future<String> addNewPetRequested(NewPet pet) async {
@@ -34,5 +45,62 @@ class PetRepository {
     }
   }
 
-  Future<void> deletePetRequested(int id) async {}
+  Future<void> deletePetRequested(int id) async {
+    try {
+      await petAPIServices.deletePet(id);
+    } on DioError catch (e) {
+      final error = APIExceptions.fromDioError(e);
+      throw error;
+    }
+  }
+
+  // Requests dos atributos de filtro
+  //
+  Future<List<PetSpecie>?> getSpecies() async {
+    try {
+      final response = await petAPIServices.getSpecies();
+      final species =
+          (response?.data as List).map((e) => PetSpecie.fromJson(e)).toList();
+      return species;
+    } on DioError catch (e) {
+      final error = APIExceptions.fromDioError(e);
+      throw error;
+    }
+  }
+
+  Future<List<PetSize>?> getSizes() async {
+    try {
+      final response = await petAPIServices.getSizes();
+      final sizes =
+          (response?.data as List).map((e) => PetSize.fromJson(e)).toList();
+      return sizes;
+    } on DioError catch (e) {
+      final error = APIExceptions.fromDioError(e);
+      throw error;
+    }
+  }
+
+  Future<List<PetGender>?> getGenders() async {
+    try {
+      final response = await petAPIServices.getGenders();
+      final genders =
+          (response?.data as List).map((e) => PetGender.fromJson(e)).toList();
+      return genders;
+    } on DioError catch (e) {
+      final error = APIExceptions.fromDioError(e);
+      throw error;
+    }
+  }
+
+  Future<List<PetStatus>?> getStatus() async {
+    try {
+      final response = await petAPIServices.getStatus();
+      final status =
+          (response?.data as List).map((e) => PetStatus.fromJson(e)).toList();
+      return status;
+    } on DioError catch (e) {
+      final error = APIExceptions.fromDioError(e);
+      throw error;
+    }
+  }
 }
