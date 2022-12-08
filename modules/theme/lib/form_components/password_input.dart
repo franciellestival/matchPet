@@ -68,10 +68,13 @@ class _FormInputBoxPasswordState extends State<FormInputBoxPassword> {
                         Radius.circular(AppRadius.buttonRadius)),
                     borderSide: const BorderSide(color: AppColors.buttonColor),
                   ),
-                  hintText: widget.hintText,
-                  hintStyle: TextStyle(
-                    color: AppColors.hintTextColor,
-                  ),
+                  // hintText: widget.hintText,
+                  // hintStyle: TextStyle(
+                  //   color: AppColors.hintTextColor,
+                  // ),
+                  label: Text.rich(TextSpan(children: <InlineSpan>[
+                    WidgetSpan(child: Text(widget.hintText))
+                  ])),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _passwordVisible

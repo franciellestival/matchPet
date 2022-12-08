@@ -59,41 +59,41 @@ class _PetProfilePageState extends State<PetProfilePage> {
             controller: _nameController,
           ),
           FormDropDownInput(
-            child: buildDropDownItem(
+            child: DropDownItem(
               currentValue: speciesCurrentValue,
               items: species,
               hintText: 'Espécie',
             ),
           ),
           FormDropDownInput(
-            child: buildDropDownItem(
+            child: DropDownItem(
               currentValue: genderCurrentValue,
               items: gender,
               hintText: 'Sexo',
             ),
           ),
           FormDropDownInput(
-            child: buildDropDownItem(
+            child: DropDownItem(
               currentValue: sizeCurrentValue,
               items: size,
               hintText: 'Porte',
             ),
           ),
           FormDropDownInput(
-            child: buildDropDownItem(
+            child: DropDownItem(
                 currentValue: statusCurrentValue,
                 items: status,
                 hintText: 'Status'),
           ),
           FormDropDownInput(
-            child: buildDropDownItem(
+            child: DropDownItem(
               currentValue: neuteredCurrentValue,
               items: neutered,
               hintText: 'Castrado(a)?',
             ),
           ),
           FormDropDownInput(
-            child: buildDropDownItem(
+            child: DropDownItem(
               currentValue: specialNeedsCurrentValue,
               items: specialNeeds,
               hintText: 'Necessidades Especiais?',
@@ -175,26 +175,6 @@ class _PetProfilePageState extends State<PetProfilePage> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget buildDropDownItem(
-      {required Rx<String> currentValue,
-      required String hintText,
-      required List<String> items}) {
-    return DropdownButtonFormField(
-      hint: Text(
-        hintText,
-        style: TextStyle(color: Colors.black.withOpacity(0.3)),
-      ),
-      dropdownColor: AppColors.editTextColor,
-      items: items.map((item) {
-        return DropdownMenuItem(
-          value: item,
-          child: Text(item.toString().split('.').last),
-        );
-      }).toList(),
-      onChanged: (newValue) => setState(() => currentValue.value = newValue!),
     );
   }
 

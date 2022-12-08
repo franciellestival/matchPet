@@ -84,7 +84,7 @@ class _UserLoginState extends State<UserLogin> {
                             ),
                             child: FormInputBox(
                               backgroundColor: AppColors.primaryColor,
-                              hintText: 'exemplo@matchpet.com',
+                              hintText: 'E-mail',
                               controller: _emailLoginController,
                               validator: (String? val) {
                                 if (!val!.isValidEmail) {
