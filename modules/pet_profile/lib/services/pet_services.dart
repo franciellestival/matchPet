@@ -79,7 +79,7 @@ class PetServices {
   Future<Response?> getSpecies() async {
     try {
       token = getx.Get.find(tag: "userToken");
-      return await petApi.get("species",
+      return await petApi.get("/species",
           options: Options(headers: {"Authorization": token.token}));
     } catch (e) {
       rethrow;
@@ -89,7 +89,7 @@ class PetServices {
   Future<Response?> getSizes() async {
     try {
       token = getx.Get.find(tag: "userToken");
-      return await petApi.get("sizes",
+      return await petApi.get("/sizes",
           options: Options(headers: {"Authorization": token.token}));
     } catch (e) {
       rethrow;
@@ -99,7 +99,7 @@ class PetServices {
   Future<Response?> getGenders() async {
     try {
       token = getx.Get.find(tag: "userToken");
-      return await petApi.get("genders",
+      return await petApi.get("/genders",
           options: Options(headers: {"Authorization": token.token}));
     } catch (e) {
       rethrow;
@@ -109,7 +109,7 @@ class PetServices {
   Future<Response?> getStatus() async {
     try {
       token = getx.Get.find(tag: "userToken");
-      return await petApi.get("status",
+      return await petApi.get("/status",
           options: Options(headers: {"Authorization": token.token}));
     } catch (e) {
       rethrow;
@@ -119,8 +119,9 @@ class PetServices {
   Future<Response?> filterPets(Map<String, String> filters) async {
     try {
       token = getx.Get.find(tag: "userToken");
-      final Response response =
-          await petApi.get(_petEndpoint, queryParameters: filters);
+      final Response response = await petApi.get(_petEndpoint,
+          queryParameters: filters,
+          options: Options(headers: {"Authorization": token.token}));
       return response;
     } catch (e) {
       rethrow;
