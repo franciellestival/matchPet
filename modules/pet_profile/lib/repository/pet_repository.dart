@@ -45,6 +45,16 @@ class PetRepository {
     }
   }
 
+  Future<String> updatePetRequested(int id, NewPet pet) async {
+    try {
+      final response = await petAPIServices.updatePet(id, pet);
+      return response!.data["message"].toString();
+    } on DioError catch (e) {
+      final error = APIExceptions.fromDioError(e);
+      throw error;
+    }
+  }
+
   Future<void> deletePetRequested(int id) async {
     try {
       await petAPIServices.deletePet(id);
@@ -98,6 +108,18 @@ class PetRepository {
       final status =
           (response?.data as List).map((e) => PetStatus.fromJson(e)).toList();
       return status;
+    } on DioError catch (e) {
+      final error = APIExceptions.fromDioError(e);
+      throw error;
+    }
+  }
+
+  Future<List<PetProfile>?> getFilteredPets(Map<String, String> filters) async {
+    try {
+      final response = await petAPIServices.filterPets(filters);
+      final list =
+          (response?.data as List).map((e) => PetProfile.fromJson(e)).toList();
+      return list;
     } on DioError catch (e) {
       final error = APIExceptions.fromDioError(e);
       throw error;

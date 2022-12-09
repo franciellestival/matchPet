@@ -29,7 +29,14 @@ class PetServices {
   }
 
   Future<Response?> getPetById(int id) async {
-    return null;
+    try {
+      token = getx.Get.find(tag: "userToken");
+      final Response response = await petApi.get("$_petEndpoint/$id",
+          options: Options(headers: {"Authorization": token.token}));
+      return response;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<Response> getAllPets() async {
@@ -42,13 +49,25 @@ class PetServices {
     }
   }
 
-  Future<Response?> updatePet() async {
-    return null;
+  Future<Response?> updatePet(int id, NewPet pet) async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      var formData = FormData.fromMap({
+        ...pet.toJson(),
+        "photo": await MultipartFile.fromFile(pet.photo!, filename: pet.name)
+      });
+      final Response response = await petApi.put("$_petEndpoint/$id",
+          data: formData,
+          options: Options(headers: {"Authorization": token.token}));
+      return response;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<Response?> deletePet(int id) async {
     try {
-      final Token token = getx.Get.find(tag: "userToken");
+      token = getx.Get.find(tag: "userToken");
       final Response response = await petApi.delete("$_petEndpoint/$id",
           options: Options(headers: {"Authorization": token.token.toString()}));
       return response;
@@ -92,6 +111,17 @@ class PetServices {
       token = getx.Get.find(tag: "userToken");
       return await petApi.get("status",
           options: Options(headers: {"Authorization": token.token}));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> filterPets(Map<String, String> filters) async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      final Response response =
+          await petApi.get(_petEndpoint, queryParameters: filters);
+      return response;
     } catch (e) {
       rethrow;
     }
