@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:api_services/api_services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pet_profile/model/new_pet.dart';
-import 'package:pet_profile/model/pet_profile.dart';
+import 'package:pet_profile/models/new_pet.dart';
+import 'package:pet_profile/models/pet_profile.dart';
 
 import 'pet_data.dart';
 

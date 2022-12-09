@@ -1,6 +1,6 @@
 import 'package:api_services/api_services.dart';
 import 'package:get/get.dart' as getx;
-import 'package:pet_profile/model/new_pet.dart';
+import 'package:pet_profile/models/new_pet.dart';
 import 'package:user_profile/model/token.dart';
 
 class PetServices {
@@ -28,8 +28,15 @@ class PetServices {
     }
   }
 
-  Future<Response?> getPetById() async {
-    return null;
+  Future<Response?> getPetById(int id) async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      final Response response = await petApi.get("$_petEndpoint/$id",
+          options: Options(headers: {"Authorization": token.token}));
+      return response;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<Response> getAllPets() async {
@@ -42,11 +49,82 @@ class PetServices {
     }
   }
 
-  Future<Response?> updatePet() async {
-    return null;
+  Future<Response?> updatePet(int id, NewPet pet) async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      var formData = FormData.fromMap({
+        ...pet.toJson(),
+        "photo": await MultipartFile.fromFile(pet.photo!, filename: pet.name)
+      });
+      final Response response = await petApi.put("$_petEndpoint/$id",
+          data: formData,
+          options: Options(headers: {"Authorization": token.token}));
+      return response;
+    } catch (e) {
+      rethrow;
+    }
   }
 
-  Future<Response?> deletePet() async {
-    return null;
+  Future<Response?> deletePet(int id) async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      final Response response = await petApi.delete("$_petEndpoint/$id",
+          options: Options(headers: {"Authorization": token.token.toString()}));
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> getSpecies() async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      return await petApi.get("/species",
+          options: Options(headers: {"Authorization": token.token}));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> getSizes() async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      return await petApi.get("/sizes",
+          options: Options(headers: {"Authorization": token.token}));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> getGenders() async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      return await petApi.get("/genders",
+          options: Options(headers: {"Authorization": token.token}));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> getStatus() async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      return await petApi.get("/status",
+          options: Options(headers: {"Authorization": token.token}));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> filterPets(Map<String, String> filters) async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      final Response response = await petApi.get(_petEndpoint,
+          queryParameters: filters,
+          options: Options(headers: {"Authorization": token.token}));
+      return response;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
-import 'package:pet_profile/model/new_pet.dart';
+import 'package:pet_profile/models/new_pet.dart';
 
 import 'package:theme/export_theme.dart';
 
