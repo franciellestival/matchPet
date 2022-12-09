@@ -12,6 +12,7 @@ class FormInputBox extends StatelessWidget {
     this.validator,
     Color? backgroundColor,
     Color? textColor,
+    this.suffixIcon = null,
     this.horizontalAxisAlignment = MainAxisAlignment.start,
     EdgeInsets? padding,
     double? borderRadius,
@@ -34,6 +35,7 @@ class FormInputBox extends StatelessWidget {
   final String? Function(String?)? validator;
   final bool? enable;
   final TextInputType? textInputType;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +54,7 @@ class FormInputBox extends StatelessWidget {
               enabled: enable ?? true,
               cursorColor: AppColors.buttonColor,
               decoration: InputDecoration(
+                suffixIcon: suffixIcon,
                 border: InputBorder.none,
                 errorBorder: OutlineInputBorder(
                   borderRadius:
