@@ -12,7 +12,7 @@ class FormInputBox extends StatelessWidget {
     this.validator,
     Color? backgroundColor,
     Color? textColor,
-    this.suffixIcon = null,
+    this.suffixIcon,
     this.horizontalAxisAlignment = MainAxisAlignment.start,
     EdgeInsets? padding,
     double? borderRadius,

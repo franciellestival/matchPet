@@ -1,8 +1,7 @@
 library api_services;
 
-// import 'package:api_services/endpoints.dart';
-
 import 'package:dio/dio.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 export './api_exceptions.dart';
 export 'package:dio/dio.dart';
@@ -18,11 +17,14 @@ class APIServices {
       ..options.connectTimeout = Endpoints.connectTimeout
       ..options.receiveTimeout = Endpoints.receiveTimeout
       ..options.responseType = ResponseType.json
-      ..interceptors.add(LogInterceptor(
+      ..interceptors.add(PrettyDioLogger(
+        compact: true,
+        request: true,
+        requestHeader: true,
         requestBody: true,
+        responseHeader: true,
         responseBody: true,
         error: true,
-        // logPrint: ((object) => (debugPrint(object.toString())))
       ));
   }
 

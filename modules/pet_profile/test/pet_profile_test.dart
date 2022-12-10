@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:api_services/api_services.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pet_profile/models/new_pet.dart';
 import 'package:pet_profile/models/pet_profile.dart';
@@ -43,6 +44,8 @@ void main() {
           "Authorization":
               "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyNX0.TJHjHaL_8mqEHecpBX3XXAQxSCQi_Gu_naWdXdU5UT0"
         }));
+
+    debugPrint(response.toString());
   });
 
   test('Pet Profile parsing', () {
@@ -57,6 +60,6 @@ void main() {
           "Authorization":
               "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyNX0.TJHjHaL_8mqEHecpBX3XXAQxSCQi_Gu_naWdXdU5UT0"
         }));
-    print(response.statusCode);
+    debugPrint(response.statusCode.toString());
   });
 }
