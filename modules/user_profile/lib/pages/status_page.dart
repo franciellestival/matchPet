@@ -67,6 +67,12 @@ class StatusPage extends StatelessWidget {
                             {Get.toNamed(Routes.userProfile, arguments: user)},
                         text: 'Ver meu Perfil'),
                   ),
+                  const SizedBox(height: 30),
+                  Center(
+                    child: PrimaryButton(
+                        onTap: () => {Get.toNamed(Routes.petDetailPage)},
+                        text: 'Detalhe do Pet'),
+                  ),
                 ],
               );
             }),
