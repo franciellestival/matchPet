@@ -1,37 +1,30 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/foundation.dart';
+import 'package:pet_profile/models/pet_gender.dart';
+import 'package:pet_profile/models/pet_size.dart';
+import 'package:pet_profile/models/pet_specie.dart';
+import 'package:pet_profile/models/pet_status.dart';
 import 'package:user_profile/model/user.dart';
-import 'package:user_profile/model/user_location.dart';
-
-enum Gender { male, female }
-
-enum Size { small, medium, big }
-
-enum Species { dog, cat, other }
-
-enum Status { registered, available, adopted, missing, adoptionProcess }
 
 class PetProfile {
   int? id;
   String? name;
-  Species? species;
-  Gender? gender;
-  Size? size;
-  Status? status;
+  PetSpecie? specie;
+  PetGender? gender;
+  PetSize? size;
+  PetStatus? status;
   String? breed;
   int? age;
   double? weight;
   String? description;
-  int? neutered;
-  int? specialNeeds;
+  bool? neutered;
+  bool? specialNeeds;
   String? photoUrl;
   User? owner;
-  UserLocation? location;
 
   PetProfile({
     this.id,
     this.name,
-    this.species,
+    this.specie,
     this.gender,
     this.size,
     this.status,
@@ -43,7 +36,6 @@ class PetProfile {
     this.specialNeeds,
     this.photoUrl,
     this.owner,
-    this.location,
   });
 
   PetProfile.empty();
@@ -51,30 +43,27 @@ class PetProfile {
   factory PetProfile.fromJson(Map<String, dynamic> json) => PetProfile(
         id: json['id'],
         name: json['name'],
-        species: Species.values
-            .firstWhere((e) => describeEnum(e) == json['species']),
-        gender:
-            Gender.values.firstWhere((e) => describeEnum(e) == json['gender']),
-        size: Size.values.firstWhere((e) => describeEnum(e) == json['size']),
-        status:
-            Status.values.firstWhere((e) => describeEnum(e) == json['status']),
+        specie: PetSpecie.fromJson(json['specie']),
+        gender: PetGender.fromJson(json['gender']),
+        size: PetSize.fromJson(json['size']),
+        status: PetStatus.fromJson(json['status']),
         breed: json['breed'],
         age: json['age'],
         weight: json['weight'],
         description: json['description'],
-        neutered: json['neutered'],
-        specialNeeds: json['special_need'],
+        neutered: (json['neutered'] as int) == 0 ? false : true,
+        specialNeeds: (json['special_need'] as int) == 0 ? false : true,
         photoUrl: json['photoUrl'],
-        //owner: User.fromJson(json['owner']),
+        owner: User.fromJson(json['owner']),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "species": species.toString().split('.').last,
-        "gender": gender.toString().split('.').last,
-        "size": size.toString().split('.').last,
-        "status": status.toString().split('.').last,
+        "specie": specie!.toJson(),
+        "gender": gender!.toJson(),
+        "size": size!.toJson(),
+        "status": status!.toJson(),
         "breed": breed,
         "age": age,
         "weight": weight,
@@ -82,6 +71,11 @@ class PetProfile {
         "neutered": neutered,
         "specialNeeds": specialNeeds,
         "photoUrl": photoUrl,
-        //"owner": owner?.toJson(),
+        "owner": owner!.toJson(),
       };
+
+  @override
+  String toString() {
+    return 'PetProfile(id: $id, name: $name, specie: $specie, gender: $gender, size: $size, status: $status, breed: $breed, age: $age, weight: $weight, description: $description, neutered: $neutered, specialNeeds: $specialNeeds, photoUrl: $photoUrl, owner: $owner)';
+  }
 }
