@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../export_theme.dart';
 
 class ImageInput extends StatelessWidget {
   final String placeHolderPath;
 
-  File? pickedFile;
+  XFile? pickedFile;
   ImagePicker imagePicker = ImagePicker();
 
   ImageController imageController = Get.find();
@@ -124,8 +125,10 @@ class ImageInput extends StatelessWidget {
                 )
               ],
             ),
-            onTap: () {
-              getPhoto(ImageSource.gallery);
+            onTap: () async {
+              if (await requestGalleryPermission()) {
+                getPhoto(ImageSource.gallery);
+              }
             },
           ),
           const SizedBox(width: 80),
@@ -143,8 +146,10 @@ class ImageInput extends StatelessWidget {
                 )
               ],
             ),
-            onTap: () {
-              getPhoto(ImageSource.camera);
+            onTap: () async {
+              if (await requestCameraPermission()) {
+                getPhoto(ImageSource.camera);
+              }
             },
           )
         ])
@@ -157,10 +162,37 @@ class ImageInput extends StatelessWidget {
         await imagePicker.pickImage(source: source, imageQuality: 100);
 
     if (pickedImage != null) {
-      pickedFile = File(pickedImage.path);
+      pickedFile = XFile(pickedImage.path);
       imageController.setImagePath(pickedFile!.path);
     }
 
     Get.back();
+  }
+
+  Future<bool> requestGalleryPermission() async {
+    var permission = Platform.isIOS ? Permission.photos : Permission.storage;
+
+    var status = await permission.status;
+
+    if (!status.isGranted) {
+      if (await permission.request().isGranted) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  Future<bool> requestCameraPermission() async {
+    var status = await Permission.camera.status;
+    if (!status.isGranted) {
+      if (await Permission.camera.request().isGranted) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return true;
   }
 }

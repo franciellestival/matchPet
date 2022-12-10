@@ -110,7 +110,7 @@ class PetCard extends StatelessWidget {
           width: 10,
         ),
         Text(
-          ' ${pet.location?.address}' ?? 'Cidade Ficticia.',
+          ' ${pet.location?.address}',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
@@ -123,7 +123,7 @@ class PetCard extends StatelessWidget {
         ),
         const WidthSpacer(width: 12),
         Text(
-          pet.age.toString() ?? "0",
+          pet.age.toString(),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(

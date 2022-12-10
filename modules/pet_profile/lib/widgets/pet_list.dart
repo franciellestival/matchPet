@@ -7,7 +7,8 @@ class PetList extends StatelessWidget {
   final List<Widget> children;
   final String? titleCallToAction;
 
-  const PetList({required this.children, this.title, this.titleCallToAction});
+  const PetList(
+      {super.key, required this.children, this.title, this.titleCallToAction});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class PetList extends StatelessWidget {
           Column(
             children: [
               GridView.count(
-                padding: EdgeInsets.only(top: 16),
+                padding: const EdgeInsets.only(top: 16),
                 crossAxisSpacing: 4,
                 crossAxisCount: 2,
                 mainAxisSpacing: 2,

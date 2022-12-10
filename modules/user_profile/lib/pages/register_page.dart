@@ -63,9 +63,9 @@ class _UserRegisterState extends State<UserRegister> {
                     child: Wrap(
                       runSpacing: 22,
                       children: <Widget>[
-                        Center(
-                            child:
-                                ImageInput(placeHolderPath: AppSvgs.userIcon)),
+                        // Center(
+                        //     child:
+                        //         ImageInput(placeHolderPath: AppSvgs.userIcon)),
                         const SizedBox(height: 20),
                         const Text(
                           'Informações pessoais',

@@ -7,6 +7,7 @@ class SectionDivider extends StatelessWidget {
   final bool showCallToAction;
 
   const SectionDivider({
+    super.key,
     this.title,
     this.onTapCallToAction,
     this.showCallToAction = true,
