@@ -15,11 +15,20 @@ class AppSvgs {
   static String get notSeenIcon => 'assets/icons/notSeenIcon.svg';
   static String get pawIcon => 'assets/icons/pawIcon.svg';
   static String get plusIcon => 'assets/icons/plusIcon.svg';
-  static String get searchIcon => 'assets/icons/searchIcon.svg';
+  static String get searchIcon => 'assets/icons/search.svg';
   static String get seenIcon => 'assets/icons/seenIcon.svg';
   static String get userIcon => 'assets/icons/userIcon.svg';
   static String get vaccineIcon => 'assets/icons/vaccineIcon.svg';
   static String get zapIcon => 'assets/icons/zapIcon.svg';
+  static String get filterIcon => 'assets/icons/filter.svg';
+  static String get femaleIcon => 'assets/icons/femaleIcon.svg';
+  static String get catIcon => 'assets/icons/catIcon.svg';
+  static String get dogIcon => 'assets/icons/dogIcon.svg';
+  static String get sizeP => 'assets/icons/letra-p.svg';
+  static String get sizeM => 'assets/icons/letra-m.svg';
+  static String get sizeG => 'assets/icons/letra-g.svg';
+  static String get check => 'assets/icons/check.svg';
+  static String get close => 'assets/icons/close.svg';
 }
 
 class AppImages {
