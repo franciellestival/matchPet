@@ -29,6 +29,7 @@ class AppSvgs {
   static String get sizeG => 'assets/icons/letra-g.svg';
   static String get check => 'assets/icons/check.svg';
   static String get close => 'assets/icons/close.svg';
+  static String get animalsIcon => 'assets/icons/livestock.svg';
 }
 
 class AppImages {

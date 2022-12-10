@@ -87,7 +87,7 @@ class _PetListPageState extends State<PetListPage> {
           decoration: const BoxDecoration(
             color: Colors.transparent,
           ),
-          height: MediaQuery.of(context).size.height * 0.75,
+          height: MediaQuery.of(context).size.height * 0.85,
           child: Wrap(
             children: _buildFilters(),
           ),
@@ -114,31 +114,36 @@ class _PetListPageState extends State<PetListPage> {
   }
 
   Widget _buildFilterButton(
-      {required String icon, required Function() onpressed}) {
+      {required String icon, required Function() onpressed, String? label}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Ink(
-        decoration: ShapeDecoration(
-            shadows: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: const Offset(0, 3), // changes position of shadow
+      child: Column(
+        children: [
+          Ink(
+            decoration: ShapeDecoration(
+                shadows: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                color: AppColors.primaryColor),
+            child: IconButton(
+              icon: SvgPicture.asset(
+                icon,
+                height: 70,
+                width: 70,
               ),
-            ],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              onPressed: onpressed,
             ),
-            color: AppColors.primaryColor),
-        child: IconButton(
-          icon: SvgPicture.asset(
-            icon,
-            height: 70,
-            width: 70,
           ),
-          onPressed: onpressed,
-        ),
+          Text(label ?? ''),
+        ],
       ),
     );
   }
@@ -171,18 +176,21 @@ class _PetListPageState extends State<PetListPage> {
             padding: const EdgeInsets.only(left: 30),
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    'Espécie',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+                const Text(
+                  'Espécie',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildFilterButton(icon: AppSvgs.dogIcon, onpressed: () {}),
-                    _buildFilterButton(icon: AppSvgs.catIcon, onpressed: () {}),
+                    _buildFilterButton(
+                        icon: AppSvgs.dogIcon, onpressed: () {}, label: 'Cão'),
+                    _buildFilterButton(
+                        icon: AppSvgs.catIcon, onpressed: () {}, label: 'Gato'),
+                    _buildFilterButton(
+                        icon: AppSvgs.animalsIcon,
+                        onpressed: () {},
+                        label: 'Outro'),
                   ],
                 ),
               ],
@@ -192,20 +200,21 @@ class _PetListPageState extends State<PetListPage> {
             padding: const EdgeInsets.only(right: 20),
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    'Sexo',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+                const Text(
+                  'Sexo',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _buildFilterButton(
-                        icon: AppSvgs.maleIcon, onpressed: () {}),
+                        icon: AppSvgs.maleIcon,
+                        onpressed: () {},
+                        label: 'Macho'),
                     _buildFilterButton(
-                        icon: AppSvgs.femaleIcon, onpressed: () {}),
+                        icon: AppSvgs.femaleIcon,
+                        onpressed: () {},
+                        label: 'Fêmea'),
                   ],
                 ),
               ],
@@ -213,20 +222,19 @@ class _PetListPageState extends State<PetListPage> {
           ),
         ],
       ),
-      const HeightSpacer(height: 30),
-      Column(
-        // ignore: prefer_const_literals_to_create_immutables
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Idade',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          StatefulBuilder(
-            builder: (context, state) {
-              return RangeSlider(
+      StatefulBuilder(
+        builder: (context, state) {
+          return Column(
+            children: [
+              const HeightSpacer(height: 50),
+              const Text(
+                'Idade',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Entre ${_ageStartValue.round().toString()} e  ${_ageEndValue.round().toString()} anos',
+              ),
+              RangeSlider(
                 min: 0.0,
                 max: 10.0,
                 divisions: 10,
@@ -245,10 +253,10 @@ class _PetListPageState extends State<PetListPage> {
                     },
                   );
                 },
-              );
-            },
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
       const HeightSpacer(height: 30),
       Padding(
@@ -265,27 +273,30 @@ class _PetListPageState extends State<PetListPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildFilterButton(icon: AppSvgs.sizeP, onpressed: () {}),
-                _buildFilterButton(icon: AppSvgs.sizeM, onpressed: () {}),
-                _buildFilterButton(icon: AppSvgs.sizeG, onpressed: () {}),
+                _buildFilterButton(
+                    icon: AppSvgs.sizeP, onpressed: () {}, label: 'Pequeno'),
+                _buildFilterButton(
+                    icon: AppSvgs.sizeM, onpressed: () {}, label: 'Médio'),
+                _buildFilterButton(
+                    icon: AppSvgs.sizeG, onpressed: () {}, label: 'Grande'),
               ],
             ),
           ],
         ),
       ),
-      Column(
-        // ignore: prefer_const_literals_to_create_immutables
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Distância',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          StatefulBuilder(
-            builder: (context, state) {
-              return RangeSlider(
+      StatefulBuilder(
+        builder: (context, state) {
+          return Column(
+            children: [
+              const HeightSpacer(height: 50),
+              const Text(
+                'Distância',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Entre ${_distanceStartValue.round().toString()} e  ${_distanceEndValue.round().toString()} km',
+              ),
+              RangeSlider(
                 min: 0.0,
                 max: 100.0,
                 divisions: 10,
@@ -304,26 +315,25 @@ class _PetListPageState extends State<PetListPage> {
                     },
                   );
                 },
-              );
-            },
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
       const HeightSpacer(height: 30),
       Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Necessidades Especiais',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
+          const Text(
+            'Necessidades Especiais',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildFilterButton(icon: AppSvgs.check, onpressed: () {}),
-              _buildFilterButton(icon: AppSvgs.close, onpressed: () {}),
+              _buildFilterButton(
+                  icon: AppSvgs.check, onpressed: () {}, label: 'Sim'),
+              _buildFilterButton(
+                  icon: AppSvgs.close, onpressed: () {}, label: 'Não'),
             ],
           ),
         ],
