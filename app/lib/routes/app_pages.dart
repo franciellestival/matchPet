@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pet_profile/pages/pet_details_page.dart';
 
 import 'package:pet_profile/pages/pet_list_page.dart';
 import 'package:pet_profile/pages/pet_register_page.dart';
@@ -41,6 +42,10 @@ class AppPages {
     GetPage(
       name: Routes.petListPage,
       page: () => PetListPage(),
+    ),
+    GetPage(
+      name: Routes.petDetailPage,
+      page: () => PetDetailPage(),
     ),
   ];
 }
