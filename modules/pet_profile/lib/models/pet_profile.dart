@@ -4,6 +4,7 @@ import 'package:pet_profile/models/pet_size.dart';
 import 'package:pet_profile/models/pet_specie.dart';
 import 'package:pet_profile/models/pet_status.dart';
 import 'package:user_profile/model/user.dart';
+import 'package:user_profile/model/user_location.dart';
 
 class PetProfile {
   int? id;
@@ -19,6 +20,7 @@ class PetProfile {
   bool? neutered;
   bool? specialNeeds;
   String? photoUrl;
+  UserLocation? location;
   User? owner;
 
   PetProfile({
@@ -35,6 +37,7 @@ class PetProfile {
     this.neutered,
     this.specialNeeds,
     this.photoUrl,
+    this.location,
     this.owner,
   });
 
@@ -54,7 +57,8 @@ class PetProfile {
         neutered: (json['neutered'] as int) == 0 ? false : true,
         specialNeeds: (json['special_need'] as int) == 0 ? false : true,
         photoUrl: json['photoUrl'],
-        owner: User.fromJson(json['owner']),
+        location: UserLocation.fromJson(json['location']),
+        owner: User.fromJson(json['user']),
       );
 
   Map<String, dynamic> toJson() => {
@@ -69,13 +73,14 @@ class PetProfile {
         "weight": weight,
         "description": description,
         "neutered": neutered,
-        "specialNeeds": specialNeeds,
+        "special_need": specialNeeds,
         "photoUrl": photoUrl,
-        "owner": owner!.toJson(),
+        "location": location!.toJson(),
+        "user": owner!.toJson(),
       };
 
   @override
   String toString() {
-    return 'PetProfile(id: $id, name: $name, specie: $specie, gender: $gender, size: $size, status: $status, breed: $breed, age: $age, weight: $weight, description: $description, neutered: $neutered, specialNeeds: $specialNeeds, photoUrl: $photoUrl, owner: $owner)';
+    return 'PetProfile(id: $id, name: $name, specie: $specie, gender: $gender, size: $size, status: $status, breed: $breed, age: $age, weight: $weight, description: $description, neutered: $neutered, specialNeeds: $specialNeeds, photoUrl: $photoUrl, location: ${location.toString()}, owner: ${owner.toString()})';
   }
 }

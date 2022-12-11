@@ -76,7 +76,7 @@ class PetServices {
     }
   }
 
-  Future<Response?> getSpecies() async {
+  Future<Response> getSpecies() async {
     try {
       token = getx.Get.find(tag: "userToken");
       return await petApi.get("/species",
@@ -86,7 +86,7 @@ class PetServices {
     }
   }
 
-  Future<Response?> getSizes() async {
+  Future<Response> getSizes() async {
     try {
       token = getx.Get.find(tag: "userToken");
       return await petApi.get("/sizes",
@@ -96,7 +96,7 @@ class PetServices {
     }
   }
 
-  Future<Response?> getGenders() async {
+  Future<Response> getGenders() async {
     try {
       token = getx.Get.find(tag: "userToken");
       return await petApi.get("/genders",
@@ -106,7 +106,7 @@ class PetServices {
     }
   }
 
-  Future<Response?> getStatus() async {
+  Future<Response> getStatus() async {
     try {
       token = getx.Get.find(tag: "userToken");
       return await petApi.get("/status",
@@ -116,7 +116,7 @@ class PetServices {
     }
   }
 
-  Future<Response?> filterPets(Map<String, String> filters) async {
+  Future<Response> filterPets(Map<String, String> filters) async {
     try {
       token = getx.Get.find(tag: "userToken");
       final Response response = await petApi.get(_petEndpoint,

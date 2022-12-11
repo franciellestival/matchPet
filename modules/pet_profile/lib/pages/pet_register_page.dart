@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
-import 'package:pet_profile/models/new_pet.dart';
 
 import 'package:theme/export_theme.dart';
 
@@ -21,7 +20,6 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
 
   //controllers setup
   final _nameController = TextEditingController();
-  final _locationController = TextEditingController();
   final _breedController = TextEditingController();
   final _ageController = TextEditingController();
   final _weightController = TextEditingController();
@@ -30,17 +28,14 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
   final ImageController _imageController =
       Get.put<ImageController>(ImageController());
 
-  //DropDown menu and values set up
-  final List<String> gender = ['Macho', 'Fêmea'];
-  Rx<String> genderCurrentValue = ''.obs;
-  final List<String> size = ['Pequeno', 'Médio', 'Grande'];
-  Rx<String> sizeCurrentValue = ''.obs;
-  final List<String> status = ['Disponível', 'Desaparecido', 'Outro'];
-  Rx<String> statusCurrentValue = ''.obs;
-  final List<String> species = ['Cão', 'Gato', 'Outro'];
   Rx<String> speciesCurrentValue = ''.obs;
+  Rx<String> genderCurrentValue = ''.obs;
+  Rx<String> sizeCurrentValue = ''.obs;
+  Rx<String> statusCurrentValue = ''.obs;
+
   final List<String> neutered = ['Sim', 'Não'];
   Rx<String> neuteredCurrentValue = ''.obs;
+
   final List<String> specialNeeds = ['Sim', 'Não'];
   Rx<String> specialNeedsCurrentValue = ''.obs;
 
@@ -59,32 +54,81 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             hintText: 'Nome',
             controller: _nameController,
           ),
-          FormDropDownInput(
-            child: DropDownItem(
-              currentValue: speciesCurrentValue,
-              items: species,
-              hintText: 'Espécie',
-            ),
+          FutureBuilder<List<String?>>(
+            future: PetController.species(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var data = snapshot.data!;
+                return FormDropDownInput(
+                    child: DropDownItem(
+                  items: data,
+                  currentValue: speciesCurrentValue,
+                  hintText: 'Espécie',
+                ));
+              } else {
+                if (snapshot.hasError) {
+                  Get.snackbar('Error', snapshot.error.toString());
+                }
+                return const CircularProgressIndicator();
+              }
+            },
           ),
-          FormDropDownInput(
-            child: DropDownItem(
-              currentValue: genderCurrentValue,
-              items: gender,
-              hintText: 'Sexo',
-            ),
+          FutureBuilder<List<String?>>(
+            future: PetController.genders(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var data = snapshot.data!;
+                return FormDropDownInput(
+                    child: DropDownItem(
+                  items: data,
+                  currentValue: genderCurrentValue,
+                  hintText: 'Sexo',
+                ));
+              } else {
+                if (snapshot.hasError) {
+                  Get.snackbar('Error', snapshot.error.toString());
+                }
+                return const CircularProgressIndicator();
+              }
+            },
           ),
-          FormDropDownInput(
-            child: DropDownItem(
-              currentValue: sizeCurrentValue,
-              items: size,
-              hintText: 'Porte',
-            ),
+          FutureBuilder<List<String?>>(
+            future: PetController.sizes(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var data = snapshot.data!;
+                return FormDropDownInput(
+                    child: DropDownItem(
+                  items: data,
+                  currentValue: sizeCurrentValue,
+                  hintText: 'Porte',
+                ));
+              } else {
+                if (snapshot.hasError) {
+                  Get.snackbar('Error', snapshot.error.toString());
+                }
+                return const CircularProgressIndicator();
+              }
+            },
           ),
-          FormDropDownInput(
-            child: DropDownItem(
-                currentValue: statusCurrentValue,
-                items: status,
-                hintText: 'Status'),
+          FutureBuilder<List<String?>>(
+            future: PetController.status(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var data = snapshot.data!;
+                return FormDropDownInput(
+                    child: DropDownItem(
+                  items: data,
+                  currentValue: statusCurrentValue,
+                  hintText: 'Status',
+                ));
+              } else {
+                if (snapshot.hasError) {
+                  Get.snackbar('Error', snapshot.error.toString());
+                }
+                return const CircularProgressIndicator();
+              }
+            },
           ),
           FormDropDownInput(
             child: DropDownItem(
@@ -99,10 +143,6 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
               items: specialNeeds,
               hintText: 'Necessidades Especiais?',
             ),
-          ),
-          FormInputBox(
-            hintText: 'Localização',
-            controller: _locationController,
           ),
           FormInputBox(
             hintText: 'Raça',
@@ -149,71 +189,22 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
     );
   }
 
-  NewPet petInstance() {
-    int size = 0;
-    var status = 0;
-    var species = 0;
-
-    switch (sizeCurrentValue.value) {
-      case 'Pequeno':
-        size = 1;
-        break;
-      case 'Médio':
-        size = 2;
-        break;
-      case 'Grande':
-        size = 3;
-        break;
-    }
-
-    switch (sizeCurrentValue.value) {
-      case 'Disponível':
-        status = 2;
-        break;
-      case 'Desaparecido':
-        status = 4;
-        break;
-      default:
-        status = 1;
-        break;
-    }
-
-    switch (speciesCurrentValue.value) {
-      case 'Cão':
-        species = 1;
-        break;
-      case 'Gato':
-        species = 2;
-        break;
-      default:
-        species = 3;
-        break;
-    }
-
-    final petToRegister = NewPet(
-        name: _nameController.text,
-        species: species,
-        gender: genderCurrentValue.value.contains('Macho') ? 1 : 2,
-        size: size,
-        status: status,
-        breed: _breedController.text,
-        age: int.parse(_ageController.text),
-        weight: double.parse(_weightController.text),
-        description: _descriptionController.text,
-        neutered: neuteredCurrentValue.value.contains('Não') ? 0 : 1,
-        specialNeeds: specialNeedsCurrentValue.value.contains('Não') ? 0 : 1,
-        lat: 0.0,
-        lng: 0.0,
-        address: 'Rua Fake',
-        photo: _imageController.imagePath.value);
-    return petToRegister;
-  }
-
   Future<void> _registerPet() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final petToRegister = petInstance();
-        await PetController.registerPet(petToRegister);
+        await PetController.registerPet(
+            _nameController.text,
+            speciesCurrentValue.value,
+            genderCurrentValue.value,
+            sizeCurrentValue.value,
+            statusCurrentValue.value,
+            _breedController.text,
+            int.parse(_ageController.text),
+            double.parse(_weightController.text),
+            _descriptionController.text,
+            neuteredCurrentValue.value == 'Sim' ? true : false,
+            specialNeedsCurrentValue.value == 'Sim' ? true : false,
+            _imageController.imagePath.value);
         Get.offAndToNamed(Routes.statusRoute);
       } on Exception catch (e) {
         Get.snackbar("Erro!", e.toString(),

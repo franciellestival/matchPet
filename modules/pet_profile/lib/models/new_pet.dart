@@ -1,16 +1,20 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class NewPet {
   String? name;
-  String? species;
-  String? gender;
-  String? size;
-  String? status;
+  int? species;
+  int? gender;
+  int? size;
+  int? status;
+  // String? species;
+  // String? gender;
+  // String? size;
+  // String? status;
   String? breed;
   int? age;
   double? weight;
   String? description;
   bool? neutered;
-  bool? specialNeeds;
+  bool? specialNeed;
   double? lat;
   double? lng;
   String? address;
@@ -27,7 +31,7 @@ class NewPet {
       this.weight,
       this.description,
       this.neutered,
-      this.specialNeeds,
+      this.specialNeed,
       this.lat,
       this.lng,
       this.address,
@@ -45,12 +49,13 @@ class NewPet {
         "age": age,
         "weight": weight,
         "description": description,
-        "neutered": neutered,
-        "specialNeeds": specialNeeds,
+        "neutered": neutered! ? 1 : 0,
+        "specialNeeds": specialNeed! ? 1 : 0,
+        "photo": photo,
       };
 
   @override
   String toString() {
-    return 'NewPet(name: $name, species: $species, gender: $gender, size: $size, status: $status, breed: $breed, age: $age, weight: $weight, description: $description, neutered: $neutered, specialNeeds: $specialNeeds, lat: $lat, lng: $lng, address: $address, photo: $photo)';
+    return 'NewPet(name: $name, species: $species, gender: $gender, size: $size, status: $status, breed: $breed, age: $age, weight: $weight, description: $description, neutered: $neutered, specialNeeds: $specialNeed, lat: $lat, lng: $lng, address: $address, photo: $photo)';
   }
 }
