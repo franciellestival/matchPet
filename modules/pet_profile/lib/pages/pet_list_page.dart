@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 
@@ -31,8 +32,13 @@ class _PetListPageState extends State<PetListPage> {
     super.initState();
   }
 
-  Future<List<PetCard>> _getPetsList() async {
-    return await PetController.getAllPets();
+  Future<List<PetCard>?> _getPetsList() async {
+    try {
+      return await PetController.getAllPets();
+    } catch (e) {
+      Get.snackbar('Erro!', e.toString());
+    }
+    return null;
   }
 
   @override

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
-import 'package:pet_profile/models/new_pet.dart';
 
 import 'package:theme/export_theme.dart';
 
@@ -30,16 +29,21 @@ class _PetProfilePageState extends State<PetProfilePage> {
   Rx<bool> inputEnabled = Rx<bool>(false);
 
   //DropDown menu and values set up
-  final List<String> gender = ['Macho', 'Fêmea'];
-  Rx<String> genderCurrentValue = ''.obs;
-  final List<String> size = ['Pequeno', 'Médio', 'Grande'];
-  Rx<String> sizeCurrentValue = ''.obs;
-  final List<String> status = ['Disponível', 'Desaparecido', 'Outro'];
-  Rx<String> statusCurrentValue = ''.obs;
-  final List<String> species = ['Cão', 'Gato', 'Outro'];
+  late List<String> species;
   Rx<String> speciesCurrentValue = ''.obs;
+
+  late List<String> genders;
+  Rx<String> genderCurrentValue = ''.obs;
+
+  late List<String> sizes;
+  Rx<String> sizeCurrentValue = ''.obs;
+
+  late List<String> status;
+  Rx<String> statusCurrentValue = ''.obs;
+
   final List<String> neutered = ['Sim', 'Não'];
   Rx<String> neuteredCurrentValue = ''.obs;
+
   final List<String> specialNeeds = ['Sim', 'Não'];
   Rx<String> specialNeedsCurrentValue = ''.obs;
 
@@ -68,14 +72,14 @@ class _PetProfilePageState extends State<PetProfilePage> {
           FormDropDownInput(
             child: DropDownItem(
               currentValue: genderCurrentValue,
-              items: gender,
+              items: genders,
               hintText: 'Sexo',
             ),
           ),
           FormDropDownInput(
             child: DropDownItem(
               currentValue: sizeCurrentValue,
-              items: size,
+              items: sizes,
               hintText: 'Porte',
             ),
           ),
@@ -178,72 +182,27 @@ class _PetProfilePageState extends State<PetProfilePage> {
     );
   }
 
-  NewPet petInstance() {
-    int size = 0;
-    var status = 0;
-    var species = 0;
-
-    switch (sizeCurrentValue.value) {
-      case 'Pequeno':
-        size = 1;
-        break;
-      case 'Médio':
-        size = 2;
-        break;
-      case 'Grande':
-        size = 3;
-        break;
-    }
-
-    switch (sizeCurrentValue.value) {
-      case 'Disponível':
-        status = 2;
-        break;
-      case 'Desaparecido':
-        status = 4;
-        break;
-      default:
-        status = 1;
-        break;
-    }
-
-    switch (speciesCurrentValue.value) {
-      case 'Cão':
-        species = 1;
-        break;
-      case 'Gato':
-        species = 2;
-        break;
-      default:
-        species = 3;
-        break;
-    }
-
-    final petToRegister = NewPet(
-        name: _nameController.text,
-        species: species,
-        gender: genderCurrentValue.value.contains('Macho') ? 1 : 2,
-        size: size,
-        status: status,
-        breed: _breedController.text,
-        age: int.parse(_ageController.text),
-        weight: double.parse(_weightController.text),
-        description: _descriptionController.text,
-        neutered: neuteredCurrentValue.value.contains('Não') ? 0 : 1,
-        specialNeeds: specialNeedsCurrentValue.value.contains('Não') ? 0 : 1,
-        lat: 0.0,
-        lng: 0.0,
-        address: 'Rua Fake');
-    return petToRegister;
-  }
-
   Future<void> _registerPet() async {
     if (_formKey.currentState!.validate()) {
-      final petToRegister = petInstance();
-      PetController.registerPet(petToRegister);
-      Get.offAndToNamed(Routes.statusRoute);
-    } else {
-      print('deu ruim tio');
+      try {
+        await PetController.registerPet(
+            _nameController.text,
+            speciesCurrentValue.value,
+            genderCurrentValue.value,
+            sizeCurrentValue.value,
+            statusCurrentValue.value,
+            _breedController.text,
+            int.parse(_breedController.text),
+            double.parse(_weightController.text),
+            _descriptionController.text,
+            neuteredCurrentValue.value == 'Sim' ? true : false,
+            specialNeedsCurrentValue.value == 'Sim' ? true : false,
+            _imageController.imagePath.value);
+        Get.offAndToNamed(Routes.statusRoute);
+      } on Exception catch (e) {
+        Get.snackbar("Erro!", e.toString(),
+            duration: const Duration(seconds: 5));
+      }
     }
   }
 }

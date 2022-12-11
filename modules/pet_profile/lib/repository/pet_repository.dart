@@ -12,7 +12,7 @@ class PetRepository {
 
   PetRepository(this.petAPIServices);
 
-  Future<List<PetProfile>?> getPetResquested() async {
+  Future<List<PetProfile>?> getPetsResquested() async {
     try {
       final response = await petAPIServices.getAllPets();
       return (response.data as List)
@@ -66,11 +66,11 @@ class PetRepository {
 
   // Requests dos atributos de filtro
   //
-  Future<List<PetSpecie>?> getSpecies() async {
+  Future<List<PetSpecie>> getSpecies() async {
     try {
       final response = await petAPIServices.getSpecies();
       final species =
-          (response?.data as List).map((e) => PetSpecie.fromJson(e)).toList();
+          (response.data as List).map((e) => PetSpecie.fromJson(e)).toList();
       return species;
     } on DioError catch (e) {
       final error = APIExceptions.fromDioError(e);
@@ -78,11 +78,11 @@ class PetRepository {
     }
   }
 
-  Future<List<PetSize>?> getSizes() async {
+  Future<List<PetSize>> getSizes() async {
     try {
       final response = await petAPIServices.getSizes();
       final sizes =
-          (response?.data as List).map((e) => PetSize.fromJson(e)).toList();
+          (response.data as List).map((e) => PetSize.fromJson(e)).toList();
       return sizes;
     } on DioError catch (e) {
       final error = APIExceptions.fromDioError(e);
@@ -90,11 +90,11 @@ class PetRepository {
     }
   }
 
-  Future<List<PetGender>?> getGenders() async {
+  Future<List<PetGender>> getGenders() async {
     try {
       final response = await petAPIServices.getGenders();
       final genders =
-          (response?.data as List).map((e) => PetGender.fromJson(e)).toList();
+          (response.data as List).map((e) => PetGender.fromJson(e)).toList();
       return genders;
     } on DioError catch (e) {
       final error = APIExceptions.fromDioError(e);
@@ -102,11 +102,11 @@ class PetRepository {
     }
   }
 
-  Future<List<PetStatus>?> getStatus() async {
+  Future<List<PetStatus>> getStatus() async {
     try {
       final response = await petAPIServices.getStatus();
       final status =
-          (response?.data as List).map((e) => PetStatus.fromJson(e)).toList();
+          (response.data as List).map((e) => PetStatus.fromJson(e)).toList();
       return status;
     } on DioError catch (e) {
       final error = APIExceptions.fromDioError(e);
@@ -114,11 +114,11 @@ class PetRepository {
     }
   }
 
-  Future<List<PetProfile>?> getFilteredPets(Map<String, String> filters) async {
+  Future<List<PetProfile>> getFilteredPets(Map<String, String> filters) async {
     try {
       final response = await petAPIServices.filterPets(filters);
       final list =
-          (response?.data as List).map((e) => PetProfile.fromJson(e)).toList();
+          (response.data as List).map((e) => PetProfile.fromJson(e)).toList();
       return list;
     } on DioError catch (e) {
       final error = APIExceptions.fromDioError(e);

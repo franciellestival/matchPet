@@ -1,19 +1,24 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class NewPet {
-  final String? name;
-  final int? species;
-  final int? gender;
-  final int? size;
-  final int? status;
-  final String? breed;
-  final int? age;
-  final double? weight;
-  final String? description;
-  final int? neutered;
-  final int? specialNeeds;
-  final double? lat;
-  final double? lng;
-  final String? address;
-  final String? photo;
+  String? name;
+  int? species;
+  int? gender;
+  int? size;
+  int? status;
+  // String? species;
+  // String? gender;
+  // String? size;
+  // String? status;
+  String? breed;
+  int? age;
+  double? weight;
+  String? description;
+  bool? neutered;
+  bool? specialNeed;
+  double? lat;
+  double? lng;
+  String? address;
+  String? photo;
 
   NewPet(
       {this.name,
@@ -26,31 +31,13 @@ class NewPet {
       this.weight,
       this.description,
       this.neutered,
-      this.specialNeeds,
+      this.specialNeed,
       this.lat,
       this.lng,
       this.address,
       this.photo});
 
-  factory NewPet.fromJson(Map<String, dynamic> json) {
-    return NewPet(
-      name: json['name'] ?? '',
-      species: json['species'],
-      gender: json['gender'],
-      size: json['size'],
-      status: json['status'],
-      breed: json['breed'] ?? '',
-      age: json['age'],
-      weight: json['weight'],
-      description: json['description'] ?? '',
-      neutered: json['neutered'],
-      specialNeeds: json['special_need'],
-      lat: json['lat'] as double,
-      lng: json['lng'] as double,
-      address: json['address'] ?? '',
-      photo: json['photo'] ?? '',
-    );
-  }
+  NewPet.empty();
 
   Map<String, dynamic> toJson() => {
         "name": name,
@@ -62,7 +49,13 @@ class NewPet {
         "age": age,
         "weight": weight,
         "description": description,
-        "neutered": neutered,
-        "specialNeeds": specialNeeds,
+        "neutered": neutered! ? 1 : 0,
+        "specialNeeds": specialNeed! ? 1 : 0,
+        "photo": photo,
       };
+
+  @override
+  String toString() {
+    return 'NewPet(name: $name, species: $species, gender: $gender, size: $size, status: $status, breed: $breed, age: $age, weight: $weight, description: $description, neutered: $neutered, specialNeeds: $specialNeed, lat: $lat, lng: $lng, address: $address, photo: $photo)';
+  }
 }
