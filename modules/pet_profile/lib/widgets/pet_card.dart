@@ -1,5 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:get/get.dart';
+import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 import 'package:theme/export_theme.dart';
 
@@ -55,7 +58,9 @@ class PetCard extends StatelessWidget {
   Widget buildButton() {
     return Center(
       child: PrimaryButton(
-        onTap: () {},
+        onTap: () {
+          Get.toNamed(Routes.petDetailPage, arguments: pet);
+        },
         backgroundColor: AppColors.white.withOpacity(0.5),
         text: 'Saiba Mais',
         padding: const EdgeInsets.all(1),
@@ -109,17 +114,25 @@ class PetCard extends StatelessWidget {
           height: 10,
           width: 10,
         ),
-        Text(
-          ' ${pet.location?.address}',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: AppColors.white,
-            fontFamily: globalFontFamily,
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            letterSpacing: 2,
-          ),
+        FutureBuilder<String?>(
+          future: _getPetCity(pet.location!.lat, pet.location!.lng),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              var data = snapshot.data;
+              return Text(data.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.white,
+                    fontFamily: globalFontFamily,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 2,
+                  ));
+            } else {
+              return const Text('');
+            }
+          },
         ),
         const WidthSpacer(width: 12),
         Text(
@@ -150,5 +163,18 @@ class PetCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<String?> _getPetCity(double? lat, double? lng) async {
+    List<Placemark>? placemarks =
+        await placemarkFromCoordinates(lat!, lng!, localeIdentifier: 'pt_BR');
+
+    if (placemarks.isEmpty) {
+      return null;
+    }
+    Placemark place = placemarks[0];
+    final String city =
+        '${place.subAdministrativeArea!.toString()}, ${place.administrativeArea!.toString()}';
+    return city;
   }
 }
