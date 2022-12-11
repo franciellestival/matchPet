@@ -83,14 +83,14 @@ class PetDetailPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                '${pet!.description!} ${pet!.description!} ${pet!.description!} ${pet!.description!}',
+                pet!.description!,
                 style: const TextStyle(fontSize: 20),
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Text(
-                'Necessidades Especiais? ${pet!.specialNeeds! ? "Sim" : "Neenhuma"}',
+                'Necessidades Especiais? ${pet!.specialNeeds! ? "Sim" : "Nenhuma"}',
               ),
             ),
             const HeightSpacer(height: 40),
