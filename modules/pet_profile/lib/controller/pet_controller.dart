@@ -34,16 +34,19 @@ class PetController {
 
       var specieMapped = speciesList
           .firstWhere((element) => element.displayName == species)
-          .id;
+          .normalizedName;
 
-      var genderMapped =
-          gendersList.firstWhere((element) => element.displayName == gender).id;
+      var genderMapped = gendersList
+          .firstWhere((element) => element.displayName == gender)
+          .normalizedName;
 
-      var sizeMapped =
-          sizesList.firstWhere((element) => element.displayName == size).id;
+      var sizeMapped = sizesList
+          .firstWhere((element) => element.displayName == size)
+          .normalizedName;
 
-      var statusMapped =
-          statusList.firstWhere((element) => element.displayName == status).id;
+      var statusMapped = statusList
+          .firstWhere((element) => element.displayName == status)
+          .normalizedName;
 
       NewPet newPet = NewPet(
           name: name,
