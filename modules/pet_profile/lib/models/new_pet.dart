@@ -1,10 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class NewPet {
   String? name;
-  // int? species;
-  // int? gender;
-  // int? size;
-  // int? status;
   String? species;
   String? gender;
   String? size;
