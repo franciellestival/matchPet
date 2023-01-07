@@ -1,14 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class NewPet {
   String? name;
-  int? species;
-  int? gender;
-  int? size;
-  int? status;
-  // String? species;
-  // String? gender;
-  // String? size;
-  // String? status;
+  String? species;
+  String? gender;
+  String? size;
+  String? status;
   String? breed;
   int? age;
   double? weight;
@@ -51,6 +47,9 @@ class NewPet {
         "description": description,
         "neutered": neutered! ? 1 : 0,
         "specialNeeds": specialNeed! ? 1 : 0,
+        "lat": lat,
+        "lng": lng,
+        "address": address,
         "photo": photo,
       };
 
