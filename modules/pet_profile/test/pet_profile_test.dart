@@ -9,8 +9,7 @@ import 'package:pet_profile/models/pet_profile.dart';
 import 'pet_data.dart';
 
 void main() {
-  NewPet petnew = NewPet.fromJson(jsonDecode(newPet));
-
+  NewPet petnew = NewPet();
   test('New Pet from Json Parsing', () {
     expect(petnew.name, "Major");
   });

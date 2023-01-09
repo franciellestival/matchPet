@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:matchpet/pages/bottom_nav_bar.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/export_theme.dart';
-import 'package:theme/widgets/bottom_nav_bar.dart';
 
 import '../controller/user_controller.dart';
 import '../model/token.dart';
@@ -79,7 +79,6 @@ class StatusPage extends StatelessWidget {
           }),
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavBar(),
     );
   }
 
