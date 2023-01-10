@@ -13,11 +13,13 @@ class StatusPage extends StatelessWidget {
 
   final Token userToken = Get.find(tag: "userToken");
 
+  static const padding = EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0);
   late String msg;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const GenericAppBar(title: 'Meu Perfil'),
       backgroundColor: AppColors.primaryColor,
       body: SingleChildScrollView(
         child: FutureBuilder<User?>(
@@ -29,7 +31,7 @@ class StatusPage extends StatelessWidget {
               user = snapshot.data;
               msg = (user == null)
                   ? "Usuário não encontrado!"
-                  : "Usuário ${user.name} conectado com sucesso - email: ${user.email}";
+                  : "Olá, ${user.name} !";
             } else if (snapshot.hasError) {
               msg =
                   'Vish! Algo deu errado. \n\n  Chamaremos os universitários!';
@@ -37,42 +39,102 @@ class StatusPage extends StatelessWidget {
 
             return Column(
               children: [
-                const SizedBox(height: 200),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Ink(
+                        decoration: ShapeDecoration(
+                            shadows: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 3,
+                                offset: const Offset(
+                                    0, 1), // changes position of shadow
+                              ),
+                            ],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(200),
+                            ),
+                            color: AppColors.primaryColor),
+                        child: IconButton(
+                          icon: SvgPicture.asset(
+                            AppSvgs.menuIcon,
+                            height: 30,
+                            width: 30,
+                          ),
+                          onPressed: () => {
+                            Get.toNamed(Routes.userProfile, arguments: user),
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Ink(
+                        decoration: ShapeDecoration(
+                            shadows: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 3,
+                                offset: const Offset(
+                                    0, 1), // changes position of shadow
+                              ),
+                            ],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            color: AppColors.primaryColor),
+                        child: TextButton(
+                          onPressed: (() {
+                            _logout();
+                          }),
+                          child: const Text(
+                            'Logout',
+                            style: TextStyle(color: AppColors.black),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(msg,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontSize: 28, color: AppColors.buttonColor))),
-                const SizedBox(height: 50),
-                Center(
-                  child: PrimaryButton(
-                      onTap: () => {_logout()}, text: 'Voltar ao início'),
+                  padding: const EdgeInsets.all(8.0),
+                  child: SvgPicture.asset(AppSvgs.appIcon),
                 ),
-                const SizedBox(height: 30),
-                Center(
-                  child: PrimaryButton(
-                      onTap: () => {Get.toNamed(Routes.petRegisterRoute)},
-                      text: 'Cadastrar Pet'),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    msg,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 28,
+                        color: Colors.brown,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
-                const SizedBox(height: 30),
-                Center(
-                  child: PrimaryButton(
-                      onTap: () => {Get.toNamed(Routes.petListPage)},
-                      text: 'Ver Pets'),
+                _buildFrame(
+                  icon: AppSvgs.dogIcon,
+                  text: 'Meus Pets Disponíveis',
+                  ontap: () => {},
                 ),
-                const SizedBox(height: 30),
-                Center(
-                  child: PrimaryButton(
-                      onTap: () =>
-                          {Get.toNamed(Routes.userProfile, arguments: user)},
-                      text: 'Ver meu Perfil'),
+                _buildFrame(
+                  icon: AppSvgs.catIcon,
+                  text: 'Meus Pets Adotados',
+                  ontap: () => {},
                 ),
-                const SizedBox(height: 30),
-                Center(
-                  child: PrimaryButton(
-                      onTap: () => {Get.toNamed(Routes.petDetailPage)},
-                      text: 'Detalhe do Pet'),
+                _buildFrame(
+                  icon: AppSvgs.disappearedOutlined,
+                  text: 'Meus Pets Desaparecidos',
+                  ontap: () => {},
+                ),
+                _buildFrame(
+                  icon: AppSvgs.animalsIcon,
+                  text: 'Todos os meus pets',
+                  ontap: () => {},
                 ),
               ],
             );
@@ -89,5 +151,59 @@ class StatusPage extends StatelessWidget {
 
   Future<User?> _getUser() async {
     return await UserController.getLoggedUserData(userToken);
+  }
+
+  Widget _buildFrame(
+      {required String icon, required String text, required Function() ontap}) {
+    return Padding(
+      padding: padding,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Ink(
+          decoration: ShapeDecoration(
+              // ignore: prefer_const_literals_to_create_immutables
+              shadows: [
+                const BoxShadow(
+                  color: AppColors.buttonColor,
+                  spreadRadius: 2,
+                  blurRadius: 3,
+                  offset: Offset(0, 1), // changes position of shadow
+                ),
+              ],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              color: AppColors.primaryColor),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SvgPicture.asset(
+                  icon,
+                  height: 50,
+                  color: Colors.brown,
+                ),
+              ),
+              TextButton(
+                onPressed: ontap,
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(AppColors.primaryColor),
+                ),
+                child: Text(
+                  text,
+                  style: const TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.brown,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
