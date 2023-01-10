@@ -5,6 +5,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/export_theme.dart';
 import 'package:user_profile/controller/user_controller.dart';
+import 'package:user_profile/model/token.dart';
 
 class UserRegister extends StatefulWidget {
   const UserRegister({Key? key}) : super(key: key);
@@ -30,9 +31,10 @@ class _UserRegisterState extends State<UserRegister> {
             _emailController.text,
             _pwController.text,
             _pwConfirmationController.text);
-        await UserController.loginUser(
+        final loggedToken = await UserController.loginUser(
             _emailController.text, _pwController.text);
-        Get.offAndToNamed(Routes.statusRoute);
+        Get.offAndToNamed(Routes.home);
+        Get.put<Token>(loggedToken, tag: "userToken", permanent: true);
       } on Exception catch (e) {
         Get.snackbar("Erro!", e.toString(),
             duration: const Duration(seconds: 5));

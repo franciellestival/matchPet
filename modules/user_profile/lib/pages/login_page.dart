@@ -179,7 +179,9 @@ class _UserLoginState extends State<UserLogin> {
       if (_formKey.currentState!.validate()) {
         Token loggedToken = await UserController.loginUser(
             _emailLoginController.text, _passwordLoginController.text);
-        Get.offAndToNamed(Routes.statusRoute, arguments: loggedToken);
+        Get.put<Token>(loggedToken, tag: "userToken", permanent: true);
+        Get.offAndToNamed(Routes.home);
+        //Get.offAndToNamed(Routes.statusRoute, arguments: loggedToken);
       }
     } on Exception catch (e) {
       Get.snackbar("Erro!", e.toString(), duration: const Duration(seconds: 5));

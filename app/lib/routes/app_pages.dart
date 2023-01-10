@@ -9,6 +9,7 @@ import 'package:user_profile/pages/register_page.dart';
 import 'package:user_profile/pages/status_page.dart';
 
 import '../middlewares/auth_middleware.dart';
+import '../pages/bottom_nav_bar.dart';
 import '../pages/initial_page.dart';
 import 'app_routes.dart';
 
@@ -46,6 +47,10 @@ class AppPages {
     GetPage(
       name: Routes.petDetailPage,
       page: () => PetDetailPage(),
+    ),
+    GetPage(
+      name: Routes.home,
+      page: () => CustomBottomNavBar(),
     ),
   ];
 }
