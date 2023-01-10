@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
+
 import 'package:matchpet/pages/bottom_nav_bar.dart';
+import 'package:matchpet/routes/app_routes.dart';
 
 import 'di/home_binding.dart';
 import 'di/splash_dependency.dart';
@@ -23,6 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(fontFamily: 'Lato'),
       initialBinding: HomeBinding(),
       home: CustomBottomNavBar(),
+      initialRoute: Routes.initialRoute,
     );
   }
 }

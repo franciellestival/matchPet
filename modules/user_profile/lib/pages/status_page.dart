@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:matchpet/pages/bottom_nav_bar.dart';
+
 import 'package:matchpet/routes/app_routes.dart';
+
 import 'package:theme/export_theme.dart';
 
-import '../controller/user_controller.dart';
-import '../model/token.dart';
-import '../model/user.dart';
+import 'package:user_profile/controller/user_controller.dart';
+import 'package:user_profile/model/token.dart';
+import 'package:user_profile/model/user.dart';
 
 class StatusPage extends StatelessWidget {
   StatusPage({Key? key}) : super(key: key);
 
   final Token userToken = Get.find(tag: "userToken");
 
-  static const padding = EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0);
+  static const padding = EdgeInsets.symmetric(horizontal: 8.0);
   late String msg;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const GenericAppBar(title: 'Meu Perfil'),
-      backgroundColor: AppColors.primaryColor,
+      backgroundColor: AppColors.primaryLightColor,
       body: SingleChildScrollView(
         child: FutureBuilder<User?>(
           future: _getUser(),
@@ -39,11 +40,12 @@ class StatusPage extends StatelessWidget {
 
             return Column(
               children: [
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: padding,
                       child: Ink(
                         decoration: ShapeDecoration(
                             shadows: [
@@ -72,7 +74,7 @@ class StatusPage extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: padding,
                       child: Ink(
                         decoration: ShapeDecoration(
                             shadows: [
@@ -101,21 +103,19 @@ class StatusPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SvgPicture.asset(AppSvgs.appIcon),
-                ),
+                SvgPicture.asset(AppSvgs.appIcon),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
                     msg,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                        fontSize: 28,
+                        fontSize: 30,
                         color: Colors.brown,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
+                const SizedBox(height: 20),
                 _buildFrame(
                   icon: AppSvgs.dogIcon,
                   text: 'Meus Pets Disponíveis',
@@ -156,7 +156,7 @@ class StatusPage extends StatelessWidget {
   Widget _buildFrame(
       {required String icon, required String text, required Function() ontap}) {
     return Padding(
-      padding: padding,
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Ink(
