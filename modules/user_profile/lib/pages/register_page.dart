@@ -59,6 +59,27 @@ class _UserRegisterState extends State<UserRegister> {
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
               child: Column(
                 children: [
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 5),
+                      child: const Text(
+                        'Match Pet',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 28, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppSvgs.appIcon,
+                        height: 100,
+                        width: 100,
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   Form(
                     key: _formKey,
