@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 
+import 'package:matchpet/routes/app_routes.dart';
+
 import 'di/home_binding.dart';
 import 'di/splash_dependency.dart';
 import 'routes/app_pages.dart';
-import 'routes/app_routes.dart';
 
 void main() async {
   WidgetsBinding binding = WidgetsFlutterBinding.ensureInitialized();
@@ -20,9 +21,9 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'MatchPet',
       getPages: AppPages.routes,
-      initialRoute: Routes.initialRoute,
       theme: ThemeData(fontFamily: 'Lato'),
       initialBinding: HomeBinding(),
+      initialRoute: Routes.initialRoute,
     );
   }
 }

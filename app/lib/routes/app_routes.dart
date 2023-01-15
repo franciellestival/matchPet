@@ -7,4 +7,6 @@ abstract class Routes {
   static const userProfile = "/user_profile";
   static const petListPage = "/pet_list_page";
   static const petDetailPage = "/pet_detail_page";
+  static const home = "/home";
+  static const petEditPage = "/pet_edit";
 }

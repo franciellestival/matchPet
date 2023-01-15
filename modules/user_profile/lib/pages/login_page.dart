@@ -18,6 +18,7 @@ class _UserLoginState extends State<UserLogin> {
   final _formKey = GlobalKey<FormState>();
   final _emailLoginController = TextEditingController();
   final _passwordLoginController = TextEditingController();
+  RxBool isLoading = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class _UserLoginState extends State<UserLogin> {
                 image: AssetImage(AppImages.loginPagePhoto),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                    Colors.black.withOpacity(0.4), BlendMode.dstATop),
               ),
             ),
           ),
@@ -40,13 +41,10 @@ class _UserLoginState extends State<UserLogin> {
               child: Column(
                 children: [
                   Center(
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 50),
-                      child: SvgPicture.asset(
-                        AppSvgs.appIcon,
-                        height: 100,
-                        width: 100,
-                      ),
+                    child: SvgPicture.asset(
+                      AppSvgs.appIcon,
+                      height: 100,
+                      width: 100,
                     ),
                   ),
                   Center(
@@ -117,24 +115,14 @@ class _UserLoginState extends State<UserLogin> {
                               },
                             ),
                           ),
-                          Center(
-                            child: PrimaryButton(
-                              // onTap: signIn,
-                              onTap: _signIn,
-                              text: AppStrings.loginButton,
-                              backgroundColor: AppColors.blueButton,
-                            ),
-                          ),
-                          Center(
-                            child: TextButton(
-                              onPressed: () => {},
-                              child: const Text(
-                                'Esqueceu sua senha?',
-                                style: TextStyle(
-                                  color: AppColors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            child: Center(
+                              child: PrimaryButton(
+                                isLoading: isLoading,
+                                onTap: _signIn,
+                                text: AppStrings.loginButton,
+                                backgroundColor: AppColors.blueButton,
                               ),
                             ),
                           ),
@@ -142,14 +130,7 @@ class _UserLoginState extends State<UserLogin> {
                       ),
                     ),
                   ),
-                  const Text('Entrar com Uma rede social'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(AppSvgs.googleIcon),
-                      //SvgPicture.asset(AppSvgs.facebookIcon),
-                    ],
-                  ),
+                  const SizedBox(height: 20),
                   const Text('Não possui conta ainda?'),
                   Center(
                     child: TextButton(
@@ -175,11 +156,14 @@ class _UserLoginState extends State<UserLogin> {
   }
 
   Future<void> _signIn() async {
+    isLoading.value = true;
     try {
       if (_formKey.currentState!.validate()) {
         Token loggedToken = await UserController.loginUser(
             _emailLoginController.text, _passwordLoginController.text);
-        Get.offAndToNamed(Routes.statusRoute, arguments: loggedToken);
+        Get.put<Token>(loggedToken, tag: "userToken", permanent: true);
+        isLoading.value = false;
+        Get.offAndToNamed(Routes.home);
       }
     } on Exception catch (e) {
       Get.snackbar("Erro!", e.toString(), duration: const Duration(seconds: 5));
