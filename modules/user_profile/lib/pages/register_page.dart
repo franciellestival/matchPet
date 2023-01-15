@@ -21,8 +21,10 @@ class _UserRegisterState extends State<UserRegister> {
   final _emailController = TextEditingController();
   final _pwController = TextEditingController();
   final _pwConfirmationController = TextEditingController();
+  RxBool isLoading = false.obs;
 
   Future<void> _registerUser() async {
+    isLoading.value = true;
     if (_formKey.currentState!.validate()) {
       try {
         await UserController.signUpUser(
@@ -33,6 +35,7 @@ class _UserRegisterState extends State<UserRegister> {
             _pwConfirmationController.text);
         final loggedToken = await UserController.loginUser(
             _emailController.text, _pwController.text);
+
         Get.offAndToNamed(Routes.home);
         Get.put<Token>(loggedToken, tag: "userToken", permanent: true);
       } on Exception catch (e) {
@@ -40,6 +43,7 @@ class _UserRegisterState extends State<UserRegister> {
             duration: const Duration(seconds: 5));
       }
     }
+    isLoading.value = false;
   }
 
   @override
@@ -147,7 +151,9 @@ class _UserRegisterState extends State<UserRegister> {
                         ),
                         Center(
                             child: PrimaryButton(
-                                onTap: _registerUser, text: 'Salvar')),
+                                isLoading: isLoading,
+                                onTap: _registerUser,
+                                text: 'Salvar')),
                         const SizedBox(height: 10),
                       ],
                     ),

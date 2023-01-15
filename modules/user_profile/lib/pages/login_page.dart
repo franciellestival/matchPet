@@ -18,6 +18,7 @@ class _UserLoginState extends State<UserLogin> {
   final _formKey = GlobalKey<FormState>();
   final _emailLoginController = TextEditingController();
   final _passwordLoginController = TextEditingController();
+  RxBool isLoading = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +119,7 @@ class _UserLoginState extends State<UserLogin> {
                             padding: const EdgeInsets.symmetric(vertical: 20),
                             child: Center(
                               child: PrimaryButton(
-                                // onTap: signIn,
+                                isLoading: isLoading,
                                 onTap: _signIn,
                                 text: AppStrings.loginButton,
                                 backgroundColor: AppColors.blueButton,
@@ -155,11 +156,13 @@ class _UserLoginState extends State<UserLogin> {
   }
 
   Future<void> _signIn() async {
+    isLoading.value = true;
     try {
       if (_formKey.currentState!.validate()) {
         Token loggedToken = await UserController.loginUser(
             _emailLoginController.text, _passwordLoginController.text);
         Get.put<Token>(loggedToken, tag: "userToken", permanent: true);
+        isLoading.value = false;
         Get.offAndToNamed(Routes.home);
       }
     } on Exception catch (e) {
