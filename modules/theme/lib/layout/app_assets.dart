@@ -6,6 +6,7 @@ class AppSvgs {
   static String get forwardIcon => 'assets/icons/forwardIcon.svg';
   static String get googleIcon => 'assets/icons/googleIcon.svg';
   static String get heartIcon => 'assets/icons/heartIcon.svg';
+  static String get favoriteOutlined => 'assets/icons/favoriteOutlined.svg';
   static String get homeIcon => 'assets/icons/homeIcon.svg';
   static String get locationIcon => 'assets/icons/locationIcon.svg';
   static String get appIcon => 'assets/icons/logo.svg';
@@ -30,6 +31,10 @@ class AppSvgs {
   static String get check => 'assets/icons/check.svg';
   static String get close => 'assets/icons/close.svg';
   static String get animalsIcon => 'assets/icons/livestock.svg';
+  static String get editIcon => 'assets/icons/edit.svg';
+  static String get menuIcon => 'assets/icons/menu.svg';
+  static String get disappearedOutlined =>
+      'assets/icons/disappeared-icon -outlined.svg';
 }
 
 class AppImages {

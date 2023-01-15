@@ -168,6 +168,10 @@ class PetController {
       rethrow;
     }
   }
+
+  void addToFavorites() {}
+
+  void removeFromFavorites() {}
 }
 
 Future<UserLocation?> _getCurrentLocation() async {

@@ -73,10 +73,17 @@ class _PetListPageState extends State<PetListPage> {
             FutureBuilder<List<PetCard>?>(
               future: _getPetsList(),
               builder: (context, snapshot) {
-                return PetList(
-                  title: widget.listTitle,
-                  children: snapshot.hasData ? snapshot.data! : [],
-                );
+                if (snapshot.hasData) {
+                  return PetList(
+                      title: widget.listTitle, children: snapshot.data!);
+                } else {
+                  if (snapshot.hasError) {
+                    Get.snackbar('Error', snapshot.error.toString());
+                  }
+                  return const Center(
+                      child: CircularProgressIndicator(
+                          color: AppColors.buttonColor));
+                }
               },
             ),
           ],
