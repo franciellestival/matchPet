@@ -114,7 +114,7 @@ class PetRepository {
     }
   }
 
-  Future<List<PetProfile>> getFilteredPets(Map<String, String> filters) async {
+  Future<List<PetProfile>> getFilteredPets(Map<String, dynamic> filters) async {
     try {
       final response = await petAPIServices.filterPets(filters);
       final list =

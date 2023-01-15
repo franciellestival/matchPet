@@ -12,8 +12,6 @@ class StatusPage extends StatelessWidget {
 
   final Token userToken = Get.find(tag: "userToken");
 
-  late String msg;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

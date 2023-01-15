@@ -39,13 +39,15 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
   final List<String> specialNeeds = ['Sim', 'Não'];
   Rx<String> specialNeedsCurrentValue = ''.obs;
 
+  final inputEnabled = true.obs;
+
   Form _buildPetRegisterForm(GlobalKey<FormState> formKey) {
     return Form(
       key: formKey,
       child: Wrap(
         runSpacing: 22,
         children: <Widget>[
-          ImageInput(placeHolderPath: AppSvgs.pawIcon),
+          ImageInput(placeHolderPath: AppSvgs.pawIcon, isEnabled: true.obs),
           const Text(
             'Informações Gerais',
             style: TextStyle(fontSize: 16),
@@ -53,6 +55,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
           FormInputBox(
             hintText: 'Nome',
             controller: _nameController,
+            enable: inputEnabled.value,
           ),
           FutureBuilder<List<String?>>(
             future: PetController.species(),
@@ -64,6 +67,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
                   items: data,
                   currentValue: speciesCurrentValue,
                   hintText: 'Espécie',
+                  isEnabled: inputEnabled,
                 ));
               } else {
                 if (snapshot.hasError) {
@@ -83,6 +87,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
                   items: data,
                   currentValue: genderCurrentValue,
                   hintText: 'Sexo',
+                  isEnabled: inputEnabled,
                 ));
               } else {
                 if (snapshot.hasError) {
@@ -102,6 +107,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
                   items: data,
                   currentValue: sizeCurrentValue,
                   hintText: 'Porte',
+                  isEnabled: inputEnabled,
                 ));
               } else {
                 if (snapshot.hasError) {
@@ -121,6 +127,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
                   items: data,
                   currentValue: statusCurrentValue,
                   hintText: 'Status',
+                  isEnabled: inputEnabled,
                 ));
               } else {
                 if (snapshot.hasError) {
@@ -135,6 +142,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
               currentValue: neuteredCurrentValue,
               items: neutered,
               hintText: 'Castrado(a)?',
+              isEnabled: inputEnabled,
             ),
           ),
           FormDropDownInput(
@@ -142,25 +150,30 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
               currentValue: specialNeedsCurrentValue,
               items: specialNeeds,
               hintText: 'Necessidades Especiais?',
+              isEnabled: inputEnabled,
             ),
           ),
           FormInputBox(
             hintText: 'Raça',
             controller: _breedController,
+            enable: inputEnabled.value,
           ),
           FormInputBox(
             hintText: 'Idade',
             controller: _ageController,
             textInputType: TextInputType.number,
+            enable: inputEnabled.value,
           ),
           FormInputBox(
             hintText: 'Peso',
             controller: _weightController,
             textInputType: TextInputType.number,
+            enable: inputEnabled.value,
           ),
           FormInputBox(
             hintText: 'Descrição',
             controller: _descriptionController,
+            enable: inputEnabled.value,
           ),
         ],
       ),

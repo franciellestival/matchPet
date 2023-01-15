@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 
 import 'package:theme/export_theme.dart';
@@ -122,6 +123,21 @@ class PetDetailPage extends StatelessWidget {
                   height: 50,
                   onTap: () {},
                   text: 'Quero Adotar',
+                  backgroundColor: AppColors.blueButton,
+                ),
+              ],
+            ),
+            const HeightSpacer(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 20),
+                PrimaryButton(
+                  height: 50,
+                  onTap: () {
+                    Get.toNamed(Routes.petProfilePage, arguments: pet);
+                  },
+                  text: 'Editar Pet',
                   backgroundColor: AppColors.blueButton,
                 ),
               ],
