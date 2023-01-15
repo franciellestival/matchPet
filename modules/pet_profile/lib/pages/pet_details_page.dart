@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:matchpet/routes/app_routes.dart';
-import 'package:pet_profile/controller/pet_controller.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 
 import 'package:theme/export_theme.dart';
 
 class PetDetailPage extends StatelessWidget {
-  Rx<bool> isFavorited = false.obs;
-  bool? isMyPet;
-
-  PetDetailPage({super.key, this.isMyPet = true});
+  PetDetailPage({super.key});
 
   late PetProfile? pet;
 
@@ -43,7 +38,7 @@ class PetDetailPage extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.topRight,
-                    child: isMyPet! ? editIcon() : favoriteIcon(),
+                    child: favoriteIcon(),
                   ),
                 ],
               ),
@@ -140,16 +135,14 @@ class PetDetailPage extends StatelessWidget {
 
   Widget favoriteIcon() {
     return GestureDetector(
-      onTap: _onTapFavorite,
+      onTap: () {},
       child: CircleAvatar(
-        backgroundColor: AppColors.white.withOpacity(0.5),
-        child: Obx(() {
-          return SvgPicture.asset(
-            isFavorited.value ? AppSvgs.heartIcon : AppSvgs.favoriteOutlined,
-            height: 24.0,
-            color: isFavorited.value ? Colors.red : Colors.black,
-          );
-        }),
+        backgroundColor: AppColors.white.withOpacity(0.7),
+        child: SvgPicture.asset(
+          AppSvgs.heartIcon,
+          height: 24.0,
+          color: Colors.red,
+        ),
       ),
     );
   }
@@ -184,32 +177,6 @@ class PetDetailPage extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  void _onTapFavorite() {
-    PetController controller = PetController();
-
-    isFavorited.value
-        ? {controller.removeFromFavorites(), isFavorited.value = false}
-        : {controller.addToFavorites(), isFavorited.value = true};
-  }
-
-  Widget editIcon() {
-    return GestureDetector(
-      onTap: () {
-        Get.toNamed(Routes.petEditPage, arguments: pet);
-      },
-      child: CircleAvatar(
-        backgroundColor: AppColors.white.withOpacity(0.5),
-        child: Obx(() {
-          return SvgPicture.asset(
-            AppSvgs.menuIcon,
-            height: 24.0,
-            color: isFavorited.value ? Colors.red : Colors.black,
-          );
-        }),
       ),
     );
   }
