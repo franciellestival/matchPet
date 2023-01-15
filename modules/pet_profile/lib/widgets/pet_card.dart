@@ -73,10 +73,7 @@ class PetCard extends StatelessWidget {
     required Widget child,
   }) {
     return Center(
-      child: GestureDetector(
-        onTap: onTap as void Function()?,
-        child: child,
-      ),
+      child: child,
     );
   }
 
