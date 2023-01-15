@@ -6,6 +6,7 @@ class AppSvgs {
   static String get forwardIcon => 'assets/icons/forwardIcon.svg';
   static String get googleIcon => 'assets/icons/googleIcon.svg';
   static String get heartIcon => 'assets/icons/heartIcon.svg';
+  static String get favoriteOutlined => 'assets/icons/favoriteOutlined.svg';
   static String get homeIcon => 'assets/icons/homeIcon.svg';
   static String get locationIcon => 'assets/icons/locationIcon.svg';
   static String get appIcon => 'assets/icons/logo.svg';
