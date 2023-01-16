@@ -1,29 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pet_profile/controller/pet_filter_controller.dart';
 import 'package:theme/export_theme.dart';
 
 class PetFilter extends StatelessWidget {
   PetFilter({super.key});
-
-  var ageStartValue = 0.0.obs;
-  var distanceStartValue = 10.0.obs;
-  var ageEndValue = 10.0.obs;
-  var distanceEndValue = 70.0.obs;
-
-  var dogSelected = false.obs;
-  var catSelected = false.obs;
-  var otherSelected = false.obs;
-
-  var maleSelected = false.obs;
-  var femaleSelected = false.obs;
-
-  var smallSelected = false.obs;
-  var mediumSelected = false.obs;
-  var bigSelected = false.obs;
-
-  var noSpecialNeedsSelected = false.obs;
-  var specialNeedsSelected = false.obs;
+  FilterController filterController = FilterController();
 
   @override
   Widget build(BuildContext context) {
@@ -79,26 +62,24 @@ class PetFilter extends StatelessWidget {
 
   List<Widget> _buildFilters() {
     return [
-      Builder(builder: (context) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Filtros',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Filtros',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                Get.back();
-              },
-            ),
-          ],
-        );
-      }),
+          ),
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+        ],
+      ),
       const HeightSpacer(height: 30),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,18 +98,21 @@ class PetFilter extends StatelessWidget {
                     children: [
                       _buildFilterButton(
                           icon: AppSvgs.dogIcon,
-                          selected: dogSelected.value,
-                          onPressed: () => dogSelected.toggle(),
+                          selected: filterController.dogSelected.value,
+                          onPressed: () =>
+                              filterController.dogSelected.toggle(),
                           label: 'Cão'),
                       _buildFilterButton(
                           icon: AppSvgs.catIcon,
-                          selected: catSelected.value,
-                          onPressed: () => catSelected.toggle(),
+                          selected: filterController.catSelected.value,
+                          onPressed: () =>
+                              filterController.catSelected.toggle(),
                           label: 'Gato'),
                       _buildFilterButton(
                           icon: AppSvgs.animalsIcon,
-                          onPressed: () => otherSelected.toggle(),
-                          selected: otherSelected.value,
+                          onPressed: () =>
+                              filterController.otherSelected.toggle(),
+                          selected: filterController.otherSelected.value,
                           label: 'Outro'),
                     ],
                   );
@@ -150,13 +134,15 @@ class PetFilter extends StatelessWidget {
                     children: [
                       _buildFilterButton(
                           icon: AppSvgs.maleIcon,
-                          onPressed: () => maleSelected.toggle(),
-                          selected: maleSelected.value,
+                          onPressed: () =>
+                              filterController.maleSelected.toggle(),
+                          selected: filterController.maleSelected.value,
                           label: 'Macho'),
                       _buildFilterButton(
                           icon: AppSvgs.femaleIcon,
-                          selected: femaleSelected.value,
-                          onPressed: () => femaleSelected.toggle(),
+                          selected: filterController.femaleSelected.value,
+                          onPressed: () =>
+                              filterController.femaleSelected.toggle(),
                           label: 'Fêmea'),
                     ],
                   );
@@ -186,18 +172,21 @@ class PetFilter extends StatelessWidget {
                     children: [
                       _buildFilterButton(
                           icon: AppSvgs.sizeP,
-                          selected: smallSelected.value,
-                          onPressed: () => smallSelected.toggle(),
+                          selected: filterController.smallSelected.value,
+                          onPressed: () =>
+                              filterController.smallSelected.toggle(),
                           label: 'Pequeno'),
                       _buildFilterButton(
                           icon: AppSvgs.sizeM,
-                          selected: mediumSelected.value,
-                          onPressed: () => mediumSelected.toggle(),
+                          selected: filterController.mediumSelected.value,
+                          onPressed: () =>
+                              filterController.mediumSelected.toggle(),
                           label: 'Médio'),
                       _buildFilterButton(
                           icon: AppSvgs.sizeG,
-                          selected: bigSelected.value,
-                          onPressed: () => bigSelected.toggle(),
+                          selected: filterController.bigSelected.value,
+                          onPressed: () =>
+                              filterController.bigSelected.toggle(),
                           label: 'Grande'),
                     ],
                   );
@@ -215,7 +204,7 @@ class PetFilter extends StatelessWidget {
                     'Necessidades \n Especiais',
                     maxLines: 2,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 1, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Obx(() {
@@ -224,13 +213,16 @@ class PetFilter extends StatelessWidget {
                     children: [
                       _buildFilterButton(
                           icon: AppSvgs.check,
-                          selected: noSpecialNeedsSelected.value,
-                          onPressed: () => noSpecialNeedsSelected.toggle(),
+                          selected:
+                              filterController.noSpecialNeedsSelected.value,
+                          onPressed: () =>
+                              filterController.noSpecialNeedsSelected.toggle(),
                           label: 'Sim'),
                       _buildFilterButton(
                           icon: AppSvgs.close,
-                          selected: specialNeedsSelected.value,
-                          onPressed: () => specialNeedsSelected.toggle(),
+                          selected: filterController.specialNeedsSelected.value,
+                          onPressed: () =>
+                              filterController.specialNeedsSelected.toggle(),
                           label: 'Não'),
                     ],
                   );
@@ -250,24 +242,25 @@ class PetFilter extends StatelessWidget {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
-                'Entre ${ageStartValue.round().toString()} e  ${ageEndValue.round().toString()} anos',
+                'Entre ${filterController.ageStartValue.round().toString()} e  ${filterController.ageEndValue.round().toString()} anos',
               ),
               RangeSlider(
                 min: 0.0,
                 max: 10.0,
                 divisions: 10,
                 labels: RangeLabels(
-                  ageStartValue.round().toString(),
-                  ageEndValue.round().toString(),
+                  filterController.ageStartValue.round().toString(),
+                  filterController.ageEndValue.round().toString(),
                 ),
                 activeColor: AppColors.buttonColor,
                 inactiveColor: Colors.orange.shade100,
-                values: RangeValues(ageStartValue.value, ageEndValue.value),
+                values: RangeValues(filterController.ageStartValue.value,
+                    filterController.ageEndValue.value),
                 onChanged: (values) {
                   state(
                     () {
-                      ageStartValue.value = values.start;
-                      ageEndValue.value = values.end;
+                      filterController.ageStartValue.value = values.start;
+                      filterController.ageEndValue.value = values.end;
                     },
                   );
                 },
@@ -285,25 +278,25 @@ class PetFilter extends StatelessWidget {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
-                'Entre ${distanceStartValue.round().toString()} e  ${distanceEndValue.round().toString()} km',
+                'Entre ${filterController.distanceStartValue.round().toString()} e  ${filterController.distanceEndValue.round().toString()} km',
               ),
               RangeSlider(
                 min: 0.0,
                 max: 100.0,
                 divisions: 10,
                 labels: RangeLabels(
-                  distanceStartValue.round().toString(),
-                  distanceEndValue.round().toString(),
+                  filterController.distanceStartValue.round().toString(),
+                  filterController.distanceEndValue.round().toString(),
                 ),
                 activeColor: AppColors.buttonColor,
                 inactiveColor: Colors.orange.shade100,
-                values: RangeValues(
-                    distanceStartValue.value, distanceEndValue.value),
+                values: RangeValues(filterController.distanceStartValue.value,
+                    filterController.distanceEndValue.value),
                 onChanged: (values) {
                   state(
                     () {
-                      distanceStartValue.value = values.start;
-                      distanceEndValue.value = values.end;
+                      filterController.distanceStartValue.value = values.start;
+                      filterController.distanceEndValue.value = values.end;
                     },
                   );
                 },
