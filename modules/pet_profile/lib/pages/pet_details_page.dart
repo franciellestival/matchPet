@@ -7,8 +7,8 @@ import 'package:pet_profile/models/pet_profile.dart';
 import 'package:theme/export_theme.dart';
 
 class PetDetailPage extends StatelessWidget {
-  Rx<bool> isFavorited = false.obs;
-  bool? isMyPet;
+  final Rx<bool> isFavorited = false.obs;
+  final bool? isMyPet;
 
   PetDetailPage({super.key, this.isMyPet = false});
 
@@ -127,6 +127,21 @@ class PetDetailPage extends StatelessWidget {
                   height: 50,
                   onTap: () {},
                   text: 'Quero Adotar',
+                  backgroundColor: AppColors.blueButton,
+                ),
+              ],
+            ),
+            const HeightSpacer(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 20),
+                PrimaryButton(
+                  height: 50,
+                  onTap: () {
+                    Get.toNamed(Routes.petEditPage, arguments: pet);
+                  },
+                  text: 'Editar Pet',
                   backgroundColor: AppColors.blueButton,
                 ),
               ],

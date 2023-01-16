@@ -7,12 +7,14 @@ class DropDownItem extends StatefulWidget {
   final Rx<String> currentValue;
   final String hintText;
   final List<String?> items;
+  final Rx<bool> isEnabled;
 
   const DropDownItem(
       {Key? key,
       required this.hintText,
       required this.currentValue,
-      required this.items})
+      required this.items,
+      required this.isEnabled})
       : super(key: key);
 
   @override
@@ -23,10 +25,6 @@ class _DropDownItemState extends State<DropDownItem> {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField(
-      // hint: Text(
-      //   hintText,
-      //   style: TextStyle(color: Colors.black.withOpacity(0.3)),
-      // ),
       decoration: InputDecoration(
           border: InputBorder.none,
           errorBorder: OutlineInputBorder(
@@ -48,8 +46,11 @@ class _DropDownItemState extends State<DropDownItem> {
           child: Text(item.toString().split('.').last),
         );
       }).toList(),
-      onChanged: (newValue) =>
-          setState(() => widget.currentValue.value = newValue!),
+      value: widget.currentValue.value,
+      onChanged: !widget.isEnabled.value
+          ? null
+          : (newValue) =>
+              setState(() => widget.currentValue.value = newValue.toString()),
     );
   }
 }

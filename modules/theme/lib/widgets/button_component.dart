@@ -58,7 +58,7 @@ class PrimaryButton extends StatelessWidget {
       ),
       child: Obx(
         () {
-          if (isLoading == null) this.isLoading = false.obs;
+          isLoading ??= false.obs;
           return isLoading!.value
               ? const CircularProgressIndicator(
                   color: Colors.grey,

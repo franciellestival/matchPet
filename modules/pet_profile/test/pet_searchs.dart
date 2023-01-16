@@ -18,18 +18,18 @@ void main() {
   test('Test request Genders', () async {
     var lista = await petRepository.getGenders();
 
-    expect(lista?.length, 2);
+    expect(lista.length, 2);
   });
 
   test('Test request Status', () async {
     var lista = await petRepository.getStatus();
 
-    expect(lista?.length, 2);
+    expect(lista.length, 2);
   });
 
   test('Test filter request', () async {
     final Map<String, String> filters = {"specie": "dog"};
     var lista = await petRepository.getFilteredPets(filters);
-    expect(lista?.length, 0);
+    expect(lista.length, 0);
   });
 }

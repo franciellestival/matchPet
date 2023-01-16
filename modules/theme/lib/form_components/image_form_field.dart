@@ -9,13 +9,15 @@ import '../export_theme.dart';
 
 class ImageInput extends StatelessWidget {
   final String placeHolderPath;
+  final bool isEnabled;
 
   XFile? pickedFile;
   ImagePicker imagePicker = ImagePicker();
 
   ImageController imageController = Get.find();
 
-  ImageInput({required this.placeHolderPath, super.key});
+  ImageInput(
+      {required this.placeHolderPath, required this.isEnabled, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,31 +29,17 @@ class ImageInput extends StatelessWidget {
             SizedBox(
                 height: 150,
                 width: 150,
-                child: Obx(
-                  () => DecoratedBox(
-                      decoration: const ShapeDecoration(
-                        shape: CircleBorder(
-                          side: BorderSide(
-                            strokeAlign: StrokeAlign.outside,
-                            width: 2,
-                            color: AppColors.buttonColor,
-                          ),
-                        ),
+                child: DecoratedBox(
+                  decoration: const ShapeDecoration(
+                    shape: CircleBorder(
+                      side: BorderSide(
+                        strokeAlign: StrokeAlign.outside,
+                        width: 2,
+                        color: AppColors.buttonColor,
                       ),
-                      child: imageController.isImagePathSet.value
-                          ? CircleAvatar(
-                              radius: 100,
-                              backgroundImage: FileImage(
-                                  File(imageController.imagePath.value)))
-                          : CircleAvatar(
-                              radius: 100,
-                              backgroundColor: AppColors.editTextColor,
-                              child: SvgPicture.asset(
-                                color: AppColors.hintTextColor,
-                                placeHolderPath,
-                                width: 110,
-                                height: 110,
-                              ))),
+                    ),
+                  ),
+                  child: Obx(() => _imageLoader()),
                 )),
             Positioned(
               left: 110,
@@ -78,11 +66,18 @@ class ImageInput extends StatelessWidget {
                         Icons.add_a_photo_outlined,
                         size: 25.0,
                       ),
-                      onPressed: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (context) => bottonSheet(context));
-                      },
+                      onPressed: isEnabled
+                          ? () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => bottonSheet(context));
+                            }
+                          : null,
+                      // onPressed: () {
+                      //   showModalBottomSheet(
+                      //       context: context,
+                      //       builder: (context) => bottonSheet(context));
+                      // },
                     ),
                   ),
                 ),
@@ -164,6 +159,7 @@ class ImageInput extends StatelessWidget {
     if (pickedImage != null) {
       pickedFile = XFile(pickedImage.path);
       imageController.setImagePath(pickedFile!.path);
+      imageController.unsetImageURL();
     }
 
     Get.back();
@@ -194,5 +190,28 @@ class ImageInput extends StatelessWidget {
       }
     }
     return true;
+  }
+
+  CircleAvatar _imageLoader() {
+    if (imageController.isImagePathSet.value) {
+      return CircleAvatar(
+          radius: 100,
+          backgroundImage: FileImage(File(imageController.imagePath.value)));
+    }
+
+    if (imageController.isImageURLSet.value) {
+      return CircleAvatar(
+          radius: 100,
+          backgroundImage: NetworkImage(imageController.imageURL.value));
+    }
+    return CircleAvatar(
+        radius: 100,
+        backgroundColor: AppColors.editTextColor,
+        child: SvgPicture.asset(
+          color: AppColors.hintTextColor,
+          placeHolderPath,
+          width: 110,
+          height: 110,
+        ));
   }
 }

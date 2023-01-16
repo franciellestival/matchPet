@@ -54,7 +54,8 @@ class PetServices {
       token = getx.Get.find(tag: "userToken");
       var formData = FormData.fromMap({
         ...pet.toJson(),
-        "photo": await MultipartFile.fromFile(pet.photo!, filename: pet.name)
+        if (pet.photo!.isNotEmpty)
+          "photo": await MultipartFile.fromFile(pet.photo!, filename: pet.name)
       });
       final Response response = await petApi.put("$_petEndpoint/$id",
           data: formData,
@@ -116,12 +117,26 @@ class PetServices {
     }
   }
 
-  Future<Response> filterPets(Map<String, String> filters) async {
+  Future<Response> filterPets(Map<String, dynamic> filters) async {
     try {
       token = getx.Get.find(tag: "userToken");
       final Response response = await petApi.get(_petEndpoint,
-          queryParameters: filters,
-          options: Options(headers: {"Authorization": token.token}));
+          queryParameters: filters.map((key, value) {
+        var newKey = "";
+        switch (key) {
+          case "minAge":
+          case "maxAge":
+          case "special_need":
+          case "neutered":
+          case "userId":
+            newKey = key;
+            break;
+          default:
+            newKey = "$key[]";
+            break;
+        }
+        return MapEntry(newKey, value);
+      }), options: Options(headers: {"Authorization": token.token}));
       return response;
     } catch (e) {
       rethrow;
