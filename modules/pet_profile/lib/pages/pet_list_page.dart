@@ -31,7 +31,8 @@ class _PetListPageState extends State<PetListPage> {
     try {
       return await PetController.getAllPets();
     } catch (e) {
-      Get.snackbar('Erro!', e.toString());
+      // Get.snackbar('Erro!', e.toString());
+      Get.snackbar('Erro!', "Não foi possivel obter a lista de Animais.");
     }
     return null;
   }

@@ -118,13 +118,12 @@ class _UserLoginState extends State<UserLogin> {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 20),
                             child: Center(
-                              child: PrimaryButton(
-                                isLoading: isLoading,
-                                onTap: _signIn,
-                                text: AppStrings.loginButton,
-                                backgroundColor: AppColors.blueButton,
-                              ),
-                            ),
+                                child: PrimaryButton(
+                              isLoading: isLoading,
+                              onTap: _signIn,
+                              text: AppStrings.loginButton,
+                              backgroundColor: AppColors.blueButton,
+                            )),
                           ),
                         ],
                       ),
@@ -167,6 +166,7 @@ class _UserLoginState extends State<UserLogin> {
       }
     } on Exception catch (e) {
       Get.snackbar("Erro!", e.toString(), duration: const Duration(seconds: 5));
+      isLoading.value = false;
     }
   }
 }

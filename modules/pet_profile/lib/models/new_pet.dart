@@ -46,7 +46,7 @@ class NewPet {
         "weight": weight,
         "description": description,
         "neutered": neutered! ? 1 : 0,
-        "specialNeeds": specialNeed! ? 1 : 0,
+        "special_need": specialNeed! ? 1 : 0,
         "lat": lat,
         "lng": lng,
         "address": address,

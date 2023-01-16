@@ -7,6 +7,7 @@ import 'package:pet_profile/models/new_pet.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 import 'package:pet_profile/repository/pet_repository.dart';
 import 'package:pet_profile/widgets/pet_card.dart';
+import 'package:user_profile/model/user.dart';
 import 'package:user_profile/model/user_location.dart';
 
 class PetController {
@@ -26,45 +27,43 @@ class PetController {
       String photoUrl) async {
     try {
       final PetRepository petRepository = Get.find();
-      UserLocation? location = await _getCurrentLocation();
-      var speciesList = await petRepository.getSpecies();
-      var gendersList = await petRepository.getGenders();
-      var sizesList = await petRepository.getSizes();
-      var statusList = await petRepository.getStatus();
+      NewPet newPet = await newPetInstance(name, species, gender, size, status,
+          breed, age, weight, description, neutered, specialNeed, photoUrl);
 
-      var specieMapped = speciesList
-          .firstWhere((element) => element.displayName == species)
-          .normalizedName;
-
-      var genderMapped = gendersList
-          .firstWhere((element) => element.displayName == gender)
-          .normalizedName;
-
-      var sizeMapped = sizesList
-          .firstWhere((element) => element.displayName == size)
-          .normalizedName;
-
-      var statusMapped = statusList
-          .firstWhere((element) => element.displayName == status)
-          .normalizedName;
-
-      NewPet newPet = NewPet(
-          name: name,
-          species: specieMapped,
-          gender: genderMapped,
-          size: sizeMapped,
-          status: statusMapped,
-          breed: breed,
-          age: age,
-          weight: weight,
-          description: description,
-          neutered: neutered,
-          specialNeed: specialNeed,
-          photo: photoUrl,
-          lat: location?.lat,
-          lng: location?.lng,
-          address: location?.address);
       await petRepository.addNewPetRequested(newPet);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<void> updatePet(
+      int petId,
+      String name,
+      String species,
+      String gender,
+      String size,
+      String status,
+      String breed,
+      int age,
+      double weight,
+      String description,
+      bool neutered,
+      bool specialNeed,
+      String photoUrl) async {
+    try {
+      final PetRepository petRepository = Get.find();
+      NewPet newPet = await newPetInstance(name, species, gender, size, status,
+          breed, age, weight, description, neutered, specialNeed, photoUrl);
+      await petRepository.updatePetRequested(petId, newPet);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<void> deletePet(int petId) async {
+    try {
+      final PetRepository petRepository = Get.find();
+      await petRepository.deletePetRequested(petId);
     } catch (e) {
       rethrow;
     }
@@ -81,6 +80,43 @@ class PetController {
           PetCard petCard = PetCard(pet: pet);
           cardsList.add(petCard);
         }
+      }
+      return cardsList;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<List<PetCard>> getFilteredPets(
+      Map<String, dynamic> filters) async {
+    final List<PetCard> cardsList = [];
+    try {
+      final PetRepository petRepository = Get.find();
+      final List<PetProfile> response =
+          // await petRepository.getPetsResquested();
+          await petRepository.getFilteredPets(filters);
+      for (var pet in response) {
+        PetCard petCard = PetCard(pet: pet);
+        cardsList.add(petCard);
+      }
+      return cardsList;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<List<PetCard>> getPetsByUser(User user) async {
+    final List<PetCard> cardsList = [];
+    Map<String, int> filter = {
+      "user": user.id!,
+    };
+    try {
+      final PetRepository petRepository = Get.find();
+      final List<PetProfile> response =
+          await petRepository.getFilteredPets(filter);
+      for (var pet in response) {
+        PetCard petCard = PetCard(pet: pet);
+        cardsList.add(petCard);
       }
       return cardsList;
     } catch (e) {
@@ -154,4 +190,63 @@ Future<UserLocation?> _getCurrentLocation() async {
   final UserLocation userLocation = UserLocation(
       lat: position.latitude, lng: position.longitude, address: address);
   return userLocation;
+}
+
+Future<NewPet> newPetInstance(
+    String name,
+    String species,
+    String gender,
+    String size,
+    String status,
+    String breed,
+    int age,
+    double weight,
+    String description,
+    bool neutered,
+    bool specialNeed,
+    String photoUrl) async {
+  try {
+    final PetRepository petRepository = Get.find();
+
+    UserLocation? location = await _getCurrentLocation();
+    var speciesList = await petRepository.getSpecies();
+    var gendersList = await petRepository.getGenders();
+    var sizesList = await petRepository.getSizes();
+    var statusList = await petRepository.getStatus();
+
+    var specieMapped = speciesList
+        .firstWhere((element) => element.displayName == species)
+        .normalizedName;
+
+    var genderMapped = gendersList
+        .firstWhere((element) => element.displayName == gender)
+        .normalizedName;
+
+    var sizeMapped = sizesList
+        .firstWhere((element) => element.displayName == size)
+        .normalizedName;
+
+    var statusMapped = statusList
+        .firstWhere((element) => element.displayName == status)
+        .normalizedName;
+
+    return NewPet(
+        name: name,
+        species: specieMapped,
+        gender: genderMapped,
+        size: sizeMapped,
+        status: statusMapped,
+        breed: breed,
+        age: age,
+        weight: weight,
+        description: description,
+        neutered: neutered,
+        specialNeed: specialNeed,
+        photo: photoUrl,
+        lat: location?.lat,
+        lng: location?.lng,
+        address: location?.address);
+  } catch (e) {
+    rethrow;
+  }
 }
