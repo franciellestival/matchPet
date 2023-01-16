@@ -35,7 +35,8 @@ class PetDetailPage extends StatelessWidget {
                 ),
                 image: DecorationImage(
                   fit: BoxFit.fitWidth,
-                  image: NetworkImage(pet!.photoUrl!),
+                  image: NetworkImage(pet!.photoUrl ??
+                      'https://i.pinimg.com/originals/d8/9e/d9/d89ed96e3cda94aff64b574662a621b3.jpg'),
                 ),
               ),
               child: Stack(
