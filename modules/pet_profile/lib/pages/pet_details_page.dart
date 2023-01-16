@@ -52,7 +52,7 @@ class PetDetailPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               child: Text(
-                '${pet?.name!} , ${pet?.breed}',
+                '${pet?.name ?? 'Sem Nome'}  , ${pet?.breed ?? 'Sem Raça'}',
                 style:
                     const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
@@ -80,23 +80,23 @@ class PetDetailPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                buildCardInfo('Sexo', pet!.gender!.displayName!),
+                buildCardInfo('Sexo', pet!.gender?.displayName ?? ''),
                 buildCardInfo('Idade', '${pet!.age.toString()} anos'),
                 buildCardInfo('Peso', '${pet!.weight.toString()} kg'),
-                buildCardInfo('Porte', pet!.size!.displayName!),
+                buildCardInfo('Porte', pet!.size?.displayName ?? ''),
               ],
             ),
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                pet!.description!,
+                pet!.description ?? '',
                 style: const TextStyle(fontSize: 20),
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Text(
-                'Necessidades Especiais? ${pet!.specialNeeds! ? "Sim" : "Nenhuma"}',
+                'Necessidades Especiais? ${pet!.specialNeeds ?? false ? "Sim" : "Nenhuma"}',
               ),
             ),
             const HeightSpacer(height: 40),
