@@ -29,7 +29,7 @@ class PetCard extends StatelessWidget {
             Radius.circular(20),
           ),
           border: Border.all(
-            color: AppColors.black,
+            color: AppColors.buttonColor,
             width: 1,
           ),
           image: DecorationImage(
@@ -46,7 +46,7 @@ class PetCard extends StatelessWidget {
             Align(alignment: Alignment.topRight, child: favoriteIcon()),
             Positioned(bottom: 70, child: petName()),
             Positioned(bottom: 45, child: petInfo()),
-            Positioned(bottom: 1, child: buildButton()),
+            Positioned(bottom: 0, child: buildButton()),
           ],
         ),
       ),
@@ -59,7 +59,7 @@ class PetCard extends StatelessWidget {
         onTap: () {
           Get.toNamed(Routes.petDetailPage, arguments: pet);
         },
-        backgroundColor: AppColors.white.withOpacity(0.5),
+        backgroundColor: AppColors.buttonColor.withOpacity(0.8),
         text: 'Saiba Mais',
         padding: const EdgeInsets.all(1),
         height: 10,
@@ -79,22 +79,24 @@ class PetCard extends StatelessWidget {
 
   Widget petName() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SvgPicture.asset(
             pet.gender?.id == 1 ? AppSvgs.maleIcon : AppSvgs.femaleIcon,
             color: AppColors.white,
             height: 24.0),
-        const WidthSpacer(width: 2),
-        Text(
-          pet.name ?? "Pet Teste",
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: AppColors.white,
-            fontFamily: globalFontFamily,
-            fontSize: 20.0,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
+        Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: Text(
+            pet.name ?? "Pet Teste",
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: AppColors.white,
+              fontFamily: globalFontFamily,
+              fontSize: 20.0,
+              fontWeight: FontWeight.w900,
+            ),
           ),
         ),
       ],
@@ -103,7 +105,7 @@ class PetCard extends StatelessWidget {
 
   Widget petInfo() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SvgPicture.asset(
           AppSvgs.locationIcon,
@@ -111,37 +113,32 @@ class PetCard extends StatelessWidget {
           height: 10,
           width: 10,
         ),
-        FutureBuilder<String?>(
-          future: _getPetCity(pet.location!.lat, pet.location!.lng),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              var data = snapshot.data;
-              return Text(data.toString(),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: AppColors.white,
-                    fontFamily: globalFontFamily,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 2,
-                  ));
-            } else {
-              return const Text('');
-            }
-          },
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Text(
+            '${pet.distanceBetween} km',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: AppColors.white,
+              fontFamily: globalFontFamily,
+              fontSize: 15.0,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
         ),
-        const WidthSpacer(width: 12),
-        Text(
-          pet.age.toString(),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: AppColors.white,
-            fontFamily: globalFontFamily,
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            letterSpacing: 2,
+        Padding(
+          padding: const EdgeInsets.only(left: 15),
+          child: Text(
+            '${pet.age} ano(s)',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: AppColors.white,
+              fontFamily: globalFontFamily,
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
       ],

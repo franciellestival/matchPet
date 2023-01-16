@@ -22,6 +22,7 @@ class PetProfile {
   String? photoUrl;
   UserLocation? location;
   User? owner;
+  double distanceBetween = 0;
 
   PetProfile({
     this.id,
