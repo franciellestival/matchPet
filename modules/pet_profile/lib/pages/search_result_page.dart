@@ -42,10 +42,21 @@ class SearchResultPage extends StatelessWidget {
                         style: TextStyle(fontSize: 20),
                       ),
                       snapshot.data!.isEmpty
-                          ? const Text(
-                              'Não houve resultados para a sua pesquisa :(')
-                          : Container(),
-                      PetList(title: listTitle, children: snapshot.data!),
+                          ? Center(
+                              child: Column(
+                                children: [
+                                  const Text(
+                                      'Não houve resultados para a sua pesquisa :('),
+                                  const HeightSpacer(),
+                                  PrimaryButton(
+                                      onTap: () {
+                                        Get.back();
+                                      },
+                                      text: 'Voltar')
+                                ],
+                              ),
+                            )
+                          : PetList(title: listTitle, children: snapshot.data!),
                     ],
                   );
                 } else {
