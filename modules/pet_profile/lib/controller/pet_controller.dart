@@ -87,28 +87,10 @@ class PetController {
     }
   }
 
-  static Future<List<PetCard>> getFilteredPets(
-      Map<String, dynamic> filters) async {
-    final List<PetCard> cardsList = [];
-    try {
-      final PetRepository petRepository = Get.find();
-      final List<PetProfile> response =
-          // await petRepository.getPetsResquested();
-          await petRepository.getFilteredPets(filters);
-      for (var pet in response) {
-        PetCard petCard = PetCard(pet: pet);
-        cardsList.add(petCard);
-      }
-      return cardsList;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   static Future<List<PetCard>> getPetsByUser(User user) async {
     final List<PetCard> cardsList = [];
-    Map<String, int> filter = {
-      "user": user.id!,
+    Map<String, String> filter = {
+      "user": user.id.toString(),
     };
     try {
       final PetRepository petRepository = Get.find();
@@ -163,6 +145,24 @@ class PetController {
       final statusRequested = await petRepository.getStatus();
       var statusList = [...statusRequested.map((e) => e.displayName)];
       return statusList;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<List<PetCard>> getFilteredPets(
+      Map<String, dynamic> filters) async {
+    final List<PetCard> cardsList = [];
+    try {
+      final PetRepository petRepository = Get.find();
+      final List<PetProfile> response =
+          // await petRepository.getPetsResquested();
+          await petRepository.getFilteredPets(filters);
+      for (var pet in response) {
+        PetCard petCard = PetCard(pet: pet);
+        cardsList.add(petCard);
+      }
+      return cardsList;
     } catch (e) {
       rethrow;
     }

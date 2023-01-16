@@ -32,6 +32,7 @@ class PetList extends StatelessWidget {
                 mainAxisSpacing: 2,
                 childAspectRatio: 180 / 250,
                 scrollDirection: Axis.vertical,
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 children: items.map((gridItem) {
                   return Padding(

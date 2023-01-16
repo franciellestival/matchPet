@@ -121,22 +121,26 @@ class PetServices {
     try {
       token = getx.Get.find(tag: "userToken");
       final Response response = await petApi.get(_petEndpoint,
-          queryParameters: filters.map((key, value) {
-        var newKey = "";
-        switch (key) {
-          case "minAge":
-          case "maxAge":
-          case "special_need":
-          case "neutered":
-          case "userId":
-            newKey = key;
-            break;
-          default:
-            newKey = "$key[]";
-            break;
-        }
-        return MapEntry(newKey, value);
-      }), options: Options(headers: {"Authorization": token.token}));
+          queryParameters: filters
+
+          //     .map((key, value) {
+          //   var newKey = "";
+          //   switch (key) {
+          //     case "minAge":
+          //     case "maxAge":
+          //     case "special_need":
+          //     case "neutered":
+          //     case "userId":
+          //       newKey = key;
+          //       break;
+          //     default:
+          //       newKey = "$key[]";
+          //       break;
+          //   }
+          //   return MapEntry(newKey, value);
+          // })
+          ,
+          options: Options(headers: {"Authorization": token.token}));
       return response;
     } catch (e) {
       rethrow;
