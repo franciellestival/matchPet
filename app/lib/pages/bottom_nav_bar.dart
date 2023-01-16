@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:pet_profile/pages/missing_pet_page.dart';
 import 'package:pet_profile/pages/pet_list_page.dart';
+
 import 'package:pet_profile/pages/pet_register_page.dart';
 import 'package:theme/export_theme.dart';
 
@@ -22,7 +22,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
     PetListPage(),
     FavoritesPage(),
     PetRegisterPage(),
-    MissingPetsPage(),
+    MissingPetPage(),
     StatusPage()
   ];
 

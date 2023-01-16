@@ -80,11 +80,13 @@ class PetCard extends StatelessWidget {
   Widget petName() {
     return Row(
       children: [
-        SvgPicture.asset(AppSvgs.maleIcon,
-            color: AppColors.white, height: 24.0),
+        SvgPicture.asset(
+            pet.gender?.id == 1 ? AppSvgs.maleIcon : AppSvgs.femaleIcon,
+            color: AppColors.white,
+            height: 24.0),
         const WidthSpacer(width: 2),
         Text(
-          pet.name ?? "Sem nome",
+          pet.name ?? "Pet Teste",
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(

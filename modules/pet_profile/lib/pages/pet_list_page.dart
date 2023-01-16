@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
-import 'package:pet_profile/models/pet_profile.dart';
 import 'package:pet_profile/pages/pet_filter_modal.dart';
 import 'package:pet_profile/pages/pet_search_bar.dart';
 
@@ -9,23 +8,10 @@ import 'package:pet_profile/widgets/pet_card.dart';
 import 'package:pet_profile/widgets/pet_list.dart';
 import 'package:theme/export_theme.dart';
 
-class PetListPage extends StatefulWidget {
-  final String listTitle = 'Todos disponíveis';
+class PetListPage extends StatelessWidget {
+  PetListPage({super.key});
 
-  const PetListPage({super.key});
-
-  @override
-  State<PetListPage> createState() => _PetListPageState();
-}
-
-class _PetListPageState extends State<PetListPage> {
-  List<PetProfile> profilesList = [];
-  List<PetCard> petCardsList = [];
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  String listTitle = 'Todos os Pets';
 
   Future<List<PetCard>?> _getPetsList() async {
     try {
@@ -40,7 +26,7 @@ class _PetListPageState extends State<PetListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar(title: widget.listTitle),
+      appBar: GenericAppBar(title: listTitle),
       backgroundColor: AppColors.primaryLightColor,
       body: SingleChildScrollView(
         child: Column(
@@ -69,8 +55,7 @@ class _PetListPageState extends State<PetListPage> {
               future: _getPetsList(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return PetList(
-                      title: widget.listTitle, children: snapshot.data!);
+                  return PetList(title: listTitle, children: snapshot.data!);
                 } else {
                   if (snapshot.hasError) {
                     Get.snackbar('Error', snapshot.error.toString());
