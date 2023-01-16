@@ -61,13 +61,10 @@ class FormInputBox extends StatelessWidget {
                       BorderRadius.all(Radius.circular(AppRadius.buttonRadius)),
                   borderSide: const BorderSide(color: AppColors.buttonColor),
                 ),
-                // hintText: hintText,
-                // hintStyle: TextStyle(
-                //   color: AppColors.hintTextColor,
-                // ),
                 label: Text.rich(TextSpan(
                     children: <InlineSpan>[WidgetSpan(child: Text(hintText))])),
               ),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: validator,
               controller: controller,
               inputFormatters: inputFormatters,

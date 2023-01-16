@@ -47,7 +47,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
       child: Wrap(
         runSpacing: 22,
         children: <Widget>[
-          ImageInput(placeHolderPath: AppSvgs.pawIcon, isEnabled: true.obs),
+          ImageInput(placeHolderPath: AppSvgs.pawIcon, isEnabled: true),
           const Text(
             'Informações Gerais',
             style: TextStyle(fontSize: 16),

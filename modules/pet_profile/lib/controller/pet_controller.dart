@@ -92,13 +92,12 @@ class PetController {
     final List<PetCard> cardsList = [];
     try {
       final PetRepository petRepository = Get.find();
-      final List<PetProfile>? response =
-          await petRepository.getPetsResquested();
-      if (response != null) {
-        for (var pet in response) {
-          PetCard petCard = PetCard(pet: pet);
-          cardsList.add(petCard);
-        }
+      final List<PetProfile> response =
+          // await petRepository.getPetsResquested();
+          await petRepository.getFilteredPets(filters);
+      for (var pet in response) {
+        PetCard petCard = PetCard(pet: pet);
+        cardsList.add(petCard);
       }
       return cardsList;
     } catch (e) {

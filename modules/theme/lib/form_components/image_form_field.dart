@@ -9,7 +9,7 @@ import '../export_theme.dart';
 
 class ImageInput extends StatelessWidget {
   final String placeHolderPath;
-  final Rx<bool> isEnabled;
+  final bool isEnabled;
 
   XFile? pickedFile;
   ImagePicker imagePicker = ImagePicker();
@@ -66,7 +66,7 @@ class ImageInput extends StatelessWidget {
                         Icons.add_a_photo_outlined,
                         size: 25.0,
                       ),
-                      onPressed: isEnabled.value
+                      onPressed: isEnabled
                           ? () {
                               showModalBottomSheet(
                                   context: context,

@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:pet_profile/pages/pet_details_page.dart';
 
 import 'package:pet_profile/pages/pet_list_page.dart';
-import 'package:pet_profile/pages/pet_profile_page.dart';
+import 'package:pet_profile/pages/pet_edit_page.dart';
 import 'package:pet_profile/pages/pet_register_page.dart';
 import 'package:user_profile/pages/login_page.dart';
 import 'package:user_profile/pages/profile_page.dart';
@@ -54,8 +54,8 @@ class AppPages {
       page: () => CustomBottomNavBar(),
     ),
     GetPage(
-      name: Routes.petProfilePage,
-      page: () => PetProfilePage(),
+      name: Routes.petEditPage,
+      page: () => PetEditPage(),
     ),
   ];
 }

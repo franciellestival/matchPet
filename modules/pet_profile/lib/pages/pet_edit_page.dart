@@ -6,16 +6,16 @@ import 'package:pet_profile/models/pet_profile.dart';
 
 import 'package:theme/export_theme.dart';
 
-class PetProfilePage extends StatefulWidget {
+class PetEditPage extends StatefulWidget {
   static const heightSpacer = HeightSpacer();
 
-  const PetProfilePage({super.key});
+  const PetEditPage({super.key});
 
   @override
-  State<PetProfilePage> createState() => _PetProfilePageState();
+  State<PetEditPage> createState() => _PetEditPageState();
 }
 
-class _PetProfilePageState extends State<PetProfilePage> {
+class _PetEditPageState extends State<PetEditPage> {
   PetProfile pet = Get.arguments;
 
   //formKey set up
@@ -64,7 +64,8 @@ class _PetProfilePageState extends State<PetProfilePage> {
         runSpacing: 22,
         children: <Widget>[
           // ImageInput(placeHolderPath: AppSvgs.pawIcon),
-          ImageInput(placeHolderPath: pet.photoUrl!, isEnabled: inputEnabled),
+          ImageInput(
+              placeHolderPath: pet.photoUrl!, isEnabled: inputEnabled.value),
           const Text(
             'Informações Gerais',
             style: TextStyle(fontSize: 16),
@@ -262,12 +263,12 @@ class _PetProfilePageState extends State<PetProfilePage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              PetProfilePage.heightSpacer,
+              PetEditPage.heightSpacer,
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: _buildPetRegisterForm(_formKey),
               ),
-              PetProfilePage.heightSpacer,
+              PetEditPage.heightSpacer,
             ],
           ),
         ),
@@ -316,10 +317,9 @@ class _PetProfilePageState extends State<PetProfilePage> {
       barrierDismissible: false,
       cancelTextColor: AppColors.black,
       confirmTextColor: AppColors.black,
-      onConfirm: () {
+      onConfirm: () async {
         try {
-          //TODO Desabilitado para testes
-          //TODO PetContoller.deletePet(pet.id);
+          await PetController.deletePet(pet.id!);
           Get.offAndToNamed(Routes.initialRoute);
         } catch (e) {
           Get.snackbar("Erro!", e.toString(),
