@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/pet_filter_controller.dart';
+import 'package:pet_profile/pages/missing_pet_page.dart';
+import 'package:pet_profile/pages/search_result_page.dart';
 import 'package:theme/export_theme.dart';
 
 class PetFilter extends StatelessWidget {
@@ -204,7 +207,7 @@ class PetFilter extends StatelessWidget {
                     'Necessidades \n Especiais',
                     maxLines: 2,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 1, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Obx(() {
@@ -308,8 +311,15 @@ class PetFilter extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
         child: Center(
-            child: PrimaryButton(height: 50, onTap: () {}, text: 'Filtrar')),
-      )
+          child: PrimaryButton(
+              height: 50,
+              onTap: () {
+                var mappedFilters = filterController.getQueryMap();
+                Get.to(SearchResultPage(), arguments: mappedFilters);
+              },
+              text: 'Filtrar'),
+        ),
+      ),
     ];
   }
 }
