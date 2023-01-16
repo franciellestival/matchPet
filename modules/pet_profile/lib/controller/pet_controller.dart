@@ -7,6 +7,7 @@ import 'package:pet_profile/models/new_pet.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 import 'package:pet_profile/repository/pet_repository.dart';
 import 'package:pet_profile/widgets/pet_card.dart';
+
 import 'package:user_profile/model/user.dart';
 import 'package:user_profile/model/user_location.dart';
 
@@ -72,10 +73,9 @@ class PetController {
   static Future<List<PetCard>> getAllPets() async {
     final List<PetCard> cardsList = [];
     try {
-      final PetRepository petRepository = Get.find();
-      final List<PetProfile>? response =
-          await petRepository.getPetsResquested();
-      if (response != null) {
+      final List<PetProfile> response = await sortByDistance();
+
+      if (response.isNotEmpty) {
         for (var pet in response) {
           PetCard petCard = PetCard(pet: pet);
           cardsList.add(petCard);
@@ -154,15 +154,62 @@ class PetController {
       Map<String, dynamic> filters) async {
     final List<PetCard> cardsList = [];
     try {
-      final PetRepository petRepository = Get.find();
-      final List<PetProfile> response =
-          // await petRepository.getPetsResquested();
-          await petRepository.getFilteredPets(filters);
+      final List<PetProfile> response = await sortByDistance(filters: filters);
       for (var pet in response) {
         PetCard petCard = PetCard(pet: pet);
         cardsList.add(petCard);
       }
       return cardsList;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<List<PetProfile>> filterPets(
+      Map<String, dynamic> filters) async {
+    final List<PetProfile> petList = [];
+    try {
+      final PetRepository petRepository = Get.find();
+      final List<PetProfile> response =
+          // await petRepository.getPetsResquested();
+          await petRepository.getFilteredPets(filters);
+      for (var pet in response) {
+        petList.add(pet);
+      }
+      return petList;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<List<PetProfile>> sortByDistance(
+      {Map<String, dynamic>? filters}) async {
+    UserLocation? userLocation = await _getCurrentLocation();
+
+    final List<PetProfile> petList = [];
+
+    try {
+      final PetRepository petRepository = Get.find();
+      final List<PetProfile>? response = filters == null
+          ? await petRepository.getPetsResquested()
+          : await filterPets(filters);
+      if (response != null) {
+        for (var pet in response) {
+          var distanceFromUser = (GeolocatorPlatform.instance.distanceBetween(
+                      userLocation?.lat ?? 0,
+                      userLocation?.lng ?? 0,
+                      pet.location?.lat ?? 0,
+                      pet.location?.lng ?? 0) /
+                  1000)
+              .toStringAsFixed(2);
+          pet.distanceBetween = double.parse(distanceFromUser);
+          petList.add(pet);
+        }
+      }
+
+      petList.sort((a, b) => a.distanceBetween.compareTo(b.distanceBetween));
+
+      return petList;
     } catch (e) {
       rethrow;
     }

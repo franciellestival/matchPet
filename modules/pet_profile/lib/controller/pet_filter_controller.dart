@@ -1,9 +1,4 @@
 import 'package:get/get.dart';
-import 'package:pet_profile/models/pet_profile.dart';
-import 'package:pet_profile/repository/pet_repository.dart';
-import 'package:pet_profile/widgets/pet_card.dart';
-import 'package:user_profile/controller/user_controller.dart';
-import 'package:user_profile/model/token.dart';
 
 class FilterController extends GetxController {
   var ageStartValue = 0.0.obs;
