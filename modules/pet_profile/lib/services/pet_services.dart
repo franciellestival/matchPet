@@ -52,8 +52,10 @@ class PetServices {
   Future<Response?> updatePet(int id, NewPet pet) async {
     try {
       token = getx.Get.find(tag: "userToken");
+      var data = pet.toJson();
+      data.remove("photo");
       var formData = FormData.fromMap({
-        ...pet.toJson(),
+        ...data,
         if (pet.photo!.isNotEmpty)
           "photo": await MultipartFile.fromFile(pet.photo!, filename: pet.name)
       });

@@ -87,6 +87,15 @@ class PetController {
     }
   }
 
+  static Future<PetProfile?> getPetByID(int id) async {
+    try {
+      final PetRepository petRepository = Get.find();
+      return await petRepository.getPetByID(id);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   static Future<List<PetCard>> getPetsByUser(User user) async {
     final List<PetCard> cardsList = [];
     Map<String, String> filter = {

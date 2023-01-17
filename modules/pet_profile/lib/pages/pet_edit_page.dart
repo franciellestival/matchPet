@@ -296,6 +296,8 @@ class _PetEditPageState extends State<PetEditPage> {
                 ? _imageController.imagePath.value
                 : '');
 
+        pet = (await PetController.getPetByID(pet.id!))!;
+        Get.offAndToNamed(Routes.petDetailPage, arguments: pet);
         Get.snackbar("Sucesso!", "Pet alterado com sucesso!");
       } catch (e) {
         Get.snackbar("Erro!", e.toString(),

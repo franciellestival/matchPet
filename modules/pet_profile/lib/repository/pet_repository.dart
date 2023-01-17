@@ -27,7 +27,8 @@ class PetRepository {
   Future<PetProfile?> getPetByID(int id) async {
     try {
       final response = await petAPIServices.getPetById(id);
-      final pet = response?.data as PetProfile;
+      // final pet = response?.data as PetProfile;
+      final pet = PetProfile.fromJson(response?.data);
       return pet;
     } on DioError catch (e) {
       final error = APIExceptions.fromDioError(e);
