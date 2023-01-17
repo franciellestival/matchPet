@@ -56,7 +56,7 @@ class PetServices {
       data.remove("photo");
       var formData = FormData.fromMap({
         ...data,
-        if (pet.photo!.isNotEmpty)
+        if ((pet.photo ?? "").isNotEmpty)
           "photo": await MultipartFile.fromFile(pet.photo!, filename: pet.name)
       });
       final Response response = await petApi.put("$_petEndpoint/$id",
