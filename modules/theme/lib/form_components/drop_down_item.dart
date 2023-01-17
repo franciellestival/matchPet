@@ -46,7 +46,9 @@ class _DropDownItemState extends State<DropDownItem> {
           child: Text(item.toString().split('.').last),
         );
       }).toList(),
-      value: widget.currentValue.value,
+      value: widget.currentValue.value.isEmpty
+          ? widget.items.first
+          : widget.currentValue.value.toString(),
       onChanged: !widget.isEnabled.value
           ? null
           : (newValue) =>

@@ -24,23 +24,35 @@ class FilterController extends GetxController {
   Map<String, dynamic> getQueryMap() {
     Map<String, dynamic> map = {};
 
-    if (dogSelected.value) map.addEntries({'species': 'dog'}.entries);
-    if (catSelected.value) map.addEntries({'species': 'cat'}.entries);
-    if (otherSelected.value) map.addEntries({'species': 'others'}.entries);
-    if (maleSelected.value) map.addEntries({'gender': 'male'}.entries);
-    if (femaleSelected.value) map.addEntries({'gender': 'female'}.entries);
-    if (smallSelected.value) map.addEntries({'size': 'small'}.entries);
-    if (mediumSelected.value) map.addEntries({'size': 'medium'}.entries);
-    if (bigSelected.value) map.addEntries({'size': 'big'}.entries);
+    List<String> speciesList = [];
+    List<String> genderList = [];
+    List<String> sizeList = [];
+
+    if (dogSelected.value) speciesList.add('dog');
+    if (catSelected.value) speciesList.add('cat');
+    if (otherSelected.value) speciesList.add('others');
+
+    if (maleSelected.value) genderList.add('male');
+    if (femaleSelected.value) genderList.add('female');
+
+    if (smallSelected.value) sizeList.add('small');
+    if (mediumSelected.value) sizeList.add('medium');
+    if (bigSelected.value) sizeList.add('big');
+
+    if (speciesList.isNotEmpty) {
+      map.addEntries({'species': speciesList.join(',')}.entries);
+    }
+    if (genderList.isNotEmpty) {
+      map.addEntries({'gender': genderList.join(',')}.entries);
+    }
+    if (sizeList.isNotEmpty) {
+      map.addEntries({'size': sizeList.join(',')}.entries);
+    }
 
     map.addEntries({'minAge': ageStartValue.round().toString()}.entries);
     map.addEntries({'maxAge': ageEndValue.round().toString()}.entries);
-
-    if (specialNeedsSelected.value) {
-      map.addEntries({'special_need': '0'}.entries);
-    } else {
-      map.addEntries({'special_need': '1'}.entries);
-    }
+    map.addEntries(
+        {'special_need': specialNeedsSelected.value ? '0' : '1'}.entries);
 
     return map;
   }

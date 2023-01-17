@@ -313,7 +313,7 @@ class PetFilter extends StatelessWidget {
               height: 50,
               onTap: () {
                 var mappedFilters = filterController.getQueryMap();
-                Get.to(SearchResultPage(), arguments: mappedFilters);
+                Get.to(() => SearchResultPage(), arguments: mappedFilters);
               },
               text: 'Filtrar'),
         ),
