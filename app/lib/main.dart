@@ -7,11 +7,16 @@ import 'package:matchpet/routes/app_routes.dart';
 import 'di/home_binding.dart';
 import 'di/splash_dependency.dart';
 import 'routes/app_pages.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsBinding binding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: binding);
   await SplashDependency().initializeSettings();
+  await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
   runApp(MyApp());
 }
 
