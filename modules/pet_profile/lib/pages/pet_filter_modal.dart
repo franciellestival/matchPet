@@ -5,12 +5,12 @@ import 'package:pet_profile/controller/pet_filter_controller.dart';
 import 'package:pet_profile/pages/search_result_page.dart';
 import 'package:theme/export_theme.dart';
 
-class PetFilter extends StatelessWidget {
-  PetFilter({super.key});
-  FilterController filterController = FilterController();
+class PetFilter extends GetView<FilterController> {
+  const PetFilter({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Get.put(FilterController());
     return Wrap(
       children: _buildFilters(),
     );
@@ -99,21 +99,18 @@ class PetFilter extends StatelessWidget {
                     children: [
                       _buildFilterButton(
                           icon: AppSvgs.dogIcon,
-                          selected: filterController.dogSelected.value,
-                          onPressed: () =>
-                              filterController.dogSelected.toggle(),
+                          selected: controller.dogSelected.value,
+                          onPressed: () => controller.dogSelected.toggle(),
                           label: 'Cão'),
                       _buildFilterButton(
                           icon: AppSvgs.catIcon,
-                          selected: filterController.catSelected.value,
-                          onPressed: () =>
-                              filterController.catSelected.toggle(),
+                          selected: controller.catSelected.value,
+                          onPressed: () => controller.catSelected.toggle(),
                           label: 'Gato'),
                       _buildFilterButton(
                           icon: AppSvgs.animalsIcon,
-                          onPressed: () =>
-                              filterController.otherSelected.toggle(),
-                          selected: filterController.otherSelected.value,
+                          onPressed: () => controller.otherSelected.toggle(),
+                          selected: controller.otherSelected.value,
                           label: 'Outro'),
                     ],
                   );
@@ -135,15 +132,13 @@ class PetFilter extends StatelessWidget {
                     children: [
                       _buildFilterButton(
                           icon: AppSvgs.maleIcon,
-                          onPressed: () =>
-                              filterController.maleSelected.toggle(),
-                          selected: filterController.maleSelected.value,
+                          onPressed: () => controller.maleSelected.toggle(),
+                          selected: controller.maleSelected.value,
                           label: 'Macho'),
                       _buildFilterButton(
                           icon: AppSvgs.femaleIcon,
-                          selected: filterController.femaleSelected.value,
-                          onPressed: () =>
-                              filterController.femaleSelected.toggle(),
+                          selected: controller.femaleSelected.value,
+                          onPressed: () => controller.femaleSelected.toggle(),
                           label: 'Fêmea'),
                     ],
                   );
@@ -173,21 +168,18 @@ class PetFilter extends StatelessWidget {
                     children: [
                       _buildFilterButton(
                           icon: AppSvgs.sizeP,
-                          selected: filterController.smallSelected.value,
-                          onPressed: () =>
-                              filterController.smallSelected.toggle(),
+                          selected: controller.smallSelected.value,
+                          onPressed: () => controller.smallSelected.toggle(),
                           label: 'Pequeno'),
                       _buildFilterButton(
                           icon: AppSvgs.sizeM,
-                          selected: filterController.mediumSelected.value,
-                          onPressed: () =>
-                              filterController.mediumSelected.toggle(),
+                          selected: controller.mediumSelected.value,
+                          onPressed: () => controller.mediumSelected.toggle(),
                           label: 'Médio'),
                       _buildFilterButton(
                           icon: AppSvgs.sizeG,
-                          selected: filterController.bigSelected.value,
-                          onPressed: () =>
-                              filterController.bigSelected.toggle(),
+                          selected: controller.bigSelected.value,
+                          onPressed: () => controller.bigSelected.toggle(),
                           label: 'Grande'),
                     ],
                   );
@@ -214,16 +206,15 @@ class PetFilter extends StatelessWidget {
                     children: [
                       _buildFilterButton(
                           icon: AppSvgs.check,
-                          selected:
-                              filterController.noSpecialNeedsSelected.value,
+                          selected: controller.specialNeedYesSelected.value,
                           onPressed: () =>
-                              filterController.noSpecialNeedsSelected.toggle(),
+                              controller.specialNeedYesSelected.toggle(),
                           label: 'Sim'),
                       _buildFilterButton(
                           icon: AppSvgs.close,
-                          selected: filterController.specialNeedsSelected.value,
+                          selected: controller.specialNeedNoSelected.value,
                           onPressed: () =>
-                              filterController.specialNeedsSelected.toggle(),
+                              controller.specialNeedNoSelected.toggle(),
                           label: 'Não'),
                     ],
                   );
@@ -233,88 +224,68 @@ class PetFilter extends StatelessWidget {
           ),
         ],
       ),
-      StatefulBuilder(
-        builder: (context, state) {
-          return Column(
-            children: [
-              const HeightSpacer(height: 5),
-              const Text(
-                'Idade',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                'Entre ${filterController.ageStartValue.round().toString()} e  ${filterController.ageEndValue.round().toString()} anos',
-              ),
-              RangeSlider(
-                min: 0.0,
-                max: 10.0,
-                divisions: 10,
-                labels: RangeLabels(
-                  filterController.ageStartValue.round().toString(),
-                  filterController.ageEndValue.round().toString(),
-                ),
-                activeColor: AppColors.buttonColor,
-                inactiveColor: Colors.orange.shade100,
-                values: RangeValues(filterController.ageStartValue.value,
-                    filterController.ageEndValue.value),
-                onChanged: (values) {
-                  state(
-                    () {
-                      filterController.ageStartValue.value = values.start;
-                      filterController.ageEndValue.value = values.end;
-                    },
-                  );
-                },
-              ),
-            ],
-          );
-        },
+      Column(
+        children: [
+          const HeightSpacer(height: 5),
+          const Text(
+            'Idade',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          Obx(() => Text(
+                'Entre ${controller.ageStart.toString()} e  ${controller.ageEnd.toString()} anos',
+              )),
+          Obx(
+            () => RangeSlider(
+              activeColor: AppColors.buttonColor,
+              inactiveColor: Colors.orange.shade100,
+              labels: RangeLabels(
+                  controller.ageStart.toString(), controller.ageEnd.toString()),
+              values: RangeValues(
+                  controller.ageStart.toDouble(), controller.ageEnd.toDouble()),
+              onChanged: (RangeValues values) {
+                controller.ageStart = values.start.toInt();
+                controller.ageEnd = values.end.toInt();
+              },
+              min: 0.0,
+              max: 15.0,
+              divisions: 15,
+            ),
+          ),
+        ],
       ),
-      StatefulBuilder(
-        builder: (context, state) {
-          return Column(
-            children: [
-              const Text(
-                'Distância',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                'Entre ${filterController.distanceStartValue.round().toString()} e  ${filterController.distanceEndValue.round().toString()} km',
-              ),
-              RangeSlider(
-                min: 0.0,
-                max: 100.0,
-                divisions: 10,
-                labels: RangeLabels(
-                  filterController.distanceStartValue.round().toString(),
-                  filterController.distanceEndValue.round().toString(),
-                ),
-                activeColor: AppColors.buttonColor,
-                inactiveColor: Colors.orange.shade100,
-                values: RangeValues(filterController.distanceStartValue.value,
-                    filterController.distanceEndValue.value),
-                onChanged: (values) {
-                  state(
-                    () {
-                      filterController.distanceStartValue.value = values.start;
-                      filterController.distanceEndValue.value = values.end;
-                    },
-                  );
-                },
-              ),
-            ],
-          );
-        },
+      Column(
+        children: [
+          const Text(
+            'Distância',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          Obx(() => Text(
+                'Até ${controller.distanceSlider.toInt().toString()} km',
+              )),
+          Obx(
+            () => Slider(
+              label: controller.distanceSlider.toString(),
+              activeColor: AppColors.buttonColor,
+              inactiveColor: Colors.orange.shade100,
+              value: controller.distanceSlider.toDouble(),
+              onChanged: ((double value) {
+                controller.distanceSlider = value.toInt();
+              }),
+              min: 1.0,
+              max: 100.0,
+            ),
+          ),
+        ],
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
         child: Center(
           child: PrimaryButton(
               height: 50,
-              onTap: () {
-                var mappedFilters = filterController.getQueryMap();
-                Get.to(() => SearchResultPage(), arguments: mappedFilters);
-              },
+              onTap: () => Future.sync(() async {
+                    var mappedFilters = await controller.getQueryMap();
+                    Get.to(() => SearchResultPage(), arguments: mappedFilters);
+                  }),
               text: 'Filtrar'),
         ),
       ),
