@@ -4,6 +4,7 @@ import 'package:pet_profile/pages/pet_details_page.dart';
 import 'package:pet_profile/pages/pet_list_page.dart';
 import 'package:pet_profile/pages/pet_edit_page.dart';
 import 'package:pet_profile/pages/pet_register_page.dart';
+import 'package:pet_profile/pages/search_result_page.dart';
 import 'package:user_profile/pages/login_page.dart';
 import 'package:user_profile/pages/profile_page.dart';
 import 'package:user_profile/pages/register_page.dart';
@@ -57,5 +58,9 @@ class AppPages {
       name: Routes.petEditPage,
       page: () => PetEditPage(),
     ),
+    GetPage(
+      name: Routes.searchResultPage,
+      page: () => SearchResultPage(),
+    )
   ];
 }

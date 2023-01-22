@@ -107,22 +107,45 @@ class StatusPage extends StatelessWidget {
             _buildFrame(
               icon: AppSvgs.dogIcon,
               text: 'Meus Pets Disponíveis',
-              ontap: () => {},
+              onPressed: () {
+                Map<String, dynamic> filters = {};
+                filters["userId"] = loggedInUser.id;
+                filters["status"] = "available";
+
+                Get.toNamed(Routes.searchResultPage, arguments: filters);
+              },
             ),
             _buildFrame(
               icon: AppSvgs.catIcon,
               text: 'Meus Pets Adotados',
-              ontap: () => {},
+              onPressed: () {
+                Map<String, dynamic> filters = {};
+                filters["userId"] = loggedInUser.id;
+                filters["status"] = "adopted";
+
+                Get.toNamed(Routes.searchResultPage, arguments: filters);
+              },
             ),
             _buildFrame(
               icon: AppSvgs.disappearedOutlined,
               text: 'Meus Pets Desaparecidos',
-              ontap: () => {},
+              onPressed: () {
+                Map<String, dynamic> filters = {};
+                filters["userId"] = loggedInUser.id;
+                filters["status"] = "missing";
+
+                Get.toNamed(Routes.searchResultPage, arguments: filters);
+              },
             ),
             _buildFrame(
               icon: AppSvgs.animalsIcon,
               text: 'Todos os meus pets',
-              ontap: () => {},
+              onPressed: () {
+                Map<String, dynamic> filters = {};
+                filters["userId"] = loggedInUser.id;
+
+                Get.toNamed(Routes.searchResultPage, arguments: filters);
+              },
             ),
           ],
         ),
@@ -135,7 +158,9 @@ class StatusPage extends StatelessWidget {
   }
 
   Widget _buildFrame(
-      {required String icon, required String text, required Function() ontap}) {
+      {required String icon,
+      required String text,
+      required Function() onPressed}) {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
         child: Padding(
@@ -159,7 +184,7 @@ class StatusPage extends StatelessWidget {
               style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all(AppColors.primaryColor)),
-              onPressed: ontap,
+              onPressed: onPressed,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
