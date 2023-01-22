@@ -18,12 +18,6 @@ class StatusPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User? user;
-    if (Get.isRegistered<User>(tag: "loggedInUser")) {
-      user = Get.find<User>(tag: "loggedInUser");
-    } else {
-      Future.sync(() async => user = await _getUser());
-    }
     String msg;
     return Scaffold(
       appBar: const GenericAppBar(title: 'Meu Perfil'),
@@ -156,7 +150,11 @@ class StatusPage extends StatelessWidget {
   }
 
   Future<User?> _getUser() async {
-    return await UserController.getLoggedUserData(userToken);
+    if (!Get.isRegistered<User>(tag: "loggedInUser")) {
+      return await UserController.getLoggedUserData(userToken);
+    } else {
+      return Get.find<User>(tag: "loggedInUser");
+    }
   }
 
   Widget _buildFrame(
