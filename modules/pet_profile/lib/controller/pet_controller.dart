@@ -1,6 +1,5 @@
 import 'dart:core';
 
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:pet_profile/models/new_pet.dart';
@@ -10,6 +9,7 @@ import 'package:pet_profile/widgets/pet_card.dart';
 
 import 'package:user_profile/model/user.dart';
 import 'package:user_profile/model/user_location.dart';
+import 'package:user_profile/repository/user_repository.dart';
 
 class PetController {
   //Cadastra um novo pet de acordo com os parametros recebidos
@@ -193,7 +193,9 @@ class PetController {
 
   static Future<List<PetProfile>> sortByDistance(
       {Map<String, dynamic>? filters}) async {
-    UserLocation? userLocation = await _getCurrentLocation();
+    final UserRepository userRepository = Get.find();
+
+    UserLocation? userLocation = await userRepository.getCurrentLocation();
 
     final List<PetProfile> petList = [];
 
@@ -229,25 +231,6 @@ class PetController {
   void removeFromFavorites() {}
 }
 
-Future<UserLocation?> _getCurrentLocation() async {
-  Position? position = await Geolocator.getCurrentPosition(
-    desiredAccuracy: LocationAccuracy.high,
-  );
-
-  List<Placemark>? placemarks = await placemarkFromCoordinates(
-      position.latitude, position.longitude,
-      localeIdentifier: 'pt_BR');
-
-  if (placemarks.isEmpty) {
-    return null;
-  }
-  Placemark place = placemarks[0];
-  final String address = place.street!.toString();
-  final UserLocation userLocation = UserLocation(
-      lat: position.latitude, lng: position.longitude, address: address);
-  return userLocation;
-}
-
 Future<NewPet> newPetInstance(
     String name,
     String species,
@@ -263,8 +246,9 @@ Future<NewPet> newPetInstance(
     String photoUrl) async {
   try {
     final PetRepository petRepository = Get.find();
+    final UserRepository userRepository = Get.find();
 
-    UserLocation? location = await _getCurrentLocation();
+    UserLocation? location = await userRepository.getCurrentLocation();
     var speciesList = await petRepository.getSpecies();
     var gendersList = await petRepository.getGenders();
     var sizesList = await petRepository.getSizes();

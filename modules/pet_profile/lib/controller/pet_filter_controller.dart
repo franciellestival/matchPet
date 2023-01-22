@@ -1,59 +1,93 @@
 import 'package:get/get.dart';
+import 'package:user_profile/model/user_location.dart';
+import 'package:user_profile/repository/user_repository.dart';
 
 class FilterController extends GetxController {
-  var ageStartValue = 0.0.obs;
-  var ageEndValue = 10.0.obs;
+  final RxBool isLoading = false.obs;
 
-  var distanceStartValue = 10.0.obs;
-  var distanceEndValue = 70.0.obs;
+  final RxInt _ageStart = 0.obs;
+  final RxInt _ageEnd = 15.obs;
 
-  var dogSelected = false.obs;
-  var catSelected = false.obs;
-  var otherSelected = false.obs;
+  int get ageStart => _ageStart.value;
+  set ageStart(int value) => _ageStart.value = value;
 
-  var maleSelected = false.obs;
-  var femaleSelected = false.obs;
+  int get ageEnd => _ageEnd.value;
+  set ageEnd(int value) => _ageEnd.value = value;
 
-  var smallSelected = false.obs;
-  var mediumSelected = false.obs;
-  var bigSelected = false.obs;
+  final RxInt _distanceSlider = 10.obs;
 
-  var noSpecialNeedsSelected = false.obs;
-  var specialNeedsSelected = false.obs;
+  int get distanceSlider => _distanceSlider.value;
+  set distanceSlider(int value) => _distanceSlider.value = value;
 
-  Map<String, dynamic> getQueryMap() {
+  RxBool dogSelected = false.obs;
+  RxBool catSelected = false.obs;
+  RxBool otherSelected = false.obs;
+
+  RxBool maleSelected = false.obs;
+  RxBool femaleSelected = false.obs;
+
+  RxBool smallSelected = false.obs;
+  RxBool mediumSelected = false.obs;
+  RxBool bigSelected = false.obs;
+
+  RxBool specialNeedYesSelected = false.obs;
+  RxBool specialNeedNoSelected = false.obs;
+
+  Future<Map<String, dynamic>> getQueryMap() async {
+    final UserRepository userRepository = Get.find();
+    final bool isDogSelected = dogSelected.value;
+    final bool isCatSelected = catSelected.value;
+    final bool isOtherSelected = otherSelected.value;
+    final bool isMaleSelected = maleSelected.value;
+    final bool isFemaleSelected = femaleSelected.value;
+    final bool isSmallSelected = smallSelected.value;
+    final bool isMediumSelected = mediumSelected.value;
+    final bool isBigSelected = bigSelected.value;
+    final bool isSpecialNeedYes = specialNeedYesSelected.value;
+    final bool isSpecialNeedNo = specialNeedNoSelected.value;
+    final int minAge = ageStart.round();
+    final int maxAge = ageEnd.round();
+    final int distance = distanceSlider.round();
+
+    Set<String> species = {};
+    if (isDogSelected) species.add('dog');
+    if (isCatSelected) species.add('cat');
+    if (isOtherSelected) species.add('others');
+
+    Set<String> gender = {};
+    if (isMaleSelected) gender.add('male');
+    if (isFemaleSelected) gender.add('female');
+
+    Set<String> size = {};
+    if (isSmallSelected) size.add('small');
+    if (isMediumSelected) size.add('medium');
+    if (isBigSelected) size.add('big');
+
     Map<String, dynamic> map = {};
-
-    List<String> speciesList = [];
-    List<String> genderList = [];
-    List<String> sizeList = [];
-
-    if (dogSelected.value) speciesList.add('dog');
-    if (catSelected.value) speciesList.add('cat');
-    if (otherSelected.value) speciesList.add('others');
-
-    if (maleSelected.value) genderList.add('male');
-    if (femaleSelected.value) genderList.add('female');
-
-    if (smallSelected.value) sizeList.add('small');
-    if (mediumSelected.value) sizeList.add('medium');
-    if (bigSelected.value) sizeList.add('big');
-
-    if (speciesList.isNotEmpty) {
-      map.addEntries({'species': speciesList.join(',')}.entries);
+    if (species.isNotEmpty) {
+      map['species'] = species.join(',');
     }
-    if (genderList.isNotEmpty) {
-      map.addEntries({'gender': genderList.join(',')}.entries);
+    if (gender.isNotEmpty) {
+      map['gender'] = gender.join(',');
     }
-    if (sizeList.isNotEmpty) {
-      map.addEntries({'size': sizeList.join(',')}.entries);
+    if (size.isNotEmpty) {
+      map['size'] = size.join(',');
+    }
+    map['minAge'] = minAge;
+    map['maxAge'] = maxAge;
+
+    // So vai preencher o special_need se marcou algum dos dois (yes/no)
+    if (isSpecialNeedNo ^ isSpecialNeedYes) {
+      map['specialNeed'] = isSpecialNeedYes ? 'yes' : 'no';
     }
 
-    map.addEntries({'minAge': ageStartValue.round().toString()}.entries);
-    map.addEntries({'maxAge': ageEndValue.round().toString()}.entries);
-    map.addEntries(
-        {'special_need': specialNeedsSelected.value ? '0' : '1'}.entries);
+    final UserLocation? location = await userRepository.getCurrentLocation();
 
+    if (location != null) {
+      map['distance'] = distance;
+      map['lat'] = location.lat;
+      map['lng'] = location.lng;
+    }
     return map;
   }
 }

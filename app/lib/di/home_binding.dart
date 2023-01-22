@@ -19,6 +19,8 @@ class HomeBinding extends Bindings {
     PetRepository petRepository = PetRepository(petServices);
     Get.put<PetRepository>(petRepository, permanent: true);
 
-    Get.put<Token>(Token());
+    if (Get.isRegistered<Token>(tag: "userToken")) {
+      Token userToken = Get.find<Token>(tag: "userToken");
+    }
   }
 }
