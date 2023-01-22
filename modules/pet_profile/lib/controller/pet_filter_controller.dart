@@ -78,7 +78,7 @@ class FilterController extends GetxController {
 
     // So vai preencher o special_need se marcou algum dos dois (yes/no)
     if (isSpecialNeedNo ^ isSpecialNeedYes) {
-      map['special_need'] = isSpecialNeedYes ? 'yes' : 'no';
+      map['specialNeed'] = isSpecialNeedYes ? 'yes' : 'no';
     }
 
     final UserLocation? location = await userRepository.getCurrentLocation();

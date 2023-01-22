@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:matchpet/routes/app_routes.dart';
 import 'package:matchpet/services/authentication_manager.dart';
 import 'package:user_profile/repository/user_repository.dart';
 import '../model/new_user.dart';
@@ -34,7 +35,8 @@ class UserController {
     try {
       final UserRepository userRepository = Get.find();
       Token token = await userRepository.loginRequested(email, password);
-      final AuthenticationManager authManager = Get.find();
+      final AuthenticationManager authManager =
+          Get.find<AuthenticationManager>();
       authManager.login(token);
       return token;
     } catch (e) {
@@ -45,8 +47,13 @@ class UserController {
 
   static Future<void> logoutUser() async {
     try {
-      final AuthenticationManager authManager = Get.find();
+      final AuthenticationManager authManager =
+          Get.find<AuthenticationManager>();
       authManager.logOut();
+      if (Get.isRegistered<User>(tag: "loggedInUser")) {
+        Get.delete<User>(tag: "loggedInUser");
+      }
+      Get.offAllNamed(Routes.initialRoute);
     } catch (e) {
       log("Erro: ${e.toString()}");
       rethrow;

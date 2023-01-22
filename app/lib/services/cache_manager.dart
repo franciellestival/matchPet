@@ -25,6 +25,7 @@ mixin CacheManager {
     final box = GetStorage();
     await box.remove(CacheManagerKey.ID.toString());
     await box.remove(CacheManagerKey.TOKEN.toString());
+    Get.delete<Token>(tag: 'userToken', force: true);
   }
 }
 

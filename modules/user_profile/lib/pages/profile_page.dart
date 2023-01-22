@@ -218,8 +218,7 @@ class _ProfilePage extends State<ProfilePage> {
       confirmTextColor: AppColors.black,
       onConfirm: () {
         try {
-          //TODO Desabilitado para testes
-          //TODO UserController.deleteUser(user.id);
+          UserController.deleteUser(user.id);
           UserController.logoutUser();
           Get.offAndToNamed(Routes.initialRoute);
         } catch (e) {
