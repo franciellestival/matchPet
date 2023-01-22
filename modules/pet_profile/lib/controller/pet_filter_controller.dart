@@ -3,6 +3,8 @@ import 'package:user_profile/model/user_location.dart';
 import 'package:user_profile/repository/user_repository.dart';
 
 class FilterController extends GetxController {
+  final RxBool isLoading = false.obs;
+
   final RxInt _ageStart = 0.obs;
   final RxInt _ageEnd = 15.obs;
 

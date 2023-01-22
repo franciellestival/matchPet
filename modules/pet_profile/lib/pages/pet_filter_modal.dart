@@ -283,9 +283,12 @@ class PetFilter extends GetView<FilterController> {
           child: PrimaryButton(
               height: 50,
               onTap: () => Future.sync(() async {
+                    controller.isLoading.value = true;
                     var mappedFilters = await controller.getQueryMap();
+                    controller.isLoading.value = false;
                     Get.to(() => SearchResultPage(), arguments: mappedFilters);
                   }),
+              isLoading: controller.isLoading,
               text: 'Filtrar'),
         ),
       ),
