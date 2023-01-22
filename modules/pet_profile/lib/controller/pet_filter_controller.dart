@@ -12,7 +12,7 @@ class FilterController extends GetxController {
   int get ageEnd => _ageEnd.value;
   set ageEnd(int value) => _ageEnd.value = value;
 
-  final RxInt _distanceSlider = 1.obs;
+  final RxInt _distanceSlider = 10.obs;
 
   int get distanceSlider => _distanceSlider.value;
   set distanceSlider(int value) => _distanceSlider.value = value;

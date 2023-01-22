@@ -12,13 +12,19 @@ import 'package:user_profile/model/user.dart';
 class StatusPage extends StatelessWidget {
   StatusPage({Key? key}) : super(key: key);
 
-  final Token userToken = Get.find(tag: "userToken");
+  final Token userToken = Get.find<Token>(tag: "userToken");
 
   static const padding = EdgeInsets.symmetric(horizontal: 8.0);
-  late String msg;
 
   @override
   Widget build(BuildContext context) {
+    User? user;
+    if (Get.isRegistered<User>(tag: "loggedInUser")) {
+      user = Get.find<User>(tag: "loggedInUser");
+    } else {
+      Future.sync(() async => user = await _getUser());
+    }
+    String msg;
     return Scaffold(
       appBar: const GenericAppBar(title: 'Meu Perfil'),
       backgroundColor: AppColors.primaryLightColor,
@@ -26,7 +32,7 @@ class StatusPage extends StatelessWidget {
         child: FutureBuilder<User?>(
           future: _getUser(),
           builder: ((context, snapshot) {
-            String msg = "Carregando...";
+            msg = "Carregando...";
             late User? user;
             if (snapshot.hasData) {
               user = snapshot.data;

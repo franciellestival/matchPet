@@ -8,7 +8,7 @@ mixin CacheManager {
     await box.write(CacheManagerKey.ID.toString(), userToken.id.toString());
     await box.write(
         CacheManagerKey.TOKEN.toString(), userToken.token.toString());
-    Get.put(userToken, tag: "userToken", permanent: true);
+    Get.put<Token>(userToken, tag: "userToken", permanent: true);
     return true;
   }
 

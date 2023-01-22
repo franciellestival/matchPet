@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pet_profile/repository/pet_repository.dart';
 import 'package:pet_profile/services/pet_services.dart';
 import 'package:user_profile/model/token.dart';
+import 'package:user_profile/model/user.dart';
 import 'package:user_profile/repository/user_repository.dart';
 import 'package:user_profile/services/user_services.dart';
 
@@ -19,6 +20,11 @@ class HomeBinding extends Bindings {
     PetRepository petRepository = PetRepository(petServices);
     Get.put<PetRepository>(petRepository, permanent: true);
 
-    Get.put<Token>(Token());
+    // Get.put<Token>(Token());
+    Token userToken = Get.find<Token>(tag: "userToken");
+    User? user = await userRepository.getUserById(userToken.id!);
+    if (user != null) {
+      Get.put<User>(user, tag: "loggedInUser");
+    }
   }
 }
