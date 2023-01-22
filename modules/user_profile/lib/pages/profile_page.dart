@@ -38,7 +38,7 @@ class _ProfilePage extends State<ProfilePage> {
 
     return Obx(() {
       return Scaffold(
-        appBar: GenericAppBar(title: 'Meu Perfil', appBar: AppBar()),
+        appBar: const GenericAppBar(title: 'Meu Perfil'),
         backgroundColor: AppColors.primaryColor,
         body: SingleChildScrollView(
           child: Column(
