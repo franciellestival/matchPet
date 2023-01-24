@@ -144,13 +144,15 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   }
 
   Future<void> _logInUser() async {
-    Token userToken = Get.find<Token>(tag: "userToken");
-    User? user = await UserController.getLoggedUserData(userToken);
-    if (user == null) {
-      Get.offAllNamed(Routes.initialRoute);
-      Get.snackbar('Erro!', 'Usuário inválido!');
-    } else {
-      Get.put<User>(user, tag: "loggedInUser");
+    if (!Get.isRegistered<User>(tag: "loggedInUser")) {
+      Token userToken = Get.find<Token>(tag: "userToken");
+      User? user = await UserController.getLoggedUserData(userToken);
+      if (user == null) {
+        Get.offAllNamed(Routes.initialRoute);
+        Get.snackbar('Erro!', 'Usuário inválido!');
+      } else {
+        Get.put<User>(user, tag: "loggedInUser");
+      }
     }
   }
 }

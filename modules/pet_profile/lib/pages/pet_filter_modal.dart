@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/pet_filter_controller.dart';
-import 'package:pet_profile/pages/search_result_page.dart';
 import 'package:theme/export_theme.dart';
 
 class PetFilter extends GetView<FilterController> {
@@ -286,7 +286,8 @@ class PetFilter extends GetView<FilterController> {
                     controller.isLoading.value = true;
                     var mappedFilters = await controller.getQueryMap();
                     controller.isLoading.value = false;
-                    Get.to(() => SearchResultPage(), arguments: mappedFilters);
+                    Get.toNamed(Routes.searchResultPage,
+                        arguments: mappedFilters);
                   }),
               isLoading: controller.isLoading,
               text: 'Filtrar'),
