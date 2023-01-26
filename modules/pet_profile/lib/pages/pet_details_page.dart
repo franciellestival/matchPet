@@ -126,7 +126,9 @@ class PetDetailPage extends StatelessWidget {
                 ),
                 PrimaryButton(
                   height: 50,
-                  onTap: () {},
+                  onTap: () {
+                    _showDialogMessage(context, false);
+                  },
                   text: 'Quero Adotar',
                   backgroundColor: AppColors.blueButton,
                 ),
@@ -210,6 +212,34 @@ class PetDetailPage extends StatelessWidget {
     isFavorited.value
         ? {controller.removeFromFavorites(), isFavorited.value = false}
         : {controller.addToFavorites(), isFavorited.value = true};
+  }
+
+  void _showDialogMessage(BuildContext context, bool success) {
+    Widget goHomeButton = TextButton(
+        onPressed: () {
+          Get.toNamed(Routes.home);
+        },
+        child: const Text('Ir para a Home'));
+
+    Widget backButton = TextButton(
+        onPressed: () {
+          Get.back();
+        },
+        child: const Text('Voltar'));
+
+    AlertDialog alert = AlertDialog(
+      title: Text('Quero adotar ${pet?.name ?? ''} '),
+      content: Text(success
+          ? 'O tutor do pet foi notificado sobre seu interesse. Logo você poderá contatá-lo'
+          : 'Algo deu errado. Tente novamente mais tarde'),
+      actions: [goHomeButton, backButton],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
   }
 
   Widget editIcon() {
