@@ -3,11 +3,11 @@ import 'dart:core';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+
 import 'package:pet_profile/models/new_pet.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 import 'package:pet_profile/repository/pet_repository.dart';
 import 'package:pet_profile/widgets/pet_card.dart';
-
 import 'package:user_profile/model/user.dart';
 import 'package:user_profile/model/user_location.dart';
 

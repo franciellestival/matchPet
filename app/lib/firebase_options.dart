@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAmFsiH1A0y3sWcd8DyfvNA2PrCw5ZHwLM',
-    appId: '1:854118004850:android:b3b3199891559b31fc6aeb',
+    appId: '1:854118004850:android:918ef5f3da4f8f70fc6aeb',
     messagingSenderId: '854118004850',
     projectId: 'matchpet-a1542',
     storageBucket: 'matchpet-a1542.appspot.com',
@@ -59,11 +59,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyA-tfOzeeNT_LdDAdryHcB35fculctcsD8',
-    appId: '1:854118004850:ios:19d12e615101bb23fc6aeb',
+    appId: '1:854118004850:ios:11cd774a47f830f9fc6aeb',
     messagingSenderId: '854118004850',
     projectId: 'matchpet-a1542',
     storageBucket: 'matchpet-a1542.appspot.com',
-    iosClientId: '854118004850-ovd2d084ksdgpe4c7h0i1bir8h9q5sv1.apps.googleusercontent.com',
-    iosBundleId: 'com.example.matchpetPoc',
+    iosClientId:
+        '854118004850-m0ooe54gvkolhg3fj5akantbdk1n2ess.apps.googleusercontent.com',
+    iosBundleId: 'com.example.matchpet_poc',
   );
 }

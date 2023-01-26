@@ -1,13 +1,17 @@
+import 'dart:developer';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../services/authentication_manager.dart';
+import 'package:matchpet/services/authentication_manager.dart';
 
 class SplashDependency {
   Future<void> initializeSettings() async {
     //Inicializa o acesso ao storage
+
     await GetStorage.init();
 
     _loggedUserDependencies();
@@ -19,6 +23,8 @@ class SplashDependency {
     FlutterNativeSplash.remove();
 
     await _getLocationPermission();
+
+    _requestNotificationPermission();
   }
 
   void _loggedUserDependencies() {
@@ -49,6 +55,30 @@ class SplashDependency {
     if (permission == LocationPermission.deniedForever) {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
+    }
+  }
+
+  void _requestNotificationPermission() async {
+    //Configuração da permissão de notificação.
+
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true);
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      log('FIREBASE PERMISSION: PERMITIDO');
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      log('FIREBASE PERMISSION: PERMITIDO PARCIALMENTE');
+    } else {
+      log('FIREBASE PERMISSION: NEGADO');
     }
   }
 }
