@@ -7,9 +7,7 @@ import 'package:pet_profile/widgets/pet_list.dart';
 import 'package:theme/export_theme.dart';
 
 class SearchResultPage extends StatelessWidget {
-  SearchResultPage({super.key});
-
-  var listTitle = 'Buscar Pets';
+  const SearchResultPage({super.key});
 
   Future<List<PetCard>?> _getPetsList() async {
     Map<String, dynamic> arguments = Get.arguments;
@@ -24,6 +22,7 @@ class SearchResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var listTitle = 'Buscar Pets';
     return Scaffold(
       appBar: GenericAppBar(title: listTitle),
       backgroundColor: AppColors.primaryLightColor,

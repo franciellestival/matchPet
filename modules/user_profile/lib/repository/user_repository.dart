@@ -1,10 +1,14 @@
 import 'dart:developer';
 
 import 'package:api_services/api_services.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:user_profile/model/new_user.dart';
 import 'package:user_profile/model/token.dart';
 import 'package:user_profile/model/user.dart';
 import 'package:user_profile/services/user_services.dart';
+
+import '../model/user_location.dart';
 
 class UserRepository {
   final UserServices userAPIServices;
@@ -77,5 +81,24 @@ class UserRepository {
       final erro = APIExceptions.fromDioError(e);
       throw erro;
     }
+  }
+
+  Future<UserLocation?> getCurrentLocation() async {
+    Position? position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    List<Placemark>? placemarks = await placemarkFromCoordinates(
+        position.latitude, position.longitude,
+        localeIdentifier: 'pt_BR');
+
+    if (placemarks.isEmpty) {
+      return null;
+    }
+    Placemark place = placemarks[0];
+    final String address = place.street!.toString();
+    final UserLocation userLocation = UserLocation(
+        lat: position.latitude, lng: position.longitude, address: address);
+    return userLocation;
   }
 }

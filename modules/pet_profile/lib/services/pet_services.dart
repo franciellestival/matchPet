@@ -59,7 +59,7 @@ class PetServices {
         if ((pet.photo ?? "").isNotEmpty)
           "photo": await MultipartFile.fromFile(pet.photo!, filename: pet.name)
       });
-      final Response response = await petApi.put("$_petEndpoint/$id",
+      final Response response = await petApi.patch("$_petEndpoint/$id",
           data: formData,
           options: Options(headers: {"Authorization": token.token}));
       return response;

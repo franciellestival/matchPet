@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/pages/missing_pet_page.dart';
 import 'package:pet_profile/pages/pet_list_page.dart';
 
 import 'package:pet_profile/pages/pet_register_page.dart';
 import 'package:theme/export_theme.dart';
+import 'package:user_profile/controller/user_controller.dart';
+import 'package:user_profile/model/token.dart';
+import 'package:user_profile/model/user.dart';
 
 import 'package:user_profile/pages/status_page.dart';
 import 'package:pet_profile/pages/favorites_page.dart';
@@ -34,6 +39,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
+    Future.sync(() => _logInUser());
     return Scaffold(
       body: Center(child: _pages.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
@@ -135,5 +141,18 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         ],
       ),
     );
+  }
+
+  Future<void> _logInUser() async {
+    if (!Get.isRegistered<User>(tag: "loggedInUser")) {
+      Token userToken = Get.find<Token>(tag: "userToken");
+      User? user = await UserController.getLoggedUserData(userToken);
+      if (user == null) {
+        Get.offAllNamed(Routes.initialRoute);
+        Get.snackbar('Erro!', 'Usuário inválido!');
+      } else {
+        Get.put<User>(user, tag: "loggedInUser");
+      }
+    }
   }
 }
