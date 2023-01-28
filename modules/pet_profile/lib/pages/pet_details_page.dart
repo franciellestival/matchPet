@@ -130,7 +130,9 @@ class PetDetailPage extends StatelessWidget {
                 ),
                 PrimaryButton(
                   height: 50,
-                  onTap: () {},
+                  onTap: () {
+                    sendAdoptionNotification();
+                  },
                   text: 'Quero Adotar',
                   backgroundColor: AppColors.blueButton,
                 ),
@@ -211,6 +213,8 @@ class PetDetailPage extends StatelessWidget {
           'Erro!', 'Erro ao mudar o status de favorito do pet ${pet!.name}!');
     }
   }
+
+  void sendAdoptionNotification() async {}
 
   Widget editIcon() {
     return GestureDetector(
