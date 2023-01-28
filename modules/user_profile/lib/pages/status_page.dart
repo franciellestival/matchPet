@@ -8,6 +8,7 @@ import 'package:theme/export_theme.dart';
 import 'package:user_profile/controller/user_controller.dart';
 import 'package:user_profile/model/token.dart';
 import 'package:user_profile/model/user.dart';
+import 'package:user_profile/pages/wanted_pets.dart';
 
 class StatusPage extends StatelessWidget {
   StatusPage({Key? key}) : super(key: key);
@@ -105,8 +106,18 @@ class StatusPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             _buildFrame(
+              icon: AppSvgs.animalsIcon,
+              text: 'Todos os meus pets',
+              onPressed: () {
+                Map<String, dynamic> filters = {};
+                filters["userId"] = loggedInUser.id;
+
+                Get.toNamed(Routes.searchResultPage, arguments: filters);
+              },
+            ),
+            _buildFrame(
               icon: AppSvgs.dogIcon,
-              text: 'Meus Pets Disponíveis',
+              text: 'Pets Disponíveis',
               onPressed: () {
                 Map<String, dynamic> filters = {};
                 filters["userId"] = loggedInUser.id;
@@ -116,19 +127,8 @@ class StatusPage extends StatelessWidget {
               },
             ),
             _buildFrame(
-              icon: AppSvgs.catIcon,
-              text: 'Meus Pets Adotados',
-              onPressed: () {
-                Map<String, dynamic> filters = {};
-                filters["userId"] = loggedInUser.id;
-                filters["status"] = "adopted";
-
-                Get.toNamed(Routes.searchResultPage, arguments: filters);
-              },
-            ),
-            _buildFrame(
               icon: AppSvgs.disappearedOutlined,
-              text: 'Meus Pets Desaparecidos',
+              text: 'Pets Desaparecidos',
               onPressed: () {
                 Map<String, dynamic> filters = {};
                 filters["userId"] = loggedInUser.id;
@@ -138,14 +138,27 @@ class StatusPage extends StatelessWidget {
               },
             ),
             _buildFrame(
-              icon: AppSvgs.animalsIcon,
-              text: 'Todos os meus pets',
+              icon: AppSvgs.catIcon,
+              text: 'Pets Adotados',
               onPressed: () {
                 Map<String, dynamic> filters = {};
                 filters["userId"] = loggedInUser.id;
+                filters["status"] = "adopted";
 
                 Get.toNamed(Routes.searchResultPage, arguments: filters);
               },
+            ),
+            _buildFrame(
+              icon: AppSvgs.checkAdopters,
+              text: 'Avaliar Interessados',
+              onPressed: () {
+                Get.to(WantedPets());
+              },
+            ),
+            _buildFrame(
+              icon: AppSvgs.housePet,
+              text: 'Meus futuros Pets',
+              onPressed: () {},
             ),
           ],
         ),
@@ -193,6 +206,7 @@ class StatusPage extends StatelessWidget {
                     child: SvgPicture.asset(
                       icon,
                       height: 50,
+                      width: 50,
                       color: Colors.brown,
                     ),
                   ),
