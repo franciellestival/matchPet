@@ -7,13 +7,14 @@ import 'package:pet_profile/widgets/pet_list.dart';
 import 'package:theme/export_theme.dart';
 
 class MissingPetPage extends StatelessWidget {
-  String listTitle = 'Pets Desaparecidos';
+  final String listTitle = 'Pets Desaparecidos';
+
+  const MissingPetPage({super.key});
 
   Future<List<PetCard>?> _getPetsList() async {
     try {
       return await PetController.getFilteredPets({"status": "missing"});
     } catch (e) {
-      // Get.snackbar('Erro!', e.toString());
       Get.snackbar(
           'Erro!', "Não foi possivel obter a lista de Animais Desaparecidos.");
     }

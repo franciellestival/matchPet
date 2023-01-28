@@ -71,6 +71,52 @@ class UserServices {
     }
   }
 
+  //Busca os favoritos de um usuario
+  Future<Response> getFavoritesByUserId(int userId) async {
+    try {
+      final Token token = getx.Get.find(tag: "userToken");
+      final Response response = await apiClient.get(
+          "$_userEndpoint/$userId/favorites",
+          options: Options(headers: {"Authorization": token.token.toString()}));
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //Adiciona um Pet aos favoritos de um usuario
+  Future<Response> addPetToUserFavorites(int userId, int petId) async {
+    try {
+      final Token token = getx.Get.find(tag: "userToken");
+      final Response response = await apiClient.post(
+          "$_userEndpoint/$userId/favorites",
+          data: {
+            "pet_id": petId,
+          },
+          options: Options(headers: {"Authorization": token.token.toString()}));
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //Remove um Pet dos favoritos de um usuario
+  Future<void> removePetFromUserFavorites(int userId, int petId) async {
+    try {
+      final Token token = getx.Get.find(tag: "userToken");
+      // final Response response = await apiClient.delete(
+      await apiClient.delete("$_userEndpoint/$userId/favorites",
+          data: {
+            "pet_id": petId,
+          },
+          options: Options(
+              headers: {"Authorization": token.token.toString()},
+              responseType: ResponseType.json));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   //Efetua o login do usuario
   Future<Response> login(String email, String password) async {
     try {

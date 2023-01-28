@@ -1,25 +1,33 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
-import 'package:pet_profile/controller/pet_controller.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 import 'package:theme/export_theme.dart';
+import 'package:user_profile/model/user.dart';
+
+import '../controller/favorites_controller.dart';
 
 class PetCard extends StatelessWidget {
-  Rx<bool> isFavorited = false.obs;
-  final Function? onTap;
+  RxBool? isFavorited;
   final PetProfile pet;
 
   PetCard({
     super.key,
-    this.onTap,
     required this.pet,
+    this.isFavorited,
   });
 
   @override
   Widget build(BuildContext context) {
+    isFavorited ??= pet.isUserFavorite!.obs;
+
+    final User loggedInUser = Get.find<User>(tag: "loggedInUser");
+    bool isMyPet = (pet.owner!.id == loggedInUser.id!);
+
     return cardScaffold(
       child: Container(
         height: 300,
@@ -43,7 +51,8 @@ class PetCard extends StatelessWidget {
         child: Stack(
           alignment: AlignmentDirectional.bottomStart,
           children: [
-            Align(alignment: Alignment.topRight, child: favoriteIcon()),
+            if (!isMyPet)
+              Align(alignment: Alignment.topRight, child: favoriteIcon()),
             Positioned(bottom: 70, child: petName()),
             Positioned(bottom: 45, child: petInfo()),
             Positioned(bottom: 0, child: buildButton()),
@@ -152,9 +161,9 @@ class PetCard extends StatelessWidget {
         backgroundColor: AppColors.white.withOpacity(0.5),
         child: Obx(() {
           return SvgPicture.asset(
-            isFavorited.value ? AppSvgs.heartIcon : AppSvgs.favoriteOutlined,
+            isFavorited!.value ? AppSvgs.heartIcon : AppSvgs.favoriteOutlined,
             height: 24.0,
-            color: isFavorited.value ? Colors.red : Colors.black,
+            color: isFavorited!.value ? Colors.red : Colors.black,
           );
         }),
       ),
@@ -174,11 +183,21 @@ class PetCard extends StatelessWidget {
     return city;
   }
 
-  void _onTapFavorite() {
-    PetController controller = PetController();
-
-    isFavorited.value
-        ? {controller.removeFromFavorites(), isFavorited.value = false}
-        : {controller.addToFavorites(), isFavorited.value = true};
+  void _onTapFavorite() async {
+    try {
+      final User loggedInUser = Get.find<User>(tag: "loggedInUser");
+      if (isFavorited!.value) {
+        await FavoritesController.removeFromFavorites(
+            loggedInUser.id!, pet.id!);
+        isFavorited!.value = false;
+      } else {
+        await FavoritesController.addToFavorites(loggedInUser.id!, pet.id!);
+        isFavorited!.value = true;
+      }
+    } catch (e, stacktrace) {
+      log(e.toString(), stackTrace: stacktrace);
+      Get.snackbar(
+          'Erro!', 'Erro ao mudar o status de favorito do pet ${pet.name}!');
+    }
   }
 }

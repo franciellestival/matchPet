@@ -74,7 +74,6 @@ class UserRepository {
   Future<Token> loginRequested(String email, String password) async {
     try {
       final response = await userAPIServices.login(email, password);
-      log(response.data.toString());
       return Token.fromJson(response.data);
     } on DioError catch (e) {
       log(e.toString());
@@ -100,5 +99,36 @@ class UserRepository {
     final UserLocation userLocation = UserLocation(
         lat: position.latitude, lng: position.longitude, address: address);
     return userLocation;
+  }
+
+  Future<List<dynamic>> getFavoritesByid(int userId) async {
+    try {
+      final response = await userAPIServices.getFavoritesByUserId(userId);
+      return (response.data as List);
+    } on DioError catch (e) {
+      log(e.toString());
+      final erro = APIExceptions.fromDioError(e);
+      throw erro;
+    }
+  }
+
+  Future<void> addPetToFavorites(int userId, int petId) async {
+    try {
+      await userAPIServices.addPetToUserFavorites(userId, petId);
+    } on DioError catch (e) {
+      log(e.toString());
+      final erro = APIExceptions.fromDioError(e);
+      throw erro;
+    }
+  }
+
+  Future<void> removePetFromFavorites(int userId, int petId) async {
+    try {
+      await userAPIServices.removePetFromUserFavorites(userId, petId);
+    } on DioError catch (e) {
+      log(e.toString());
+      final erro = APIExceptions.fromDioError(e);
+      throw erro;
+    }
   }
 }

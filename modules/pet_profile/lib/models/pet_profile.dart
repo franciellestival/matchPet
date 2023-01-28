@@ -22,6 +22,7 @@ class PetProfile {
   String? photoUrl;
   UserLocation? location;
   User? owner;
+  bool? isUserFavorite;
   double distanceBetween = 0;
 
   PetProfile({
@@ -40,6 +41,7 @@ class PetProfile {
     this.photoUrl,
     this.location,
     this.owner,
+    this.isUserFavorite,
   });
 
   PetProfile.empty();
@@ -60,6 +62,8 @@ class PetProfile {
         photoUrl: json['photoUrl'],
         location: UserLocation.fromJson(json['location']),
         owner: User.fromJson(json['user']),
+        isUserFavorite:
+            ((json['is_user_favorite'] ?? 0) as int) == 0 ? false : true,
       );
 
   Map<String, dynamic> toJson() => {
@@ -82,6 +86,6 @@ class PetProfile {
 
   @override
   String toString() {
-    return 'PetProfile(id: $id, name: $name, specie: $specie, gender: $gender, size: $size, status: $status, breed: $breed, age: $age, weight: $weight, description: $description, neutered: $neutered, specialNeeds: $specialNeeds, photoUrl: $photoUrl, location: ${location.toString()}, owner: ${owner.toString()})';
+    return 'PetProfile(id: $id, name: $name, specie: $specie, gender: $gender, size: $size, status: $status, breed: $breed, age: $age, weight: $weight, description: $description, neutered: $neutered, specialNeeds: $specialNeeds, photoUrl: $photoUrl, location: $location, owner: $owner, isUserFavorite: $isUserFavorite, distanceBetween: $distanceBetween)';
   }
 }
