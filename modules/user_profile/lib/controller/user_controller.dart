@@ -1,15 +1,17 @@
 import 'dart:developer';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
+
 import 'package:matchpet/services/authentication_manager.dart';
 import 'package:user_profile/repository/user_repository.dart';
-import '../model/new_user.dart';
-import '../model/token.dart';
-import '../model/user.dart';
-import '../model/user_location.dart';
+import 'package:user_profile/model/new_user.dart';
+import 'package:user_profile/model/token.dart';
+import 'package:user_profile/model/user.dart';
+import 'package:user_profile/model/user_location.dart';
 
 class UserController {
   static Future<void> signUpUser(String name, String phone, String email,
@@ -38,6 +40,7 @@ class UserController {
       final AuthenticationManager authManager =
           Get.find<AuthenticationManager>();
       authManager.login(token);
+      await getFirebaseDeviceToken();
       return token;
     } catch (e) {
       log("Erro: ${e.toString()}");
@@ -121,4 +124,24 @@ Future<UserLocation?> _getCurrentLocation() async {
   final UserLocation userLocation = UserLocation(
       lat: position.latitude, lng: position.longitude, address: address);
   return userLocation;
+}
+
+void saveFirebaseToken(String token) async {
+  final Token userToken = Get.find(tag: "userToken");
+
+  final user = await UserController.getLoggedUserData(userToken);
+
+  if (user != null) {
+    log('FIREBASE: USER ID : ${user.id} DEVICE TOKEN $token');
+    await FirebaseFirestore.instance
+        .collection("userDeviceToken")
+        .doc("${user.id}")
+        .set({"deviceToken": token});
+  }
+}
+
+Future<void> getFirebaseDeviceToken() async {
+  await FirebaseMessaging.instance.getToken().then((token) {
+    saveFirebaseToken(token ?? '');
+  });
 }

@@ -126,7 +126,9 @@ class PetDetailPage extends StatelessWidget {
                 ),
                 PrimaryButton(
                   height: 50,
-                  onTap: () {},
+                  onTap: () {
+                    sendAdoptionNotification();
+                  },
                   text: 'Quero Adotar',
                   backgroundColor: AppColors.blueButton,
                 ),
@@ -211,6 +213,8 @@ class PetDetailPage extends StatelessWidget {
         ? {controller.removeFromFavorites(), isFavorited.value = false}
         : {controller.addToFavorites(), isFavorited.value = true};
   }
+
+  void sendAdoptionNotification() async {}
 
   Widget editIcon() {
     return GestureDetector(
