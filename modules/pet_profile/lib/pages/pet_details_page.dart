@@ -127,7 +127,7 @@ class PetDetailPage extends StatelessWidget {
                 PrimaryButton(
                   height: 50,
                   onTap: () {
-                    _showDialogMessage(context, false);
+                    _showDialogMessage(context, true);
                   },
                   text: 'Quero Adotar',
                   backgroundColor: AppColors.blueButton,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:pet_profile/models/pet_gender.dart';
 import 'package:pet_profile/models/pet_profile.dart';
@@ -11,6 +12,8 @@ import 'package:user_profile/model/user.dart';
 import 'package:user_profile/widgets/adoption_info.dart';
 
 class WantedPets extends StatelessWidget {
+  final bool isMyWantedPets;
+
   static User user = User(
     id: 32,
     name: "Luis Testes1",
@@ -18,7 +21,7 @@ class WantedPets extends StatelessWidget {
     email: "luistestes1@gmail.com",
   );
 
-  WantedPets({super.key});
+  WantedPets({super.key, required this.isMyWantedPets});
 
   static PetProfile pet = PetProfile(
       id: 9,
@@ -40,7 +43,7 @@ class WantedPets extends StatelessWidget {
   AdoptionModel info = AdoptionModel(
     interestedUser: user,
     pet: pet,
-    authorized: false,
+    authorized: true,
   );
 
   @override
@@ -48,14 +51,16 @@ class WantedPets extends StatelessWidget {
     List<AdoptionModel> adoptionInterestList = [info, info, info];
 
     return Scaffold(
-      appBar: const GenericAppBar(title: 'Avaliar interessados'),
+      appBar: GenericAppBar(
+          title: isMyWantedPets ? 'Meus futuros Pets' : 'Avaliar interessados'),
       backgroundColor: AppColors.primaryColor.withOpacity(0.9),
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.85,
           child: ListView(
             children: adoptionInterestList.map((e) {
-              return AdoptionInfo(adoptionModel: e);
+              return AdoptionInfo(
+                  adoptionModel: e, isMyWantedPets: isMyWantedPets);
             }).toList(),
           ),
         ),

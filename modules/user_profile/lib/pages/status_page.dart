@@ -152,13 +152,19 @@ class StatusPage extends StatelessWidget {
               icon: AppSvgs.checkAdopters,
               text: 'Avaliar Interessados',
               onPressed: () {
-                Get.to(WantedPets());
+                Get.to(WantedPets(
+                  isMyWantedPets: false,
+                ));
               },
             ),
             _buildFrame(
               icon: AppSvgs.housePet,
               text: 'Meus futuros Pets',
-              onPressed: () {},
+              onPressed: () {
+                Get.to(WantedPets(
+                  isMyWantedPets: true,
+                ));
+              },
             ),
           ],
         ),
