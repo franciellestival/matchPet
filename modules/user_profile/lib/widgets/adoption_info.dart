@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
@@ -5,6 +8,10 @@ import 'package:matchpet/routes/app_routes.dart';
 import 'package:theme/export_theme.dart';
 
 import 'package:user_profile/model/adoption.dart';
+
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:flutter_launch/flutter_launch.dart';
 
 class AdoptionInfo extends StatelessWidget {
   final bool isMyWantedPets;
@@ -209,6 +216,32 @@ class AdoptionInfo extends StatelessWidget {
     );
   }
 
+  openWhatsApp() async {
+    String url() {
+      String phone =
+          adoptionModel.pet?.owner?.phone?.replaceAll(RegExp(r'[^\d]'), "") ??
+              '';
+      String message = 'Olá, ${adoptionModel.pet?.owner?.name ?? ''}.';
+
+      if (Platform.isAndroid) {
+        log('Android $phone $message');
+        return "https://wa.me/55$phone/?text=$message}"; // new line
+      } else if (Platform.isIOS) {
+        return "https://api.whatsapp.com/send?phone=$phone=$message"; // new line
+      } else {
+        return "whatsapp://send?phone=$phone&text=${Uri.encodeFull(message)}";
+      }
+    }
+
+    if (await canLaunchUrl(Uri.parse(url()))) {
+      log('androir deu');
+      await launchUrl(Uri.parse(url()));
+    } else {
+      log('android deu ruim');
+      throw 'Could not launch';
+    }
+  }
+
   void _modalMyWantedPetDetails(context) {
     showModalBottomSheet(
       isScrollControlled: true,
@@ -235,7 +268,16 @@ class AdoptionInfo extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            String phone = adoptionModel.pet?.owner?.phone
+                                    ?.replaceAll(RegExp(r'[^\d]'), "") ??
+                                '';
+                            String message =
+                                'Olá, ${adoptionModel.pet?.owner?.name ?? ''} ';
+                            await openWhatsApp();
+                            await FlutterLaunch.launchWhatsapp(
+                                phone: '55$phone', message: message);
+                          },
                           icon: SvgPicture.asset(AppSvgs.zapIcon,
                               color: AppColors.buttonColor),
                         ),
