@@ -21,7 +21,31 @@ class WantedPets extends StatelessWidget {
     email: "luistestes1@gmail.com",
   );
 
+  static User user2 = User(
+    id: 12,
+    name: "Fran Stival",
+    phone: "(41) 99988-7744",
+    email: "luistestes1@gmail.com",
+  );
+
   WantedPets({super.key, required this.isMyWantedPets});
+
+  static PetProfile pet2 = PetProfile(
+      id: 9,
+      name: "Kite Feliz",
+      specie: PetSpecie(displayName: "cachorro"),
+      gender: PetGender(displayName: "macho"),
+      size: PetSize(displayName: "medium"),
+      status: PetStatus(displayName: "registered"),
+      breed: "vira lata",
+      age: 3,
+      weight: 4.3,
+      description: "um dog bunito",
+      neutered: false,
+      specialNeeds: false,
+      owner: user2,
+      photoUrl:
+          "https://conteudo.imguol.com.br/c/entretenimento/54/2020/04/28/cachorro-pug-1588098472110_v2_1x1.jpg");
 
   static PetProfile pet = PetProfile(
       id: 9,
@@ -43,12 +67,17 @@ class WantedPets extends StatelessWidget {
   AdoptionModel info = AdoptionModel(
     interestedUser: user,
     pet: pet,
-    authorized: true,
+    authorized: false,
   );
 
+  AdoptionModel info2 = AdoptionModel(
+    interestedUser: user2,
+    pet: pet2,
+    authorized: true,
+  );
   @override
   Widget build(BuildContext context) {
-    List<AdoptionModel> adoptionInterestList = [info, info, info];
+    List<AdoptionModel> adoptionInterestList = [info, info2, info];
 
     return Scaffold(
       appBar: GenericAppBar(

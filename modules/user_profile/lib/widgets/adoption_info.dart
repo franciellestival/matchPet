@@ -148,7 +148,7 @@ class AdoptionInfo extends StatelessWidget {
                                 arguments: adoptionModel.pet);
                           },
                           child: const Text(
-                            'Ir para o perfil do pet',
+                            'Confirmar adoção',
                             style: TextStyle(
                                 color: AppColors.buttonColor,
                                 fontWeight: FontWeight.bold,
@@ -278,7 +278,7 @@ class AdoptionInfo extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Text(
-                            'Antes de confirmar a adoção do pet, que tal trocar uma ideia com ${adoptionModel.interestedUser?.name ?? 'Sem nome'} ?',
+                            '${adoptionModel.interestedUser?.name ?? 'Sem nome'} ainda não autorizou a liberação de contato',
                             style: const TextStyle(fontSize: 20),
                             textAlign: TextAlign.center,
                           ),
@@ -286,7 +286,7 @@ class AdoptionInfo extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Text(
-                            'Após a liberação, ${adoptionModel.interestedUser?.name ?? 'Sem nome'} poderá visualizar seu número de telefone, e os detalhes da adoção poderão ser combinados',
+                            'Aguarde a liberação, para que você possa saber mais detalhes sobre ${adoptionModel.pet?.name} ',
                             style: const TextStyle(fontSize: 15),
                             textAlign: TextAlign.center,
                           ),
@@ -297,7 +297,7 @@ class AdoptionInfo extends StatelessWidget {
                             TextButton(
                               onPressed: () {},
                               child: const Text(
-                                'Liberar contato',
+                                'Retirar Interesse',
                                 style: TextStyle(
                                     color: AppColors.buttonColor,
                                     fontWeight: FontWeight.bold,
@@ -307,7 +307,7 @@ class AdoptionInfo extends StatelessWidget {
                             TextButton(
                               onPressed: () {},
                               child: const Text(
-                                'Recusar',
+                                'Ir para o perfil do pet',
                                 style: TextStyle(
                                     color: AppColors.buttonColor,
                                     fontWeight: FontWeight.bold,
