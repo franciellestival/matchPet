@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/favorites_controller.dart';
+import 'package:user_profile/controller/interest_controller.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 
 import 'package:theme/export_theme.dart';
@@ -22,6 +23,9 @@ class PetDetailPage extends StatelessWidget {
     pet = Get.arguments;
     isFavorited.value = pet!.isUserFavorite!;
     bool isMyPet = (pet!.owner!.id == loggedInUser.id!);
+
+    Get.put(InterestController());
+
     return Scaffold(
       appBar: const GenericAppBar(title: 'Detalhes do Pet'),
       backgroundColor: AppColors.primaryLightColor,
@@ -118,6 +122,10 @@ class PetDetailPage extends StatelessWidget {
                       height: 50,
                       onTap: () {
                         _showDialogMessage(context, false, isMyPet);
+                        // _showInterestDialog(
+                        //   loggedInUser.id!,
+                        //   pet!.id!,
+                        // );
                       },
                       text: 'Quero Adotar',
                       backgroundColor: AppColors.blueButton,
@@ -180,13 +188,6 @@ class PetDetailPage extends StatelessWidget {
     );
   }
 
-  TextStyle buttonTextStyle() {
-    return const TextStyle(
-        color: AppColors.buttonColor,
-        fontWeight: FontWeight.bold,
-        fontSize: 15);
-  }
-
   void _onTapFavorite() async {
     try {
       final User loggedInUser = Get.find<User>(tag: "loggedInUser");
@@ -206,11 +207,18 @@ class PetDetailPage extends StatelessWidget {
     }
   }
 
+  TextStyle buttonTextStyle() {
+    return const TextStyle(
+        color: AppColors.buttonColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 15);
+  }
+
   void _showDialogMessage(
       BuildContext context, bool success, bool confirmAdoption) {
     Widget goHomeButton = TextButton(
       onPressed: () {
-        Get.toNamed(Routes.home);
+        Get.offAndToNamed(Routes.home);
       },
       child: Text(
         'Ir para a Home',
@@ -272,6 +280,53 @@ class PetDetailPage extends StatelessWidget {
           return confirmAdoption ? adoptionAlert : notificationAlert;
         });
   }
+
+  // void _showInterestDialog(int userId, int petId) async {
+  //   InterestController controller = Get.find<InterestController>();
+  //   await controller.saveInterest(userId, petId);
+  //   Get.dialog(
+  //     AlertDialog(
+  //       title: Text('Quero adotar ${pet?.name ?? ''} '),
+  //       content: const Text(
+  //           'O tutor do pet foi notificado sobre seu interesse. Logo você poderá contatá-lo.'),
+  //       actions: const [GoHomeDialogLink(), GoBackDialogLink()],
+  //     ),
+  //   );
+  // }
+
+  // void _showAdoptionConfirmationDialog() async {
+  //   InterestController interestController = Get.find<InterestController>();
+  //   AlertDialog adoptionConfirmationDialog = AlertDialog(
+  //     title: Text('Confirmar a adoção de ${pet?.name ?? ''}?'),
+  //     content: SizedBox(
+  //       height: 110,
+  //       child: Column(
+  //         children: [
+  //           const Text('Escolha o novo tutor:'),
+  //           const HeightSpacer(height: 20),
+  //           FormDropDownInput(
+  //             child: FutureBuilder<List<User>>(
+  //             builder: (context, snapshot) {
+  //               if (snapshot.hasData) {
+  //                 var userList = snapshot.data!;
+  //                 return DropDownItem(items: userList.map((e) => ), currentValue: interestController.interestedUser.value.name, hintText: "Adotante", isEnabled: true.obs,);
+  //               }
+  //               else {
+  //                 if (snapshot.hasError) {
+  //                   Get.snackbar('Erro!', 'Não foi possivel buscar a lista de interessados.');
+  //                 }
+  //               }
+  //               return const CircularProgressIndicator();
+
+  //             }
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+
+  //   //await InterestController.getInterests(petId);
+  // }
 
   Widget editIcon() {
     return GestureDetector(
