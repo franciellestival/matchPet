@@ -217,7 +217,7 @@ class AdoptionInfo extends StatelessWidget {
   }
 
   openWhatsApp() async {
-    String url() {
+    Uri url() {
       String phone =
           adoptionModel.pet?.owner?.phone?.replaceAll(RegExp(r'[^\d]'), "") ??
               '';
@@ -225,17 +225,18 @@ class AdoptionInfo extends StatelessWidget {
 
       if (Platform.isAndroid) {
         log('Android $phone $message');
-        return "https://wa.me/55$phone/?text=$message}"; // new line
+        return Uri.parse("https://wa.me/55$phone/?text=$message}"); // new line
       } else if (Platform.isIOS) {
-        return "https://api.whatsapp.com/send?phone=$phone=$message"; // new line
+        return Uri.parse(
+            "https://api.whatsapp.com/send?phone=55$phone=$message"); // new line
       } else {
-        return "whatsapp://send?phone=$phone&text=${Uri.encodeFull(message)}";
+        return Uri.parse("whatsapp://send?phone=55$phone&text=$message");
       }
     }
 
-    if (await canLaunchUrl(Uri.parse(url()))) {
+    if (await canLaunchUrl(url())) {
       log('androir deu');
-      await launchUrl(Uri.parse(url()));
+      await launchUrl(url(), mode: LaunchMode.externalApplication);
     } else {
       log('android deu ruim');
       throw 'Could not launch';
@@ -267,19 +268,28 @@ class AdoptionInfo extends StatelessWidget {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        IconButton(
-                          onPressed: () async {
-                            String phone = adoptionModel.pet?.owner?.phone
-                                    ?.replaceAll(RegExp(r'[^\d]'), "") ??
-                                '';
-                            String message =
-                                'Olá, ${adoptionModel.pet?.owner?.name ?? ''} ';
-                            await openWhatsApp();
-                            await FlutterLaunch.launchWhatsapp(
-                                phone: '55$phone', message: message);
-                          },
-                          icon: SvgPicture.asset(AppSvgs.zapIcon,
+                        Ink(
+                          decoration: ShapeDecoration(
+                              shadows: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: const Offset(
+                                      0, 3), // changes position of shadow
+                                ),
+                              ],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(80),
+                              ),
                               color: AppColors.buttonColor),
+                          child: IconButton(
+                            onPressed: () async {
+                              await openWhatsApp();
+                            },
+                            icon: SvgPicture.asset(AppSvgs.zapIcon,
+                                color: AppColors.white),
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
