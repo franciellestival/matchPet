@@ -246,7 +246,7 @@ class PetDetailPage extends StatelessWidget {
             const HeightSpacer(height: 20),
             FormDropDownInput(
               child: DropDownItem(
-                items: ['lulis', 'fran', 'tom'],
+                items: const ['lulis', 'fran', 'tom'],
                 currentValue: 'lulis'.obs,
                 hintText: 'Sexo',
                 isEnabled: true.obs,
