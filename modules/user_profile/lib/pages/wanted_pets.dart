@@ -5,7 +5,7 @@ import 'package:pet_profile/controller/pet_controller.dart';
 import 'package:theme/export_theme.dart';
 import 'package:user_profile/controller/interest_controller.dart';
 import 'package:user_profile/model/interest.dart';
-import 'package:user_profile/model/user.dart';
+
 import 'package:user_profile/widgets/adoption_info.dart';
 
 class WantedPets extends GetView<InterestController> {
@@ -82,6 +82,7 @@ class WantedPets extends GetView<InterestController> {
   }
 
   Future<List<AdoptionInfo>?> _getInterestedAdoptersListTeste() async {
+    controller.isLoading.value = true;
     try {
       final myPetsList =
           await PetController.getFilteredPetsProfile({"userId": loggedUserId});
@@ -96,9 +97,9 @@ class WantedPets extends GetView<InterestController> {
                       isMyWantedPets: false,
                     )))
             .toList();
-
         return adoptionInfo;
       }
+      controller.isLoading.value = false;
       return null;
     } catch (e) {
       Get.snackbar('Erro!', "Não foi possivel obter a lista de interesses.");

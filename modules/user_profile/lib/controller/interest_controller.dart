@@ -12,7 +12,6 @@ class InterestController extends GetxController {
   get userList => _userList;
 
   Future<List<Interest>> getInterestByPet(int petId) async {
-    isLoading.value = true;
     try {
       final UserRepository userRepository = Get.find();
       final list = await userRepository.getInterestsByPet(petId);
@@ -25,7 +24,7 @@ class InterestController extends GetxController {
       for (var interest in interestList) {
         _userList.add(interest.interestedUser!);
       }
-      isLoading.value = false;
+
       return interestList;
     } catch (e) {
       rethrow;
