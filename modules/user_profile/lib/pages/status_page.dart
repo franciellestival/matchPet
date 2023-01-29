@@ -153,6 +153,7 @@ class StatusPage extends StatelessWidget {
               text: 'Avaliar Interessados',
               onPressed: () {
                 Get.to(WantedPets(
+                  loggedUserId: loggedInUser.id!,
                   isMyWantedPets: false,
                 ));
               },
@@ -162,6 +163,7 @@ class StatusPage extends StatelessWidget {
               text: 'Meus futuros Pets',
               onPressed: () {
                 Get.to(WantedPets(
+                  loggedUserId: loggedInUser.id!,
                   isMyWantedPets: true,
                 ));
               },
