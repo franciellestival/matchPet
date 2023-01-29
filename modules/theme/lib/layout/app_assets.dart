@@ -33,6 +33,8 @@ class AppSvgs {
   static String get animalsIcon => 'assets/icons/livestock.svg';
   static String get editIcon => 'assets/icons/edit.svg';
   static String get menuIcon => 'assets/icons/menu.svg';
+  static String get checkAdopters => 'assets/icons/hand-heart.svg';
+  static String get housePet => 'assets/icons/pet-house.svg';
   static String get disappearedOutlined =>
       'assets/icons/disappeared-icon -outlined.svg';
 }
