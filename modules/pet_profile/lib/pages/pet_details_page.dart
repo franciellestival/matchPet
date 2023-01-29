@@ -288,16 +288,20 @@ class PetDetailPage extends StatelessWidget {
   }
 
   void _showInterestDialog(int userId, int petId) async {
-    InterestController controller = Get.find<InterestController>();
-    await controller.saveInterest(userId, petId);
-    Get.dialog(
-      AlertDialog(
-        title: Text('Quero adotar ${pet?.name ?? ''} '),
-        content: const Text(
-            'O tutor do pet foi notificado sobre seu interesse. Logo você poderá contatá-lo.'),
-        actions: const [GoHomeDialogLink(), GoBackDialogLink()],
-      ),
-    );
+    try {
+      InterestController controller = Get.find<InterestController>();
+      await controller.saveInterest(userId, petId);
+      Get.dialog(
+        AlertDialog(
+          title: Text('Quero adotar ${pet?.name ?? ''} '),
+          content: const Text(
+              'O tutor do pet foi notificado sobre seu interesse. Logo você poderá contatá-lo.'),
+          actions: const [GoHomeDialogLink(), GoBackDialogLink()],
+        ),
+      );
+    } catch (e) {
+      Get.snackbar("Erro!", "Erro ao notificar interesse no Pet.");
+    }
   }
 
   void _showAdoptionConfirmationDialog() async {
@@ -374,6 +378,13 @@ class PetDetailPage extends StatelessWidget {
 
     try {
       await PetController.changeAdoptionStatus(interestedUserId, pet!.id!);
+      Get.back();
+      Get.defaultDialog(
+        title: "Tudo certo!",
+        middleText: "Adoção do pet ${pet!.name} confirmada!",
+        backgroundColor: AppColors.primaryLightColor,
+        buttonColor: AppColors.buttonColor,
+      );
     } catch (e) {
       Get.snackbar('Erro', 'Não foi possível confirmar adoção do pet.');
     }

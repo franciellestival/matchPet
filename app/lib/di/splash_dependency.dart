@@ -16,8 +16,8 @@ class SplashDependency {
 
     _loggedUserDependencies();
 
-    //Espera 3 segundos
-    await Future.delayed(const Duration(seconds: 3));
+    //Espera 3 segundos (removi temporariamente)
+    // await Future.delayed(const Duration(seconds: 3));
 
     //Remove a Splash Screen
     FlutterNativeSplash.remove();

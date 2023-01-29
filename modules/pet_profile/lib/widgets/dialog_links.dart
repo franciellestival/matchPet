@@ -11,7 +11,7 @@ class GoHomeDialogLink extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        Get.toNamed(Routes.home);
+        Get.offNamed(Routes.home);
       },
       child: Text(
         'Ir para a Home',
