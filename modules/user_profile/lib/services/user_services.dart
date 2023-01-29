@@ -6,6 +6,7 @@ import 'package:user_profile/model/token.dart';
 class UserServices {
   static const String _userEndpoint = "/user";
   static const String _loginEndpoint = "/auth/login";
+  static const String _interestEndpoint = "/interest";
 
   final APIServices apiClient;
 
@@ -123,6 +124,82 @@ class UserServices {
       final Response response = await apiClient
           .post(_loginEndpoint, data: {"email": email, "password": password});
       return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //Seleciona todos os registros de interesse em um determinado pet
+  //
+  Future<Response> getInterestByFilter(Map<String, int> filters) async {
+    try {
+      final Token token = getx.Get.find(tag: "userToken");
+      final Response response = await apiClient.get(
+        _interestEndpoint,
+        queryParameters: filters,
+        options: Options(
+          headers: {"Authorization": token.token.toString()},
+        ),
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> getInterestById(int interestId) async {
+    try {
+      final Token token = getx.Get.find(tag: "userToken");
+      final Response response = await apiClient.get(
+        "$_interestEndpoint/$interestId",
+        options: Options(
+          headers: {"Authorization": token.token.toString()},
+        ),
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> createInterest(int userId, int petId) async {
+    try {
+      final Token token = getx.Get.find(tag: "userToken");
+      await apiClient.post(
+        _interestEndpoint,
+        data: {"userId": userId, "petId": petId},
+        options: Options(
+          headers: {"Authorization": token.token.toString()},
+        ),
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> deleteInterest(int interestId) async {
+    try {
+      final Token token = getx.Get.find(tag: "userToken");
+      await apiClient.delete(
+        "$_interestEndpoint/$interestId",
+        options: Options(
+          headers: {"Authorization": token.token.toString()},
+        ),
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> updateInterest(int interestId) async {
+    try {
+      final Token token = getx.Get.find(tag: "userToken");
+      await apiClient.patch(
+        "$_interestEndpoint/$interestId",
+        options: Options(
+          headers: {"Authorization": token.token.toString()},
+        ),
+      );
     } catch (e) {
       rethrow;
     }
