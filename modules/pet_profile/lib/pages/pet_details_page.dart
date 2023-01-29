@@ -35,7 +35,7 @@ class PetDetailPage extends StatelessWidget {
                 ),
                 image: DecorationImage(
                   fit: BoxFit.fitWidth,
-                  image: NetworkImage(pet!.photoUrl ??
+                  image: NetworkImage(pet?.photoUrl ??
                       'https://i.pinimg.com/originals/d8/9e/d9/d89ed96e3cda94aff64b574662a621b3.jpg'),
                 ),
               ),
@@ -100,39 +100,24 @@ class PetDetailPage extends StatelessWidget {
               ),
             ),
             const HeightSpacer(height: 40),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Ink(
-                  decoration: ShapeDecoration(
-                      shadows: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset:
-                              const Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      color: AppColors.blueButton),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: SvgPicture.asset(AppSvgs.zapIcon,
-                        color: AppColors.white),
-                  ),
-                ),
-                PrimaryButton(
-                  height: 50,
-                  onTap: () {
-                    sendAdoptionNotification();
-                  },
-                  text: 'Quero Adotar',
-                  backgroundColor: AppColors.blueButton,
-                ),
-              ],
+            Center(
+              child: isMyPet ?? false
+                  ? PrimaryButton(
+                      height: 50,
+                      onTap: () {
+                        _showDialogMessage(context, true, true);
+                      },
+                      text: 'Confirmar adoção',
+                      backgroundColor: AppColors.blueButton,
+                    )
+                  : PrimaryButton(
+                      height: 50,
+                      onTap: () {
+                        _showDialogMessage(context, false, isMyPet ?? false);
+                      },
+                      text: 'Quero Adotar',
+                      backgroundColor: AppColors.blueButton,
+                    ),
             ),
             const HeightSpacer(height: 40),
             Row(
@@ -206,6 +191,13 @@ class PetDetailPage extends StatelessWidget {
     );
   }
 
+  TextStyle buttonTextStyle() {
+    return const TextStyle(
+        color: AppColors.buttonColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 15);
+  }
+
   void _onTapFavorite() {
     PetController controller = PetController();
 
@@ -214,7 +206,72 @@ class PetDetailPage extends StatelessWidget {
         : {controller.addToFavorites(), isFavorited.value = true};
   }
 
-  void sendAdoptionNotification() async {}
+  void _showDialogMessage(
+      BuildContext context, bool success, bool confirmAdoption) {
+    Widget goHomeButton = TextButton(
+      onPressed: () {
+        Get.toNamed(Routes.home);
+      },
+      child: Text(
+        'Ir para a Home',
+        style: buttonTextStyle(),
+      ),
+    );
+
+    Widget backButton = TextButton(
+      onPressed: () {
+        Get.back();
+      },
+      child: Text(
+        'Voltar',
+        style: buttonTextStyle(),
+      ),
+    );
+
+    Widget confirmAdoptionButton = TextButton(
+      onPressed: () {},
+      child: Text(
+        'Confirmar Adoção',
+        style: buttonTextStyle(),
+      ),
+    );
+
+    AlertDialog adoptionAlert = AlertDialog(
+      title: Text('Confirmar a adotação de ${pet?.name ?? ''}?'),
+      content: SizedBox(
+        height: 110,
+        child: Column(
+          children: [
+            const Text('Quem vai ser o novo tutor?'),
+            const HeightSpacer(height: 20),
+            FormDropDownInput(
+              child: DropDownItem(
+                items: const ['lulis', 'fran', 'tom'],
+                currentValue: 'lulis'.obs,
+                hintText: 'Sexo',
+                isEnabled: true.obs,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [confirmAdoptionButton, backButton],
+    );
+
+    AlertDialog notificationAlert = AlertDialog(
+      title: Text('Quero adotar ${pet?.name ?? ''} '),
+      content: Text(success
+          ? 'O tutor do pet foi notificado sobre seu interesse. Logo você poderá contatá-lo'
+          : 'Algo deu errado. Tente novamente mais tarde'),
+      actions: [goHomeButton, backButton],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return confirmAdoption ? adoptionAlert : notificationAlert;
+        });
+  }
 
   Widget editIcon() {
     return GestureDetector(
