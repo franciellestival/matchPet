@@ -8,7 +8,11 @@ import 'package:user_profile/controller/interest_controller.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 
 import 'package:theme/export_theme.dart';
+import 'package:user_profile/model/interest.dart';
 import 'package:user_profile/model/user.dart';
+
+import '../controller/pet_controller.dart';
+import '../widgets/dialog_links.dart';
 
 class PetDetailPage extends StatelessWidget {
   final RxBool isFavorited = false.obs;
@@ -16,13 +20,14 @@ class PetDetailPage extends StatelessWidget {
   PetDetailPage({super.key});
 
   late PetProfile? pet;
+  late User? loggedInUser;
 
   @override
   Widget build(BuildContext context) {
-    final User loggedInUser = Get.find<User>(tag: "loggedInUser");
+    loggedInUser = Get.find<User>(tag: "loggedInUser");
     pet = Get.arguments;
     isFavorited.value = pet!.isUserFavorite!;
-    bool isMyPet = (pet!.owner!.id == loggedInUser.id!);
+    bool isMyPet = (pet!.owner!.id == loggedInUser!.id!);
 
     Get.put(InterestController());
 
@@ -113,7 +118,8 @@ class PetDetailPage extends StatelessWidget {
                   ? PrimaryButton(
                       height: 50,
                       onTap: () {
-                        _showDialogMessage(context, true, true);
+                        // _showDialogMessage(context, true, true);
+                        _showAdoptionConfirmationDialog();
                       },
                       text: 'Confirmar adoção',
                       backgroundColor: AppColors.blueButton,
@@ -121,11 +127,11 @@ class PetDetailPage extends StatelessWidget {
                   : PrimaryButton(
                       height: 50,
                       onTap: () {
-                        _showDialogMessage(context, false, isMyPet);
-                        // _showInterestDialog(
-                        //   loggedInUser.id!,
-                        //   pet!.id!,
-                        // );
+                        // _showDialogMessage(context, false, isMyPet);
+                        _showInterestDialog(
+                          loggedInUser!.id!,
+                          pet!.id!,
+                        );
                       },
                       text: 'Quero Adotar',
                       backgroundColor: AppColors.blueButton,
@@ -281,52 +287,97 @@ class PetDetailPage extends StatelessWidget {
         });
   }
 
-  // void _showInterestDialog(int userId, int petId) async {
-  //   InterestController controller = Get.find<InterestController>();
-  //   await controller.saveInterest(userId, petId);
-  //   Get.dialog(
-  //     AlertDialog(
-  //       title: Text('Quero adotar ${pet?.name ?? ''} '),
-  //       content: const Text(
-  //           'O tutor do pet foi notificado sobre seu interesse. Logo você poderá contatá-lo.'),
-  //       actions: const [GoHomeDialogLink(), GoBackDialogLink()],
-  //     ),
-  //   );
-  // }
+  void _showInterestDialog(int userId, int petId) async {
+    InterestController controller = Get.find<InterestController>();
+    await controller.saveInterest(userId, petId);
+    Get.dialog(
+      AlertDialog(
+        title: Text('Quero adotar ${pet?.name ?? ''} '),
+        content: const Text(
+            'O tutor do pet foi notificado sobre seu interesse. Logo você poderá contatá-lo.'),
+        actions: const [GoHomeDialogLink(), GoBackDialogLink()],
+      ),
+    );
+  }
 
-  // void _showAdoptionConfirmationDialog() async {
-  //   InterestController interestController = Get.find<InterestController>();
-  //   AlertDialog adoptionConfirmationDialog = AlertDialog(
-  //     title: Text('Confirmar a adoção de ${pet?.name ?? ''}?'),
-  //     content: SizedBox(
-  //       height: 110,
-  //       child: Column(
-  //         children: [
-  //           const Text('Escolha o novo tutor:'),
-  //           const HeightSpacer(height: 20),
-  //           FormDropDownInput(
-  //             child: FutureBuilder<List<User>>(
-  //             builder: (context, snapshot) {
-  //               if (snapshot.hasData) {
-  //                 var userList = snapshot.data!;
-  //                 return DropDownItem(items: userList.map((e) => ), currentValue: interestController.interestedUser.value.name, hintText: "Adotante", isEnabled: true.obs,);
-  //               }
-  //               else {
-  //                 if (snapshot.hasError) {
-  //                   Get.snackbar('Erro!', 'Não foi possivel buscar a lista de interessados.');
-  //                 }
-  //               }
-  //               return const CircularProgressIndicator();
+  void _showAdoptionConfirmationDialog() async {
+    InterestController interestController = Get.find<InterestController>();
+    AlertDialog adoptionConfirmationDialog = AlertDialog(
+      title: Text('Confirmar a adoção de ${pet?.name ?? ''}?'),
+      actions: [
+        ConfirmAdoptionLink(onPressed: confirmAdoptionFunction),
+        const GoBackDialogLink()
+      ],
+      content: SizedBox(
+        height: 110,
+        child: Column(
+          children: [
+            const Text('Escolha o novo tutor:'),
+            const HeightSpacer(height: 20),
+            FutureBuilder<List<Interest>>(
+                future: interestController.getInterestByPet(pet!.id!),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    var data = snapshot.data!;
+                    return FormDropDownInput(
+                      child: DropdownButtonFormField(
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(AppRadius.buttonRadius)),
+                            borderSide:
+                                const BorderSide(color: AppColors.buttonColor),
+                          ),
+                          label: const Text.rich(
+                            TextSpan(
+                              children: <InlineSpan>[
+                                WidgetSpan(
+                                    child: Text(
+                                  'Usuário',
+                                  style: TextStyle(color: Colors.black),
+                                ))
+                              ],
+                            ),
+                          ),
+                        ),
+                        dropdownColor: AppColors.editTextColor,
+                        // value: interestController.interestedUser,
+                        items: data
+                            .map((interest) => DropdownMenuItem<int>(
+                                  value: interest.interestedUser!.id,
+                                  child: Text(interest.interestedUser!.name!),
+                                ))
+                            .toList(),
+                        onChanged: (newValue) {
+                          interestController.interestedUserId = newValue!;
+                        },
+                      ),
+                    );
+                  }
+                  return const CircularProgressIndicator();
+                }),
+          ],
+        ),
+      ),
+    );
 
-  //             }
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
+    Get.dialog(adoptionConfirmationDialog);
+  }
 
-  //   //await InterestController.getInterests(petId);
-  // }
+  void confirmAdoptionFunction() async {
+    InterestController interestController = Get.find<InterestController>();
+
+    var interestedUserId = interestController.interestedUserId;
+    debugPrint(
+        "USUARIO.ID INTERESSADO: ${interestController.interestedUserId.toString()}");
+
+    try {
+      await PetController.changeAdoptionStatus(interestedUserId, pet!.id!);
+    } catch (e) {
+      Get.snackbar('Erro', 'Não foi possível confirmar adoção do pet.');
+    }
+  }
 
   Widget editIcon() {
     return GestureDetector(

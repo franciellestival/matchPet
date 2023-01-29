@@ -5,12 +5,16 @@ import '../model/interest.dart';
 import '../repository/user_repository.dart';
 
 class InterestController extends GetxController {
-  final interestedUser = User().obs;
+  final RxInt _interestedUserId = 0.obs;
+  int get interestedUserId => _interestedUserId.value;
+  set interestedUserId(int value) => _interestedUserId.value = value;
 
   final _userList = <User>[].obs;
   get userList => _userList;
 
   Future<List<Interest>> getInterestByPet(int petId) async {
+    _userList.clear();
+
     try {
       final UserRepository userRepository = Get.find();
       final list = await userRepository.getInterestsByPet(petId);

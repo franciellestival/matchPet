@@ -126,4 +126,14 @@ class PetRepository {
       throw error;
     }
   }
+
+  Future<String> updatePetStatus(PetProfile pet) async {
+    try {
+      final response = await petAPIServices.updatePetStatus(pet);
+      return response.data["message"].toString();
+    } on DioError catch (e) {
+      final error = APIExceptions.fromDioError(e);
+      throw error;
+    }
+  }
 }
