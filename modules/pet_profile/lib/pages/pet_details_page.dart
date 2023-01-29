@@ -121,10 +121,11 @@ class PetDetailPage extends StatelessWidget {
                   : PrimaryButton(
                       height: 50,
                       onTap: () {
-                        _showInterestDialog(
-                          loggedInUser.id!,
-                          pet!.id!,
-                        );
+                        _showDialogMessage(context, false, isMyPet);
+                        // _showInterestDialog(
+                        //   loggedInUser.id!,
+                        //   pet!.id!,
+                        // );
                       },
                       text: 'Quero Adotar',
                       backgroundColor: AppColors.blueButton,
@@ -280,18 +281,18 @@ class PetDetailPage extends StatelessWidget {
         });
   }
 
-  void _showInterestDialog(int userId, int petId) async {
-    InterestController controller = Get.find<InterestController>();
-    await controller.saveInterest(userId, petId);
-    Get.dialog(
-      AlertDialog(
-        title: Text('Quero adotar ${pet?.name ?? ''} '),
-        content: const Text(
-            'O tutor do pet foi notificado sobre seu interesse. Logo você poderá contatá-lo.'),
-        actions: const [GoHomeDialogLink(), GoBackDialogLink()],
-      ),
-    );
-  }
+  // void _showInterestDialog(int userId, int petId) async {
+  //   InterestController controller = Get.find<InterestController>();
+  //   await controller.saveInterest(userId, petId);
+  //   Get.dialog(
+  //     AlertDialog(
+  //       title: Text('Quero adotar ${pet?.name ?? ''} '),
+  //       content: const Text(
+  //           'O tutor do pet foi notificado sobre seu interesse. Logo você poderá contatá-lo.'),
+  //       actions: const [GoHomeDialogLink(), GoBackDialogLink()],
+  //     ),
+  //   );
+  // }
 
   // void _showAdoptionConfirmationDialog() async {
   //   InterestController interestController = Get.find<InterestController>();

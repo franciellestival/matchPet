@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
 
-import '../layout/app_config.dart';
+import 'package:theme/export_theme.dart';
 
 class GoHomeDialogLink extends StatelessWidget {
   const GoHomeDialogLink({super.key});
