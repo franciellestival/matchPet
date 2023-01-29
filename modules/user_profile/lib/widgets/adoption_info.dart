@@ -8,6 +8,7 @@ import 'package:theme/export_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:user_profile/controller/interest_controller.dart';
 import 'package:user_profile/model/interest.dart';
+import 'package:user_profile/pages/wanted_pets.dart';
 
 class AdoptionInfo extends GetView<InterestController> {
   final bool isMyWantedPets;
@@ -345,7 +346,7 @@ class AdoptionInfo extends GetView<InterestController> {
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Text(
-            '${adoptionModel.interestedUser?.name ?? 'Sem nome'} ainda não autorizou a liberação de contato',
+            '${adoptionModel.pet?.owner?.name ?? 'Sem nome'} ainda não autorizou a liberação de contato',
             style: const TextStyle(fontSize: 20),
             textAlign: TextAlign.center,
           ),
@@ -362,7 +363,20 @@ class AdoptionInfo extends GetView<InterestController> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                try {
+                  await controller.removeInterest(adoptionModel);
+
+                  Get.defaultDialog(
+                      title: "Interesse removido",
+                      middleText:
+                          "${adoptionModel.pet?.name} não estará mais na sua lista de interesses",
+                      backgroundColor: AppColors.primaryLightColor,
+                      buttonColor: AppColors.buttonColor);
+                } catch (e) {
+                  Get.snackbar('Erro', 'Não foi possível remover interesse');
+                }
+              },
               child: const Text(
                 'Retirar Interesse',
                 style: TextStyle(
