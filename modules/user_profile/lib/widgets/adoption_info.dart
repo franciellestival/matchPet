@@ -11,8 +11,6 @@ import 'package:user_profile/model/adoption.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:flutter_launch/flutter_launch.dart';
-
 class AdoptionInfo extends StatelessWidget {
   final bool isMyWantedPets;
   final AdoptionModel adoptionModel;
@@ -216,29 +214,24 @@ class AdoptionInfo extends StatelessWidget {
     );
   }
 
-  openWhatsApp() async {
-    Uri url() {
-      String phone =
-          adoptionModel.pet?.owner?.phone?.replaceAll(RegExp(r'[^\d]'), "") ??
-              '';
-      String message = 'Olá, ${adoptionModel.pet?.owner?.name ?? ''}.';
+  Future<void> openWhatsApp() async {
+    String phone =
+        adoptionModel.pet?.owner?.phone?.replaceAll(RegExp(r'[^\d]'), '') ?? '';
+    String message = 'Olá, ${adoptionModel.pet?.owner?.name ?? ''}.';
+    String scheme = Platform.isAndroid ? 'https' : 'whatsapp';
+    Uri waUri = Uri(
+      scheme: scheme,
+      host: 'wa.me',
+      path: 'send',
+      queryParameters: {
+        'phone': '55$phone',
+        'text': message,
+      },
+    );
 
-      if (Platform.isAndroid) {
-        log('Android $phone $message');
-        return Uri.parse("https://wa.me/55$phone/?text=$message}"); // new line
-      } else if (Platform.isIOS) {
-        return Uri.parse(
-            "https://api.whatsapp.com/send?phone=55$phone=$message"); // new line
-      } else {
-        return Uri.parse("whatsapp://send?phone=55$phone&text=$message");
-      }
-    }
-
-    if (await canLaunchUrl(url())) {
-      log('androir deu');
-      await launchUrl(url(), mode: LaunchMode.externalApplication);
+    if (await canLaunchUrl(waUri)) {
+      await launchUrl(waUri, mode: LaunchMode.externalApplication);
     } else {
-      log('android deu ruim');
       throw 'Could not launch';
     }
   }
