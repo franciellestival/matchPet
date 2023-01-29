@@ -11,6 +11,8 @@ import 'package:user_profile/model/user.dart';
 import 'package:user_profile/model/user_location.dart';
 import 'package:user_profile/repository/user_repository.dart';
 
+import '../models/pet_status.dart';
+
 class PetController {
   //Cadastra um novo pet de acordo com os parametros recebidos
   static Future<void> registerPet(
@@ -205,11 +207,16 @@ class PetController {
     }
   }
 
-  static Future<List<String?>> status() async {
+  static Future<List<String?>> status({List<String>? only}) async {
     try {
       final PetRepository petRepository = Get.find();
       final statusRequested = await petRepository.getStatus();
-      var statusList = [...statusRequested.map((e) => e.displayName)];
+      List<PetStatus> filteredStatus = List.from(statusRequested);
+      //Se veio uma lista limitando os status, removemos os demais
+      if (only != null) {
+        filteredStatus.removeWhere((e) => !only.contains(e.normalizedName));
+      }
+      var statusList = [...filteredStatus.map((e) => e.displayName!)];
       return statusList;
     } catch (e) {
       rethrow;

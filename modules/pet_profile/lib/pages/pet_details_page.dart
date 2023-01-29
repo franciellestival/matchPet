@@ -16,6 +16,7 @@ import '../widgets/dialog_links.dart';
 
 class PetDetailPage extends StatelessWidget {
   final RxBool isFavorited = false.obs;
+  final RxBool hasInterest = false.obs;
 
   PetDetailPage({super.key});
 
@@ -29,7 +30,14 @@ class PetDetailPage extends StatelessWidget {
     isFavorited.value = pet!.isUserFavorite!;
     bool isMyPet = (pet!.owner!.id == loggedInUser!.id!);
 
-    Get.put(InterestController());
+    InterestController interestController = Get.put(InterestController());
+    Future.sync(() async {
+      await interestController.getInterestByPet(pet!.id!);
+      hasInterest.value = false;
+      if (interestController.userList.isNotEmpty) {
+        hasInterest.value = true;
+      }
+    });
 
     return Scaffold(
       appBar: const GenericAppBar(title: 'Detalhes do Pet'),
@@ -213,80 +221,6 @@ class PetDetailPage extends StatelessWidget {
     }
   }
 
-  TextStyle buttonTextStyle() {
-    return const TextStyle(
-        color: AppColors.buttonColor,
-        fontWeight: FontWeight.bold,
-        fontSize: 15);
-  }
-
-  void _showDialogMessage(
-      BuildContext context, bool success, bool confirmAdoption) {
-    Widget goHomeButton = TextButton(
-      onPressed: () {
-        Get.offAndToNamed(Routes.home);
-      },
-      child: Text(
-        'Ir para a Home',
-        style: buttonTextStyle(),
-      ),
-    );
-
-    Widget backButton = TextButton(
-      onPressed: () {
-        Get.back();
-      },
-      child: Text(
-        'Voltar',
-        style: buttonTextStyle(),
-      ),
-    );
-
-    Widget confirmAdoptionButton = TextButton(
-      onPressed: () {},
-      child: Text(
-        'Confirmar Adoção',
-        style: buttonTextStyle(),
-      ),
-    );
-
-    AlertDialog adoptionAlert = AlertDialog(
-      title: Text('Confirmar a adotação de ${pet?.name ?? ''}?'),
-      content: SizedBox(
-        height: 110,
-        child: Column(
-          children: [
-            const Text('Quem vai ser o novo tutor?'),
-            const HeightSpacer(height: 20),
-            FormDropDownInput(
-              child: DropDownItem(
-                items: const ['lulis', 'fran', 'tom'],
-                currentValue: 'lulis'.obs,
-                hintText: 'Sexo',
-                isEnabled: true.obs,
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: [confirmAdoptionButton, backButton],
-    );
-
-    AlertDialog notificationAlert = AlertDialog(
-      title: Text('Quero adotar ${pet?.name ?? ''} '),
-      content: Text(success
-          ? 'O tutor do pet foi notificado sobre seu interesse. Logo você poderá contatá-lo'
-          : 'Algo deu errado. Tente novamente mais tarde'),
-      actions: [goHomeButton, backButton],
-    );
-
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return confirmAdoption ? adoptionAlert : notificationAlert;
-        });
-  }
-
   void _showInterestDialog(int userId, int petId) async {
     try {
       InterestController controller = Get.find<InterestController>();
@@ -296,7 +230,10 @@ class PetDetailPage extends StatelessWidget {
           title: Text('Quero adotar ${pet?.name ?? ''} '),
           content: const Text(
               'O tutor do pet foi notificado sobre seu interesse. Logo você poderá contatá-lo.'),
-          actions: const [GoHomeDialogLink(), GoBackDialogLink()],
+          actions: [
+            const GoHomeDialogLink(),
+            GoBackDialogLink(onPressed: () => Get.back()),
+          ],
         ),
       );
     } catch (e) {
@@ -309,8 +246,8 @@ class PetDetailPage extends StatelessWidget {
     AlertDialog adoptionConfirmationDialog = AlertDialog(
       title: Text('Confirmar a adoção de ${pet?.name ?? ''}?'),
       actions: [
-        ConfirmAdoptionLink(onPressed: confirmAdoptionFunction),
-        const GoBackDialogLink()
+        ConfirmAdoptionLink(onPressed: _confirmAdoptionFunction),
+        GoBackDialogLink(onPressed: () => Get.back())
       ],
       content: SizedBox(
         height: 110,
@@ -369,7 +306,7 @@ class PetDetailPage extends StatelessWidget {
     Get.dialog(adoptionConfirmationDialog);
   }
 
-  void confirmAdoptionFunction() async {
+  void _confirmAdoptionFunction() async {
     InterestController interestController = Get.find<InterestController>();
 
     var interestedUserId = interestController.interestedUserId;
@@ -406,5 +343,17 @@ class PetDetailPage extends StatelessWidget {
         }),
       ),
     );
+  }
+
+  Widget _buttonConfirmAdoption(PetProfile? pet) {
+    return Obx(() => PrimaryButton(
+          height: 50,
+          onTap: () {
+            hasInterest.value ? _showAdoptionConfirmationDialog() : null;
+          },
+          text: 'Confirmar adoção',
+          backgroundColor: AppColors.blueButton,
+          disabledColor: Colors.grey.withOpacity(0.5),
+        ));
   }
 }

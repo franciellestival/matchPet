@@ -146,29 +146,29 @@ class _PetEditPageState extends State<PetEditPage> {
               }
             },
           ),
-          FutureBuilder<List<String?>>(
-            future: PetController.status(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                var data = snapshot.data!;
-                return FormDropDownInput(
-                    backgroundColor: inputEnabled.value
-                        ? null
-                        : Colors.grey.withOpacity(0.5),
-                    child: DropDownItem(
-                      items: data,
-                      currentValue: statusCurrentValue,
-                      hintText: 'Status',
-                      isEnabled: inputEnabled,
-                    ));
-              } else {
-                if (snapshot.hasError) {
-                  Get.snackbar('Error', snapshot.error.toString());
-                }
-                return const CircularProgressIndicator();
-              }
-            },
-          ),
+          // FutureBuilder<List<String?>>(
+          //   future: PetController.status(),
+          //   builder: (context, snapshot) {
+          //     if (snapshot.hasData) {
+          //       var data = snapshot.data!;
+          //       return FormDropDownInput(
+          //           backgroundColor: inputEnabled.value
+          //               ? null
+          //               : Colors.grey.withOpacity(0.5),
+          //           child: DropDownItem(
+          //             items: data,
+          //             currentValue: statusCurrentValue,
+          //             hintText: 'Status',
+          //             isEnabled: inputEnabled,
+          //           ));
+          //     } else {
+          //       if (snapshot.hasError) {
+          //         Get.snackbar('Error', snapshot.error.toString());
+          //       }
+          //       return const CircularProgressIndicator();
+          //     }
+          //   },
+          // ),
           FormDropDownInput(
             backgroundColor:
                 inputEnabled.value ? null : Colors.grey.withOpacity(0.5),
@@ -285,7 +285,8 @@ class _PetEditPageState extends State<PetEditPage> {
             speciesCurrentValue.value,
             genderCurrentValue.value,
             sizeCurrentValue.value,
-            statusCurrentValue.value,
+            // statusCurrentValue.value,
+            pet.status!.normalizedName!,
             _breedController.text,
             int.parse(_ageController.text),
             double.parse(_weightController.text),
