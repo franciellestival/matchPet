@@ -28,7 +28,7 @@ class PetController {
       String photoUrl) async {
     try {
       final PetRepository petRepository = Get.find();
-      NewPet newPet = await newPetInstance(name, species, gender, size, status,
+      NewPet newPet = await _newPetInstance(name, species, gender, size, status,
           breed, age, weight, description, neutered, specialNeed, photoUrl);
 
       await petRepository.addNewPetRequested(newPet);
@@ -53,7 +53,7 @@ class PetController {
       String photoUrl) async {
     try {
       final PetRepository petRepository = Get.find();
-      NewPet newPet = await newPetInstance(name, species, gender, size, status,
+      NewPet newPet = await _newPetInstance(name, species, gender, size, status,
           breed, age, weight, description, neutered, specialNeed, photoUrl);
       await petRepository.updatePetRequested(petId, newPet);
     } catch (e) {
@@ -229,9 +229,34 @@ class PetController {
       rethrow;
     }
   }
+
+  static Future<void> changeAdoptionStatus(
+      int interestedUserId, int petId) async {
+    try {
+      final UserRepository userRepository = Get.find<UserRepository>();
+      final PetRepository petRepository = Get.find<PetRepository>();
+      //Requisitamos o pet a partir do id
+      PetProfile? pet = await getPetByID(petId);
+
+      //Requisitamos o usuario a partir do id
+      User? user = await userRepository.getUserById(interestedUserId);
+
+      if ((pet != null) && (user != null)) {
+        var statusList = await petRepository.getStatus();
+
+        pet.owner = user;
+        pet.status = statusList
+            .firstWhere((element) => element.normalizedName == "adopted");
+
+        await petRepository.updatePetStatus(pet);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
-Future<NewPet> newPetInstance(
+Future<NewPet> _newPetInstance(
     String name,
     String species,
     String gender,

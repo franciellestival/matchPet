@@ -54,7 +54,7 @@ class UserController {
           Get.find<AuthenticationManager>();
       authManager.logOut();
       if (Get.isRegistered<User>(tag: "loggedInUser")) {
-        Get.delete<User>(tag: "loggedInUser");
+        Get.delete<User>(tag: "loggedInUser", force: true);
       }
       Get.offAllNamed(Routes.initialRoute);
     } catch (e) {
