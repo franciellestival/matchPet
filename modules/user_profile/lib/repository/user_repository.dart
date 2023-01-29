@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:api_services/api_services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:user_profile/model/interest.dart';
 import 'package:user_profile/model/new_user.dart';
 import 'package:user_profile/model/token.dart';
 import 'package:user_profile/model/user.dart';
@@ -125,6 +126,71 @@ class UserRepository {
   Future<void> removePetFromFavorites(int userId, int petId) async {
     try {
       await userAPIServices.removePetFromUserFavorites(userId, petId);
+    } on DioError catch (e) {
+      log(e.toString());
+      final erro = APIExceptions.fromDioError(e);
+      throw erro;
+    }
+  }
+
+  Future<List<dynamic>> getInterestsByPet(int petId) async {
+    try {
+      final response =
+          await userAPIServices.getInterestByFilter({"petId": petId});
+      return (response.data as List);
+    } on DioError catch (e) {
+      log(e.toString());
+      final erro = APIExceptions.fromDioError(e);
+      throw erro;
+    }
+  }
+
+  Future<List<dynamic>> getInterestsByUser(int userId) async {
+    try {
+      final response =
+          await userAPIServices.getInterestByFilter({"userId": userId});
+      return (response.data as List);
+    } on DioError catch (e) {
+      log(e.toString());
+      final erro = APIExceptions.fromDioError(e);
+      throw erro;
+    }
+  }
+
+  Future<Interest> getInterestById(int interestId) async {
+    try {
+      final response = await userAPIServices.getInterestById(interestId);
+      return response.data;
+    } on DioError catch (e) {
+      log(e.toString());
+      final erro = APIExceptions.fromDioError(e);
+      throw erro;
+    }
+  }
+
+  Future<void> saveInterest(int userId, int petId) async {
+    try {
+      await userAPIServices.createInterest(userId, petId);
+    } on DioError catch (e) {
+      log(e.toString());
+      final erro = APIExceptions.fromDioError(e);
+      throw erro;
+    }
+  }
+
+  Future<void> removeInterest(Interest it) async {
+    try {
+      await userAPIServices.deleteInterest(it.id!);
+    } on DioError catch (e) {
+      log(e.toString());
+      final erro = APIExceptions.fromDioError(e);
+      throw erro;
+    }
+  }
+
+  Future<void> updateInterest(Interest it) async {
+    try {
+      await userAPIServices.updateInterest(it.id!);
     } on DioError catch (e) {
       log(e.toString());
       final erro = APIExceptions.fromDioError(e);

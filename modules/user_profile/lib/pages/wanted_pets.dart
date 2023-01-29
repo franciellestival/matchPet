@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'package:pet_profile/models/pet_gender.dart';
 import 'package:pet_profile/models/pet_profile.dart';
@@ -7,7 +6,7 @@ import 'package:pet_profile/models/pet_size.dart';
 import 'package:pet_profile/models/pet_specie.dart';
 import 'package:pet_profile/models/pet_status.dart';
 import 'package:theme/export_theme.dart';
-import 'package:user_profile/model/adoption.dart';
+import 'package:user_profile/model/interest.dart';
 import 'package:user_profile/model/user.dart';
 import 'package:user_profile/widgets/adoption_info.dart';
 
@@ -64,20 +63,20 @@ class WantedPets extends StatelessWidget {
       photoUrl:
           "https://conteudo.imguol.com.br/c/entretenimento/54/2020/04/28/cachorro-pug-1588098472110_v2_1x1.jpg");
 
-  AdoptionModel info = AdoptionModel(
+  Interest info = Interest(
     interestedUser: user,
     pet: pet,
-    authorized: false,
+    accepted: false,
   );
 
-  AdoptionModel info2 = AdoptionModel(
+  Interest info2 = Interest(
     interestedUser: user2,
     pet: pet2,
-    authorized: true,
+    accepted: true,
   );
   @override
   Widget build(BuildContext context) {
-    List<AdoptionModel> adoptionInterestList = [info, info2, info];
+    List<Interest> adoptionInterestList = [info, info2, info];
 
     return Scaffold(
       appBar: GenericAppBar(

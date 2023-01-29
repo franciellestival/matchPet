@@ -2,18 +2,16 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_launch/flutter_launch.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
-
 import 'package:theme/export_theme.dart';
-
-import 'package:user_profile/model/adoption.dart';
-
 import 'package:url_launcher/url_launcher.dart';
+import 'package:user_profile/model/interest.dart';
 
 class AdoptionInfo extends StatelessWidget {
   final bool isMyWantedPets;
-  final AdoptionModel adoptionModel;
+  final Interest adoptionModel;
 
   const AdoptionInfo(
       {super.key, bool? isMyWantedPets, required this.adoptionModel})
@@ -82,7 +80,7 @@ class AdoptionInfo extends StatelessWidget {
                   onPressed: () {
                     _modalAuthorizeContact(context);
                   },
-                  child: adoptionModel.authorized ?? false
+                  child: adoptionModel.accepted ?? false
                       ? const Text(
                           'Contato liberado',
                           style: TextStyle(
@@ -117,7 +115,7 @@ class AdoptionInfo extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.30,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: adoptionModel.authorized ?? false
+              child: adoptionModel.accepted ?? false
                   ? Column(
                       children: [
                         Padding(
@@ -250,7 +248,7 @@ class AdoptionInfo extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.40,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: adoptionModel.authorized ?? false
+              child: adoptionModel.accepted ?? false
                   ? Column(
                       children: [
                         Padding(
