@@ -33,6 +33,25 @@ class FilterController extends GetxController {
   RxBool specialNeedYesSelected = false.obs;
   RxBool specialNeedNoSelected = false.obs;
 
+  void clearAllFilters() {
+    ageStart = 0;
+    ageEnd = 15;
+    distanceSlider = 10;
+    dogSelected.value = false;
+    catSelected.value = false;
+    otherSelected.value = false;
+
+    maleSelected.value = false;
+    femaleSelected.value = false;
+
+    smallSelected.value = false;
+    mediumSelected.value = false;
+    bigSelected.value = false;
+
+    specialNeedYesSelected.value = false;
+    specialNeedNoSelected.value = false;
+  }
+
   Future<Map<String, dynamic>> getQueryMap() async {
     final UserRepository userRepository = Get.find();
     final bool isDogSelected = dogSelected.value;
@@ -88,6 +107,7 @@ class FilterController extends GetxController {
       map['lat'] = location.lat;
       map['lng'] = location.lng;
     }
+    clearAllFilters();
     return map;
   }
 }

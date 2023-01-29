@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:theme/export_theme.dart';
 
 class PetList extends StatelessWidget {
@@ -34,10 +33,14 @@ class PetList extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                children: items.map((gridItem) {
-                  return Padding(
-                      padding: const EdgeInsets.all(2), child: gridItem);
-                }).toList(),
+                children: items.map(
+                  (gridItem) {
+                    return Padding(
+                      padding: const EdgeInsets.all(2),
+                      child: gridItem,
+                    );
+                  },
+                ).toList(),
               ),
             ],
           ),

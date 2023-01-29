@@ -1,23 +1,27 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
-import 'package:pet_profile/controller/pet_controller.dart';
+import 'package:pet_profile/controller/favorites_controller.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 
 import 'package:theme/export_theme.dart';
+import 'package:user_profile/model/user.dart';
 
 class PetDetailPage extends StatelessWidget {
-  final Rx<bool> isFavorited = false.obs;
-  final bool? isMyPet;
+  final RxBool isFavorited = false.obs;
 
-  PetDetailPage({super.key, this.isMyPet = false});
+  PetDetailPage({super.key});
 
   late PetProfile? pet;
 
   @override
   Widget build(BuildContext context) {
+    final User loggedInUser = Get.find<User>(tag: "loggedInUser");
     pet = Get.arguments;
-
+    isFavorited.value = pet!.isUserFavorite!;
+    bool isMyPet = (pet!.owner!.id == loggedInUser.id!);
     return Scaffold(
       appBar: const GenericAppBar(title: 'Detalhes do Pet'),
       backgroundColor: AppColors.primaryLightColor,
@@ -44,7 +48,7 @@ class PetDetailPage extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.topRight,
-                    child: isMyPet! ? editIcon() : favoriteIcon(),
+                    child: isMyPet ? editIcon() : favoriteIcon(),
                   ),
                 ],
               ),
@@ -101,7 +105,7 @@ class PetDetailPage extends StatelessWidget {
             ),
             const HeightSpacer(height: 40),
             Center(
-              child: isMyPet ?? false
+              child: isMyPet
                   ? PrimaryButton(
                       height: 50,
                       onTap: () {
@@ -113,26 +117,11 @@ class PetDetailPage extends StatelessWidget {
                   : PrimaryButton(
                       height: 50,
                       onTap: () {
-                        _showDialogMessage(context, false, isMyPet ?? false);
+                        _showDialogMessage(context, false, isMyPet);
                       },
                       text: 'Quero Adotar',
                       backgroundColor: AppColors.blueButton,
                     ),
-            ),
-            const HeightSpacer(height: 40),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const SizedBox(height: 20),
-                PrimaryButton(
-                  height: 50,
-                  onTap: () {
-                    Get.toNamed(Routes.petEditPage, arguments: pet);
-                  },
-                  text: 'Editar Pet',
-                  backgroundColor: AppColors.blueButton,
-                ),
-              ],
             ),
             const HeightSpacer(height: 40),
           ],
@@ -198,12 +187,23 @@ class PetDetailPage extends StatelessWidget {
         fontSize: 15);
   }
 
-  void _onTapFavorite() {
-    PetController controller = PetController();
+  void _onTapFavorite() async {
+    try {
+      final User loggedInUser = Get.find<User>(tag: "loggedInUser");
 
-    isFavorited.value
-        ? {controller.removeFromFavorites(), isFavorited.value = false}
-        : {controller.addToFavorites(), isFavorited.value = true};
+      if (isFavorited.value) {
+        await FavoritesController.removeFromFavorites(
+            loggedInUser.id!, pet!.id!);
+        isFavorited.value = false;
+      } else {
+        await FavoritesController.addToFavorites(loggedInUser.id!, pet!.id!);
+        isFavorited.value = true;
+      }
+    } catch (e) {
+      log(e.toString());
+      Get.snackbar(
+          'Erro!', 'Erro ao mudar o status de favorito do pet ${pet!.name}!');
+    }
   }
 
   void _showDialogMessage(

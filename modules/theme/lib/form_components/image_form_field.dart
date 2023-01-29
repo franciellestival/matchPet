@@ -33,7 +33,7 @@ class ImageInput extends StatelessWidget {
                   decoration: const ShapeDecoration(
                     shape: CircleBorder(
                       side: BorderSide(
-                        strokeAlign: StrokeAlign.outside,
+                        strokeAlign: BorderSide.strokeAlignInside,
                         width: 2,
                         color: AppColors.buttonColor,
                       ),
@@ -48,7 +48,7 @@ class ImageInput extends StatelessWidget {
                 decoration: const ShapeDecoration(
                   shape: CircleBorder(
                     side: BorderSide(
-                      strokeAlign: StrokeAlign.outside,
+                      strokeAlign: BorderSide.strokeAlignInside,
                       width: 1,
                       color: AppColors.white,
                     ),
