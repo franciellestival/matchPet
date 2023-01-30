@@ -457,8 +457,8 @@ class PetDetailPage extends StatelessWidget {
   void _setFoundPet(PetProfile? pet) {
     if (pet != null) {
       Get.dialog(AlertDialog(
-        title: const Text("!"),
-        content: const Text("Seu pet foi encontrado?"),
+        title: const Text("Seu pet foi encontrado?"),
+        // content: const Text("Seu pet foi encontrado?"),
         backgroundColor: AppColors.primaryLightColor,
         actions: [
           ContinueDialogLink(
@@ -477,7 +477,8 @@ class PetDetailPage extends StatelessWidget {
                         backgroundColor: AppColors.primaryLightColor,
                         actions: [
                           GoBackDialogLink(onPressed: () {
-                            Get.back();
+                            Get.offAllNamed(Routes.home);
+                            // Get.back();
                           })
                         ],
                       ),
