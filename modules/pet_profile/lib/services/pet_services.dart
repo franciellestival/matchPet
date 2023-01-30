@@ -1,6 +1,7 @@
 import 'package:api_services/api_services.dart';
 import 'package:get/get.dart' as getx;
 import 'package:pet_profile/models/new_pet.dart';
+import 'package:pet_profile/models/pet_profile.dart';
 import 'package:user_profile/model/token.dart';
 
 class PetServices {
@@ -123,26 +124,25 @@ class PetServices {
     try {
       token = getx.Get.find(tag: "userToken");
       final Response response = await petApi.get(_petEndpoint,
-          queryParameters: filters
-
-          //     .map((key, value) {
-          //   var newKey = "";
-          //   switch (key) {
-          //     case "minAge":
-          //     case "maxAge":
-          //     case "special_need":
-          //     case "neutered":
-          //     case "userId":
-          //       newKey = key;
-          //       break;
-          //     default:
-          //       newKey = "$key[]";
-          //       break;
-          //   }
-          //   return MapEntry(newKey, value);
-          // })
-          ,
+          queryParameters: filters,
           options: Options(headers: {"Authorization": token.token}));
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> updatePetStatus(PetProfile pet) async {
+    try {
+      token = getx.Get.find(tag: "userToken");
+      final Response response = await petApi.patch("$_petEndpoint/${pet.id}",
+          data: FormData.fromMap({
+            "status": pet.status!.normalizedName,
+            "user": pet.owner!.toJson(),
+          }),
+          options: Options(
+            headers: {"Authorization": token.token},
+          ));
       return response;
     } catch (e) {
       rethrow;

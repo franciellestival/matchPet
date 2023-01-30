@@ -151,7 +151,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         Get.offAllNamed(Routes.initialRoute);
         Get.snackbar('Erro!', 'Usuário inválido!');
       } else {
-        Get.put<User>(user, tag: "loggedInUser");
+        Get.put<User>(user, tag: "loggedInUser", permanent: true);
       }
     }
   }

@@ -1,15 +1,16 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_launch/flutter_launch.dart';
+
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
+
 import 'package:theme/export_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:user_profile/controller/interest_controller.dart';
 import 'package:user_profile/model/interest.dart';
 
-class AdoptionInfo extends StatelessWidget {
+class AdoptionInfo extends GetView<InterestController> {
   final bool isMyWantedPets;
   final Interest adoptionModel;
 
@@ -116,126 +117,13 @@ class AdoptionInfo extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: adoptionModel.accepted ?? false
-                  ? Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            '${adoptionModel.interestedUser?.name ?? 'Sem nome'} vai adotar ${adoptionModel.pet?.name ?? 'Sem nome'} ?',
-                            style: const TextStyle(fontSize: 20),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            'Você pode ir até o perfil do pet e confirmar a adoção, ou retirar a permissão para que ${adoptionModel.interestedUser?.name ?? 'Sem nome'} não tenha mais acesso ao seu número de telefone',
-                            style: const TextStyle(fontSize: 15),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Retirar permissão de contato',
-                            style: TextStyle(
-                                backgroundColor: AppColors.primaryLightColor,
-                                color: AppColors.buttonColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Get.toNamed(Routes.petDetailPage,
-                                arguments: adoptionModel.pet);
-                          },
-                          child: const Text(
-                            'Confirmar adoção',
-                            style: TextStyle(
-                                color: AppColors.buttonColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            'Antes de confirmar a adoção do pet, que tal trocar uma ideia com ${adoptionModel.interestedUser?.name ?? 'Sem nome'} ?',
-                            style: const TextStyle(fontSize: 20),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            'Após a liberação, ${adoptionModel.interestedUser?.name ?? 'Sem nome'} poderá visualizar seu número de telefone, e os detalhes da adoção poderão ser combinados',
-                            style: const TextStyle(fontSize: 15),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text(
-                                'Liberar contato',
-                                style: TextStyle(
-                                    color: AppColors.buttonColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text(
-                                'Recusar',
-                                style: TextStyle(
-                                    color: AppColors.buttonColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                  ? getAuthorizedContactWidget()
+                  : getunAuthorizedContactWidget(),
             ),
           ),
         );
       },
     );
-  }
-
-  openWhatsApp() async {
-    String url() {
-      String phone =
-          adoptionModel.pet?.owner?.phone?.replaceAll(RegExp(r'[^\d]'), "") ??
-              '';
-      String message = 'Olá, ${adoptionModel.pet?.owner?.name ?? ''}.';
-
-      if (Platform.isAndroid) {
-        log('Android $phone $message');
-        return "https://wa.me/55$phone/?text=$message}"; // new line
-      } else if (Platform.isIOS) {
-        return "https://api.whatsapp.com/send?phone=$phone=$message"; // new line
-      } else {
-        return "whatsapp://send?phone=$phone&text=${Uri.encodeFull(message)}";
-      }
-    }
-
-    if (await canLaunchUrl(Uri.parse(url()))) {
-      log('androir deu');
-      await launchUrl(Uri.parse(url()));
-    } else {
-      log('android deu ruim');
-      throw 'Could not launch';
-    }
   }
 
   void _modalMyWantedPetDetails(context) {
@@ -251,115 +139,305 @@ class AdoptionInfo extends StatelessWidget {
             ),
             height: MediaQuery.of(context).size.height * 0.40,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: adoptionModel.accepted ?? false
-                  ? Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            '${adoptionModel.pet?.owner?.name ?? 'Sem nome'} autorizou que você entre em contato',
-                            style: const TextStyle(fontSize: 20),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            String phone = adoptionModel.pet?.owner?.phone
-                                    ?.replaceAll(RegExp(r'[^\d]'), "") ??
-                                '';
-                            String message =
-                                'Olá, ${adoptionModel.pet?.owner?.name ?? ''} ';
-                            await openWhatsApp();
-                            await FlutterLaunch.launchWhatsapp(
-                                phone: '55$phone', message: message);
-                          },
-                          icon: SvgPicture.asset(AppSvgs.zapIcon,
-                              color: AppColors.buttonColor),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            'Essa etapa é importante para entender se ${adoptionModel.pet?.name} se encaixa no seu estilo de vida',
-                            style: const TextStyle(fontSize: 15),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Retirar interesse',
-                            style: TextStyle(
-                                backgroundColor: AppColors.primaryLightColor,
-                                color: AppColors.buttonColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Get.toNamed(Routes.petDetailPage,
-                                arguments: adoptionModel.pet);
-                          },
-                          child: const Text(
-                            'Ir para o perfil do pet',
-                            style: TextStyle(
-                                color: AppColors.buttonColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            '${adoptionModel.interestedUser?.name ?? 'Sem nome'} ainda não autorizou a liberação de contato',
-                            style: const TextStyle(fontSize: 20),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            'Aguarde a liberação, para que você possa saber mais detalhes sobre ${adoptionModel.pet?.name} ',
-                            style: const TextStyle(fontSize: 15),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text(
-                                'Retirar Interesse',
-                                style: TextStyle(
-                                    color: AppColors.buttonColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text(
-                                'Ir para o perfil do pet',
-                                style: TextStyle(
-                                    color: AppColors.buttonColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-            ),
+                padding: const EdgeInsets.all(8.0),
+                child: adoptionModel.accepted ?? false
+                    ? getAuthorizedContactMyWantedPetsWidget()
+                    : getunAuthorizedMyWantedPetsWidget()),
           ),
         );
       },
     );
+  }
+
+  Future<void> openWhatsApp() async {
+    String phone =
+        adoptionModel.pet?.owner?.phone?.replaceAll(RegExp(r'[^\d]'), '') ?? '';
+    String message = 'Olá, ${adoptionModel.pet?.owner?.name ?? ''}.';
+    String scheme = Platform.isAndroid ? 'https' : 'whatsapp';
+    Uri waUri = Uri(
+      scheme: scheme,
+      host: 'wa.me',
+      path: 'send',
+      queryParameters: {
+        'phone': '55$phone',
+        'text': message,
+      },
+    );
+
+    if (await canLaunchUrl(waUri)) {
+      await launchUrl(waUri, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch';
+    }
+  }
+
+  Widget getAuthorizedContactWidget() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            '${adoptionModel.interestedUser?.name ?? 'Sem nome'} vai adotar ${adoptionModel.pet?.name ?? 'Sem nome'} ?',
+            style: const TextStyle(fontSize: 20),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            'Você pode ir até o perfil do pet e confirmar a adoção, ou retirar a permissão para que ${adoptionModel.interestedUser?.name ?? 'Sem nome'} não tenha mais acesso ao seu número de telefone',
+            style: const TextStyle(fontSize: 15),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        TextButton(
+          onPressed: () async {
+            try {
+              await controller.removeInterest(adoptionModel);
+              Get.back();
+              dialog(
+                  "Permissão de contato removido ${adoptionModel.interestedUser?.name}",
+                  "Este contato não será mais exibido em sua listagem");
+            } catch (e) {
+              Get.snackbar("Erro", "Não foi possível concluir a remoção");
+            }
+          },
+          child: const Text(
+            'Remover permissão',
+            style: TextStyle(
+                backgroundColor: AppColors.primaryLightColor,
+                color: AppColors.buttonColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 20),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Get.toNamed(Routes.petDetailPage, arguments: adoptionModel.pet);
+          },
+          child: const Text(
+            'Confirmar adoção',
+            style: TextStyle(
+                color: AppColors.buttonColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 20),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget getunAuthorizedContactWidget() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            'Antes de confirmar a adoção do pet, que tal trocar uma ideia com ${adoptionModel.interestedUser?.name ?? 'Sem nome'} ?',
+            style: const TextStyle(fontSize: 20),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            'Após a liberação, ${adoptionModel.interestedUser?.name ?? 'Sem nome'} poderá visualizar seu número de telefone, e os detalhes da adoção poderão ser combinados',
+            style: const TextStyle(fontSize: 15),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(
+              onPressed: () async {
+                try {
+                  await controller.updateInterest(adoptionModel);
+                  Get.back();
+                  dialog(
+                      "Contato liberado para ${adoptionModel.interestedUser?.name}",
+                      "Em breve vocês poderão conversar e acertar os detalhes da adoção.");
+                } catch (e) {
+                  Get.snackbar('Erro', 'Não foi possível remover interesse');
+                }
+              },
+              child: const Text(
+                'Liberar contato',
+                style: TextStyle(
+                    color: AppColors.buttonColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                try {
+                  await controller.removeInterest(adoptionModel);
+                  Get.back();
+                  dialog("Interesse removido com sucesso",
+                      " ${adoptionModel.pet!.name!} não estará mais disponível em sua listagem");
+                } catch (e) {
+                  Get.snackbar('Erro', 'Não foi possível remover o interesse');
+                }
+              },
+              child: const Text(
+                'Recusar',
+                style: TextStyle(
+                    color: AppColors.buttonColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget getAuthorizedContactMyWantedPetsWidget() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            '${adoptionModel.pet?.owner?.name ?? 'Sem nome'} autorizou que você entre em contato',
+            style: const TextStyle(fontSize: 20),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Ink(
+          decoration: ShapeDecoration(
+              shadows: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(0, 3), // changes position of shadow
+                ),
+              ],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(80),
+              ),
+              color: AppColors.buttonColor),
+          child: IconButton(
+            onPressed: () async {
+              await openWhatsApp();
+            },
+            icon: SvgPicture.asset(AppSvgs.zapIcon, color: AppColors.white),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            'Essa etapa é importante para entender se ${adoptionModel.pet?.name} se encaixa no seu estilo de vida',
+            style: const TextStyle(fontSize: 15),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        TextButton(
+          onPressed: () async {
+            try {
+              await controller.removeInterest(adoptionModel);
+              Get.back();
+              dialog("Interesse removido com sucesso",
+                  "Este pet não será mais exibido em sua listagem");
+            } catch (e) {
+              Get.snackbar('Erro', 'Não foi possível remover interesse');
+            }
+          },
+          child: const Text(
+            'Retirar interesse',
+            style: TextStyle(
+                backgroundColor: AppColors.primaryLightColor,
+                color: AppColors.buttonColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 20),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Get.toNamed(Routes.petDetailPage, arguments: adoptionModel.pet);
+          },
+          child: const Text(
+            'Ir para o perfil do pet',
+            style: TextStyle(
+                color: AppColors.buttonColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 20),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget getunAuthorizedMyWantedPetsWidget() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            '${adoptionModel.pet?.owner?.name ?? 'Sem nome'} ainda não autorizou a liberação de contato',
+            style: const TextStyle(fontSize: 20),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            'Aguarde a liberação, para que você possa saber mais detalhes sobre ${adoptionModel.pet?.name} ',
+            style: const TextStyle(fontSize: 15),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(
+              onPressed: () async {
+                try {
+                  await controller.removeInterest(adoptionModel);
+                  Get.back();
+                  dialog("Interesse removido",
+                      "${adoptionModel.pet?.name} não estará mais na sua lista de interesses");
+                } catch (e) {
+                  Get.snackbar('Erro', 'Não foi possível remover interesse');
+                }
+              },
+              child: const Text(
+                'Retirar Interesse',
+                style: TextStyle(
+                    color: AppColors.buttonColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Get.toNamed(Routes.petDetailPage, arguments: adoptionModel.pet);
+              },
+              child: const Text(
+                'Ir para o perfil do pet',
+                style: TextStyle(
+                    color: AppColors.buttonColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void dialog(String title, String message) {
+    Get.defaultDialog(
+        title: title,
+        middleText: message,
+        backgroundColor: AppColors.primaryLightColor,
+        buttonColor: AppColors.buttonColor,
+        onConfirm: () {
+          Get.back(closeOverlays: true);
+        },
+        confirmTextColor: AppColors.black);
   }
 }

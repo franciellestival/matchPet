@@ -11,7 +11,7 @@ class GoHomeDialogLink extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        Get.toNamed(Routes.home);
+        Get.offNamed(Routes.home);
       },
       child: Text(
         'Ir para a Home',
@@ -32,6 +32,23 @@ class GoBackDialogLink extends StatelessWidget {
       },
       child: Text(
         'Voltar',
+        style: _linkTextStyle(),
+      ),
+    );
+  }
+}
+
+class ConfirmAdoptionLink extends StatelessWidget {
+  const ConfirmAdoptionLink({super.key, required this.onPressed});
+
+  final Function onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed as void Function(),
+      child: Text(
+        'Confirmar Adoção',
         style: _linkTextStyle(),
       ),
     );
