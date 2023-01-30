@@ -8,6 +8,7 @@ import 'package:user_profile/controller/interest_controller.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 
 import 'package:theme/export_theme.dart';
+import 'package:user_profile/controller/user_controller.dart';
 import 'package:user_profile/model/interest.dart';
 import 'package:user_profile/model/user.dart';
 
@@ -133,8 +134,10 @@ class PetDetailPage extends StatelessWidget {
                                     : Colors.grey.withOpacity(0.5),
                             onTap: pet!.status!.normalizedName != "missing"
                                 ? () => {_setMissingPet(pet)}
-                                : () => {},
-                            text: "Marcar como Desaparecido",
+                                : () => {_setFoundPet(pet)},
+                            text: pet!.status!.normalizedName != "missing"
+                                ? "Marcar como Desaparecido"
+                                : "Marcar como Disponível",
                           ),
                           PrimaryButton(
                             height: 50,
@@ -157,10 +160,13 @@ class PetDetailPage extends StatelessWidget {
                             text: 'Quero Adotar',
                             backgroundColor: AppColors.blueButton,
                           ),
-                          if (pet!.status!.displayName == "missing")
+                          if (pet!.status!.normalizedName == "missing")
                             PrimaryButton(
                               height: 50,
-                              onTap: () => {},
+                              onTap: () => {
+                                UserController.openWhatsApp(pet!,
+                                    adoption: false)
+                              },
                               text: 'Entrar em contato',
                               backgroundColor: AppColors.blueButton,
                             ),
@@ -267,7 +273,7 @@ class PetDetailPage extends StatelessWidget {
     if (!hasInterest.value) {
       Get.defaultDialog(
         title: "Ops!",
-        middleText: "O pet ${pet!.name} não possui nenhum interesse!",
+        middleText: "O pet ${pet!.name} não possui nenhum usuário interessado!",
         backgroundColor: AppColors.primaryLightColor,
         buttonColor: AppColors.buttonColor,
       );
@@ -347,11 +353,13 @@ class PetDetailPage extends StatelessWidget {
     try {
       await PetController.changeAdoptionStatus(interestedUserId, pet!.id!);
       Get.back();
-      Get.defaultDialog(
-        title: "Tudo certo!",
-        middleText: "Adoção do pet ${pet!.name} confirmada!",
-        backgroundColor: AppColors.primaryLightColor,
-        buttonColor: AppColors.buttonColor,
+      Get.dialog(
+        AlertDialog(
+          title: const Text("Tudo certo!"),
+          content: Text("Adoção do pet ${pet!.name} confirmada!"),
+          backgroundColor: AppColors.primaryLightColor,
+          actions: [GoBackDialogLink(onPressed: () => Get.back())],
+        ),
       );
     } catch (e) {
       Get.snackbar('Erro', 'Não foi possível confirmar adoção do pet.');
@@ -390,33 +398,78 @@ class PetDetailPage extends StatelessWidget {
 
   void _setMissingPet(PetProfile? pet) {
     if (pet != null) {
-      Get.defaultDialog(
-        title: "Atenção!",
-        middleText: "Deseja realmente marcar o pet como desaparecido?",
-        textCancel: "Cancelar",
-        textConfirm: "Sim",
+      Get.dialog(AlertDialog(
+        title: const Text("Atenção!"),
+        content: const Text("Deseja realmente marcar o pet como desaparecido?"),
+        actions: [
+          GoBackDialogLink(
+              onPressed: () => {
+                    Future.sync(() async {
+                      try {
+                        await PetController.changeMissingStatus(pet.id!);
+                        Get.back();
+                        Get.defaultDialog(
+                            title: "Ok!",
+                            middleText:
+                                "Seu pet foi marcado como Desaparecido. Esperamos que o encontre logo!",
+                            backgroundColor: AppColors.primaryLightColor,
+                            buttonColor: AppColors.buttonColor,
+                            confirmTextColor: AppColors.black,
+                            onConfirm: () => Get.back());
+                      } catch (e) {
+                        Get.snackbar("Erro!", e.toString(),
+                            duration: const Duration(seconds: 5));
+                      }
+                    })
+                  }),
+          GoBackDialogLink(onPressed: () {
+            // Get.closeCurrentSnackbar();
+            Get.back();
+          })
+        ],
         backgroundColor: AppColors.primaryLightColor,
-        buttonColor: AppColors.buttonColor,
+      ));
+    }
+  }
+
+  void _setFoundPet(PetProfile? pet) {
+    if (pet != null) {
+      Get.dialog(AlertDialog(
+        title: const Text("!"),
+        content: const Text("Seu pet foi encontrado?"),
+        actions: [
+          GoBackDialogLink(
+              onPressed: () => {
+                    Future.sync(() async {
+                      try {
+                        await PetController.changeMissingStatus(pet.id!,
+                            found: true);
+                        Get.back();
+                        Get.dialog(
+                          AlertDialog(
+                            title: const Text("Parabéns!"),
+                            content: const Text(
+                                "O status do seu pet foi alterado para disponível para adoção!"),
+                            backgroundColor: AppColors.primaryLightColor,
+                            actions: [
+                              GoBackDialogLink(onPressed: () {
+                                Get.back();
+                              })
+                            ],
+                          ),
+                        );
+                      } catch (e) {
+                        Get.snackbar("Erro!", e.toString(),
+                            duration: const Duration(seconds: 5));
+                      }
+                    })
+                  })
+        ],
+
+        backgroundColor: AppColors.primaryLightColor,
+
         // barrierDismissible: false,
-        cancelTextColor: AppColors.black,
-        confirmTextColor: AppColors.black,
-        onConfirm: () async {
-          try {
-            await PetController.changeMissingStatus(pet.id!);
-            Get.defaultDialog(
-                title: "Ok!",
-                middleText:
-                    "Seu pet foi marcado como Desaparecido. Esperamos que o encontre logo!",
-                backgroundColor: AppColors.primaryLightColor,
-                buttonColor: AppColors.buttonColor,
-                confirmTextColor: AppColors.black,
-                onConfirm: () => Get.back());
-          } catch (e) {
-            Get.snackbar("Erro!", e.toString(),
-                duration: const Duration(seconds: 5));
-          }
-        },
-      );
+      ));
     }
   }
 }

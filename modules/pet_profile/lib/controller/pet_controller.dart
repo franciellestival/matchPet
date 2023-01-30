@@ -262,7 +262,8 @@ class PetController {
     }
   }
 
-  static Future<void> changeMissingStatus(int petId) async {
+  static Future<void> changeMissingStatus(int petId,
+      {bool found = false}) async {
     //Requisitamos o pet a partir do id
     final PetRepository petRepository = Get.find<PetRepository>();
 
@@ -270,8 +271,8 @@ class PetController {
     if (pet != null) {
       var statusList = await petRepository.getStatus();
 
-      pet.status = statusList
-          .firstWhere((element) => element.normalizedName == "missing");
+      pet.status = statusList.firstWhere((element) =>
+          element.normalizedName == (found ? "available" : "missing"));
 
       await petRepository.updatePetStatus(pet);
     }
