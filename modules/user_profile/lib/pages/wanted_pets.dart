@@ -34,12 +34,31 @@ class WantedPets extends GetView<InterestController> {
                 : _getInterestedAdoptersListTeste(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return ListView(
-                  children: snapshot.data!.toList(),
-                );
+                return snapshot.data!.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'Nada por aqui ainda :) ',
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : ListView(
+                        children: snapshot.data!.toList(),
+                      );
               } else {
                 if (snapshot.hasError) {
                   Get.snackbar('Error', snapshot.error.toString());
+                  return const Center(
+                    child: Text(
+                      'Tente novamente mais tarde ',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
                 }
                 return controller.isLoading.value
                     ? const Center(

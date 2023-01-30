@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
+
 import 'package:theme/export_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:user_profile/controller/interest_controller.dart';
 import 'package:user_profile/model/interest.dart';
-import 'package:user_profile/pages/wanted_pets.dart';
 
 class AdoptionInfo extends GetView<InterestController> {
   final bool isMyWantedPets;
@@ -191,11 +191,19 @@ class AdoptionInfo extends GetView<InterestController> {
           ),
         ),
         TextButton(
-          onPressed: () {
-            controller.updateInterest(adoptionModel);
+          onPressed: () async {
+            try {
+              await controller.removeInterest(adoptionModel);
+              Get.back();
+              dialog(
+                  "Permissão de contato removido ${adoptionModel.interestedUser?.name}",
+                  "Este contato não será mais exibido em sua listagem");
+            } catch (e) {
+              Get.snackbar("Erro", "Não foi possível concluir a remoção");
+            }
           },
           child: const Text(
-            'Retirar permissão de contato',
+            'Remover permissão',
             style: TextStyle(
                 backgroundColor: AppColors.primaryLightColor,
                 color: AppColors.buttonColor,
@@ -243,7 +251,15 @@ class AdoptionInfo extends GetView<InterestController> {
           children: [
             TextButton(
               onPressed: () async {
-                await controller.updateInterest(adoptionModel);
+                try {
+                  await controller.updateInterest(adoptionModel);
+                  Get.back();
+                  dialog(
+                      "Contato liberado para ${adoptionModel.interestedUser?.name}",
+                      "Em breve vocês poderão conversar e acertar os detalhes da adoção.");
+                } catch (e) {
+                  Get.snackbar('Erro', 'Não foi possível remover interesse');
+                }
               },
               child: const Text(
                 'Liberar contato',
@@ -255,7 +271,14 @@ class AdoptionInfo extends GetView<InterestController> {
             ),
             TextButton(
               onPressed: () async {
-                await controller.removeInterest(adoptionModel);
+                try {
+                  await controller.removeInterest(adoptionModel);
+                  Get.back();
+                  dialog("Interesse removido com sucesso",
+                      " ${adoptionModel.pet!.name!} não estará mais disponível em sua listagem");
+                } catch (e) {
+                  Get.snackbar('Erro', 'Não foi possível remover o interesse');
+                }
               },
               child: const Text(
                 'Recusar',
@@ -312,8 +335,15 @@ class AdoptionInfo extends GetView<InterestController> {
           ),
         ),
         TextButton(
-          onPressed: () {
-            controller.removeInterest(adoptionModel);
+          onPressed: () async {
+            try {
+              await controller.removeInterest(adoptionModel);
+              Get.back();
+              dialog("Interesse removido com sucesso",
+                  "Este pet não será mais exibido em sua listagem");
+            } catch (e) {
+              Get.snackbar('Erro', 'Não foi possível remover interesse');
+            }
           },
           child: const Text(
             'Retirar interesse',
@@ -366,13 +396,9 @@ class AdoptionInfo extends GetView<InterestController> {
               onPressed: () async {
                 try {
                   await controller.removeInterest(adoptionModel);
-
-                  Get.defaultDialog(
-                      title: "Interesse removido",
-                      middleText:
-                          "${adoptionModel.pet?.name} não estará mais na sua lista de interesses",
-                      backgroundColor: AppColors.primaryLightColor,
-                      buttonColor: AppColors.buttonColor);
+                  Get.back();
+                  dialog("Interesse removido",
+                      "${adoptionModel.pet?.name} não estará mais na sua lista de interesses");
                 } catch (e) {
                   Get.snackbar('Erro', 'Não foi possível remover interesse');
                 }
@@ -386,7 +412,9 @@ class AdoptionInfo extends GetView<InterestController> {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.toNamed(Routes.petDetailPage, arguments: adoptionModel.pet);
+              },
               child: const Text(
                 'Ir para o perfil do pet',
                 style: TextStyle(
@@ -399,5 +427,17 @@ class AdoptionInfo extends GetView<InterestController> {
         ),
       ],
     );
+  }
+
+  void dialog(String title, String message) {
+    Get.defaultDialog(
+        title: title,
+        middleText: message,
+        backgroundColor: AppColors.primaryLightColor,
+        buttonColor: AppColors.buttonColor,
+        onConfirm: () {
+          Get.back(closeOverlays: true);
+        },
+        confirmTextColor: AppColors.black);
   }
 }
