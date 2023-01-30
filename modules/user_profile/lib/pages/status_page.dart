@@ -153,6 +153,7 @@ class StatusPage extends StatelessWidget {
               text: 'Avaliar Interessados',
               onPressed: () {
                 Get.to(WantedPets(
+                  loggedUserId: loggedInUser.id!,
                   isMyWantedPets: false,
                 ));
               },
@@ -162,6 +163,7 @@ class StatusPage extends StatelessWidget {
               text: 'Meus futuros Pets',
               onPressed: () {
                 Get.to(WantedPets(
+                  loggedUserId: loggedInUser.id!,
                   isMyWantedPets: true,
                 ));
               },
@@ -181,53 +183,54 @@ class StatusPage extends StatelessWidget {
       required String text,
       required Function() onPressed}) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Ink(
-            decoration: ShapeDecoration(
-                // ignore: prefer_const_literals_to_create_immutables
-                shadows: [
-                  const BoxShadow(
-                    color: AppColors.buttonColor,
-                    spreadRadius: 2,
-                    blurRadius: 3,
-                    offset: Offset(0, 1), // changes position of shadow
-                  ),
-                ],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Ink(
+          decoration: ShapeDecoration(
+              // ignore: prefer_const_literals_to_create_immutables
+              shadows: [
+                const BoxShadow(
+                  color: AppColors.buttonColor,
+                  spreadRadius: 2,
+                  blurRadius: 3,
+                  offset: Offset(0, 1), // changes position of shadow
                 ),
-                color: AppColors.primaryColor),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(AppColors.primaryColor)),
-              onPressed: onPressed,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SvgPicture.asset(
-                      icon,
-                      height: 50,
-                      width: 50,
-                      color: Colors.brown,
-                    ),
-                  ),
-                  Text(
-                    text,
-                    style: const TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.brown,
-                    ),
-                  ),
-                ],
+              ],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
+              color: AppColors.primaryColor),
+          child: ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(AppColors.primaryColor)),
+            onPressed: onPressed,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SvgPicture.asset(
+                    icon,
+                    height: 50,
+                    width: 50,
+                    color: Colors.brown,
+                  ),
+                ),
+                Text(
+                  text,
+                  style: const TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.brown,
+                  ),
+                ),
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

@@ -174,6 +174,20 @@ class PetController {
     }
   }
 
+  static Future<List<PetProfile>> getFilteredPetsProfile(
+      Map<String, dynamic> filters) async {
+    try {
+      final PetRepository petRepository = Get.find();
+
+      final List<PetProfile> petProfileList =
+          await petRepository.getFilteredPets(filters);
+
+      return petProfileList;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   static Future<List<String?>> genders() async {
     try {
       final PetRepository petRepository = Get.find();
