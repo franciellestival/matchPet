@@ -20,8 +20,8 @@ class PetDetailPage extends StatelessWidget {
 
   PetDetailPage({super.key});
 
-  late PetProfile? pet;
-  late User? loggedInUser;
+  PetProfile? pet;
+  User? loggedInUser;
 
   @override
   Widget build(BuildContext context) {
@@ -40,116 +40,136 @@ class PetDetailPage extends StatelessWidget {
     });
 
     return Scaffold(
-      appBar: const GenericAppBar(title: 'Detalhes do Pet'),
-      backgroundColor: AppColors.primaryLightColor,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const HeightSpacer(),
-            Container(
-              height: 400,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(10),
+        appBar: const GenericAppBar(title: 'Detalhes do Pet'),
+        backgroundColor: AppColors.primaryLightColor,
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const HeightSpacer(),
+              Container(
+                height: 400,
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  image: DecorationImage(
+                    fit: BoxFit.fitWidth,
+                    image: NetworkImage(pet?.photoUrl ??
+                        'https://i.pinimg.com/originals/d8/9e/d9/d89ed96e3cda94aff64b574662a621b3.jpg'),
+                  ),
                 ),
-                image: DecorationImage(
-                  fit: BoxFit.fitWidth,
-                  image: NetworkImage(pet?.photoUrl ??
-                      'https://i.pinimg.com/originals/d8/9e/d9/d89ed96e3cda94aff64b574662a621b3.jpg'),
+                child: Stack(
+                  alignment: AlignmentDirectional.bottomStart,
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: isMyPet ? editIcon() : favoriteIcon(),
+                    ),
+                  ],
                 ),
               ),
-              child: Stack(
-                alignment: AlignmentDirectional.bottomStart,
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                child: Text(
+                  '${pet?.name ?? 'Sem Nome'}  , ${pet?.breed ?? 'Sem Raça'}',
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: SvgPicture.asset(
+                        AppSvgs.locationIcon,
+                        height: 15,
+                        width: 15,
+                      ),
+                    ),
+                    const Text(
+                      'Curitiba/PR',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ],
+                ),
+              ),
+              const HeightSpacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: isMyPet ? editIcon() : favoriteIcon(),
-                  ),
+                  buildCardInfo('Sexo', pet!.gender?.displayName ?? ''),
+                  buildCardInfo('Idade', '${pet!.age.toString()} anos'),
+                  buildCardInfo('Peso', '${pet!.weight.toString()} kg'),
+                  buildCardInfo('Porte', pet!.size?.displayName ?? ''),
                 ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              child: Text(
-                '${pet?.name ?? 'Sem Nome'}  , ${pet?.breed ?? 'Sem Raça'}',
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Text(
+                  pet!.description ?? '',
+                  style: const TextStyle(fontSize: 20),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: SvgPicture.asset(
-                      AppSvgs.locationIcon,
-                      height: 15,
-                      width: 15,
-                    ),
-                  ),
-                  const Text(
-                    'Curitiba/PR',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  'Necessidades Especiais? ${pet!.specialNeeds ?? false ? "Sim" : "Nenhuma"}',
+                ),
               ),
-            ),
-            const HeightSpacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                buildCardInfo('Sexo', pet!.gender?.displayName ?? ''),
-                buildCardInfo('Idade', '${pet!.age.toString()} anos'),
-                buildCardInfo('Peso', '${pet!.weight.toString()} kg'),
-                buildCardInfo('Porte', pet!.size?.displayName ?? ''),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Text(
-                pet!.description ?? '',
-                style: const TextStyle(fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Text(
-                'Necessidades Especiais? ${pet!.specialNeeds ?? false ? "Sim" : "Nenhuma"}',
-              ),
-            ),
-            const HeightSpacer(height: 40),
-            Center(
-              child: isMyPet
-                  ? PrimaryButton(
-                      height: 50,
-                      onTap: () {
-                        // _showDialogMessage(context, true, true);
-                        _showAdoptionConfirmationDialog();
-                      },
-                      text: 'Confirmar adoção',
-                      backgroundColor: AppColors.blueButton,
-                    )
-                  : PrimaryButton(
-                      height: 50,
-                      onTap: () {
-                        // _showDialogMessage(context, false, isMyPet);
-                        _showInterestDialog(
-                          loggedInUser!.id!,
-                          pet!.id!,
-                        );
-                      },
-                      text: 'Quero Adotar',
-                      backgroundColor: AppColors.blueButton,
-                    ),
-            ),
-            const HeightSpacer(height: 40),
-          ],
-        ),
-      ),
-    );
+              const HeightSpacer(height: 40),
+              Center(
+                child: isMyPet
+                    ? Column(
+                        children: [
+                          PrimaryButton(
+                            backgroundColor:
+                                pet!.status!.normalizedName != "missing"
+                                    ? AppColors.blueButton
+                                    : Colors.grey.withOpacity(0.5),
+                            onTap: pet!.status!.normalizedName != "missing"
+                                ? () => {_setMissingPet(pet)}
+                                : () => {},
+                            text: "Marcar como Desaparecido",
+                          ),
+                          PrimaryButton(
+                            height: 50,
+                            onTap: () {
+                              // _showDialogMessage(context, true, true);
+                              _showAdoptionConfirmationDialog();
+                            },
+                            text: 'Confirmar adoção',
+                            backgroundColor: AppColors.blueButton,
+                          )
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          PrimaryButton(
+                            height: 50,
+                            onTap: () {
+                              _showInterestDialog(loggedInUser!.id!, pet!.id!);
+                            },
+                            text: 'Quero Adotar',
+                            backgroundColor: AppColors.blueButton,
+                          ),
+                          if (pet!.status!.displayName == "missing")
+                            PrimaryButton(
+                              height: 50,
+                              onTap: () => {},
+                              text: 'Entrar em contato',
+                              backgroundColor: AppColors.blueButton,
+                            ),
+                        ],
+                      ),
+              )
+            ],
+          ),
+        ));
   }
 
   Widget favoriteIcon() {
@@ -243,6 +263,17 @@ class PetDetailPage extends StatelessWidget {
 
   void _showAdoptionConfirmationDialog() async {
     InterestController interestController = Get.find<InterestController>();
+
+    if (!hasInterest.value) {
+      Get.defaultDialog(
+        title: "Ops!",
+        middleText: "O pet ${pet!.name} não possui nenhum interesse!",
+        backgroundColor: AppColors.primaryLightColor,
+        buttonColor: AppColors.buttonColor,
+      );
+      return;
+    }
+
     AlertDialog adoptionConfirmationDialog = AlertDialog(
       title: Text('Confirmar a adoção de ${pet?.name ?? ''}?'),
       actions: [
@@ -355,5 +386,37 @@ class PetDetailPage extends StatelessWidget {
           backgroundColor: AppColors.blueButton,
           disabledColor: Colors.grey.withOpacity(0.5),
         ));
+  }
+
+  void _setMissingPet(PetProfile? pet) {
+    if (pet != null) {
+      Get.defaultDialog(
+        title: "Atenção!",
+        middleText: "Deseja realmente marcar o pet como desaparecido?",
+        textCancel: "Cancelar",
+        textConfirm: "Sim",
+        backgroundColor: AppColors.primaryLightColor,
+        buttonColor: AppColors.buttonColor,
+        // barrierDismissible: false,
+        cancelTextColor: AppColors.black,
+        confirmTextColor: AppColors.black,
+        onConfirm: () async {
+          try {
+            await PetController.changeMissingStatus(pet.id!);
+            Get.defaultDialog(
+                title: "Ok!",
+                middleText:
+                    "Seu pet foi marcado como Desaparecido. Esperamos que o encontre logo!",
+                backgroundColor: AppColors.primaryLightColor,
+                buttonColor: AppColors.buttonColor,
+                confirmTextColor: AppColors.black,
+                onConfirm: () => Get.back());
+          } catch (e) {
+            Get.snackbar("Erro!", e.toString(),
+                duration: const Duration(seconds: 5));
+          }
+        },
+      );
+    }
   }
 }

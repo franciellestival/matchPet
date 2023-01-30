@@ -247,6 +247,21 @@ class PetController {
       rethrow;
     }
   }
+
+  static Future<void> changeMissingStatus(int petId) async {
+    //Requisitamos o pet a partir do id
+    final PetRepository petRepository = Get.find<PetRepository>();
+
+    PetProfile? pet = await getPetByID(petId);
+    if (pet != null) {
+      var statusList = await petRepository.getStatus();
+
+      pet.status = statusList
+          .firstWhere((element) => element.normalizedName == "missing");
+
+      await petRepository.updatePetStatus(pet);
+    }
+  }
 }
 
 Future<NewPet> _newPetInstance(
