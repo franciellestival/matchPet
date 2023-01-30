@@ -128,6 +128,7 @@ class PetDetailPage extends StatelessWidget {
                     ? Column(
                         children: [
                           PrimaryButton(
+                            width: 350,
                             backgroundColor:
                                 pet!.status!.normalizedName != "missing"
                                     ? AppColors.blueButton
@@ -139,7 +140,9 @@ class PetDetailPage extends StatelessWidget {
                                 ? "Marcar como Desaparecido"
                                 : "Marcar como Disponível",
                           ),
+                          const HeightSpacer(height: 20),
                           PrimaryButton(
+                            width: 350,
                             height: 50,
                             onTap: () {
                               // _showDialogMessage(context, true, true);
@@ -147,12 +150,14 @@ class PetDetailPage extends StatelessWidget {
                             },
                             text: 'Confirmar adoção',
                             backgroundColor: AppColors.blueButton,
-                          )
+                          ),
+                          const HeightSpacer(height: 50),
                         ],
                       )
                     : Column(
                         children: [
                           PrimaryButton(
+                            width: 350,
                             height: 50,
                             onTap: () {
                               _showInterestDialog(loggedInUser!.id!, pet!.id!);
@@ -161,15 +166,17 @@ class PetDetailPage extends StatelessWidget {
                             backgroundColor: AppColors.blueButton,
                           ),
                           if (pet!.status!.normalizedName == "missing")
-                            PrimaryButton(
-                              height: 50,
-                              onTap: () => {
-                                UserController.openWhatsApp(pet!,
-                                    adoption: false)
-                              },
-                              text: 'Entrar em contato',
-                              backgroundColor: AppColors.blueButton,
-                            ),
+                            const HeightSpacer(height: 20),
+                          PrimaryButton(
+                            width: 350,
+                            height: 50,
+                            onTap: () => {
+                              UserController.openWhatsApp(pet!, adoption: false)
+                            },
+                            text: 'Entrar em contato',
+                            backgroundColor: AppColors.blueButton,
+                          ),
+                          const HeightSpacer(height: 50)
                         ],
                       ),
               )
