@@ -258,7 +258,9 @@ class PetDetailPage extends StatelessWidget {
               'O tutor do pet foi notificado sobre seu interesse. Logo você poderá contatá-lo.'),
           actions: [
             const GoHomeDialogLink(),
-            GoBackDialogLink(onPressed: () => Get.back()),
+            GoBackDialogLink(onPressed: () {
+              Get.back();
+            }),
           ],
         ),
       );
@@ -271,12 +273,17 @@ class PetDetailPage extends StatelessWidget {
     InterestController interestController = Get.find<InterestController>();
 
     if (!hasInterest.value) {
-      Get.defaultDialog(
-        title: "Ops!",
-        middleText: "O pet ${pet!.name} não possui nenhum usuário interessado!",
+      Get.dialog(AlertDialog(
+        title: const Text("Ops!"),
+        content:
+            Text("O pet ${pet!.name} não possui nenhum usuário interessado!"),
         backgroundColor: AppColors.primaryLightColor,
-        buttonColor: AppColors.buttonColor,
-      );
+        actions: [
+          GoBackDialogLink(onPressed: () {
+            Get.back();
+          })
+        ],
+      ));
       return;
     }
 
@@ -284,7 +291,9 @@ class PetDetailPage extends StatelessWidget {
       title: Text('Confirmar a adoção de ${pet?.name ?? ''}?'),
       actions: [
         ConfirmAdoptionLink(onPressed: _confirmAdoptionFunction),
-        GoBackDialogLink(onPressed: () => Get.back())
+        GoBackDialogLink(onPressed: () {
+          Get.back();
+        })
       ],
       content: SizedBox(
         height: 110,
@@ -358,7 +367,11 @@ class PetDetailPage extends StatelessWidget {
           title: const Text("Tudo certo!"),
           content: Text("Adoção do pet ${pet!.name} confirmada!"),
           backgroundColor: AppColors.primaryLightColor,
-          actions: [GoBackDialogLink(onPressed: () => Get.back())],
+          actions: [
+            GoBackDialogLink(onPressed: () {
+              Get.back();
+            })
+          ],
         ),
       );
     } catch (e) {
@@ -402,12 +415,12 @@ class PetDetailPage extends StatelessWidget {
         title: const Text("Atenção!"),
         content: const Text("Deseja realmente marcar o pet como desaparecido?"),
         actions: [
-          GoBackDialogLink(
+          ContinueDialogLink(
               onPressed: () => {
                     Future.sync(() async {
                       try {
-                        await PetController.changeMissingStatus(pet.id!);
                         Get.back();
+                        await PetController.changeMissingStatus(pet.id!);
                         Get.defaultDialog(
                             title: "Ok!",
                             middleText:
@@ -415,7 +428,9 @@ class PetDetailPage extends StatelessWidget {
                             backgroundColor: AppColors.primaryLightColor,
                             buttonColor: AppColors.buttonColor,
                             confirmTextColor: AppColors.black,
-                            onConfirm: () => Get.back());
+                            onConfirm: () {
+                              Get.back();
+                            });
                       } catch (e) {
                         Get.snackbar("Erro!", e.toString(),
                             duration: const Duration(seconds: 5));
@@ -437,36 +452,41 @@ class PetDetailPage extends StatelessWidget {
       Get.dialog(AlertDialog(
         title: const Text("!"),
         content: const Text("Seu pet foi encontrado?"),
-        actions: [
-          GoBackDialogLink(
-              onPressed: () => {
-                    Future.sync(() async {
-                      try {
-                        await PetController.changeMissingStatus(pet.id!,
-                            found: true);
-                        Get.back();
-                        Get.dialog(
-                          AlertDialog(
-                            title: const Text("Parabéns!"),
-                            content: const Text(
-                                "O status do seu pet foi alterado para disponível para adoção!"),
-                            backgroundColor: AppColors.primaryLightColor,
-                            actions: [
-                              GoBackDialogLink(onPressed: () {
-                                Get.back();
-                              })
-                            ],
-                          ),
-                        );
-                      } catch (e) {
-                        Get.snackbar("Erro!", e.toString(),
-                            duration: const Duration(seconds: 5));
-                      }
-                    })
-                  })
-        ],
-
         backgroundColor: AppColors.primaryLightColor,
+        actions: [
+          ContinueDialogLink(
+            onPressed: () => {
+              Future.sync(
+                () async {
+                  try {
+                    Get.back();
+                    await PetController.changeMissingStatus(pet.id!,
+                        found: true);
+                    Get.dialog(
+                      AlertDialog(
+                        title: const Text("Parabéns!"),
+                        content: const Text(
+                            "O status do seu pet foi alterado para disponível para adoção!"),
+                        backgroundColor: AppColors.primaryLightColor,
+                        actions: [
+                          GoBackDialogLink(onPressed: () {
+                            Get.back();
+                          })
+                        ],
+                      ),
+                    );
+                  } catch (e) {
+                    Get.snackbar("Erro!", e.toString(),
+                        duration: const Duration(seconds: 5));
+                  }
+                },
+              )
+            },
+          ),
+          GoBackDialogLink(onPressed: () {
+            Get.back();
+          })
+        ],
 
         // barrierDismissible: false,
       ));

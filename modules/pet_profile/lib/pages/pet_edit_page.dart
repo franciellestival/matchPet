@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
 import 'package:pet_profile/models/pet_profile.dart';
+import 'package:pet_profile/widgets/dialog_links.dart';
 
 import 'package:theme/export_theme.dart';
 
@@ -310,25 +311,51 @@ class _PetEditPageState extends State<PetEditPage> {
 
   Future<void> _deletePet() async {
     inputEnabled.value = false;
-    Get.defaultDialog(
-      title: "Atenção!",
-      middleText: "Deseja realmente remover o pet?",
-      textCancel: "Cancelar",
-      textConfirm: "Remover",
+    Get.dialog(AlertDialog(
+      title: const Text("Atenção!"),
+      content: const Text("Deseja realmente remover o pet?"),
+      actions: [
+        ContinueDialogLink(onPressed: () async {
+          try {
+            await PetController.deletePet(pet.id!);
+            Get.offAndToNamed(Routes.statusRoute);
+            Get.defaultDialog(
+                title: "Sucesso!",
+                middleText: "O pet foi deletado com sucesso!",
+                onConfirm: () {
+                  Get.back();
+                },
+                textConfirm: "Fechar");
+          } catch (e) {
+            Get.snackbar("Erro!", e.toString(),
+                duration: const Duration(seconds: 5));
+          }
+        }),
+        GoBackDialogLink(onPressed: () {
+          Get.back();
+        }),
+      ],
       backgroundColor: AppColors.primaryLightColor,
-      buttonColor: AppColors.buttonColor,
-      barrierDismissible: false,
-      cancelTextColor: AppColors.black,
-      confirmTextColor: AppColors.black,
-      onConfirm: () async {
-        try {
-          await PetController.deletePet(pet.id!);
-          Get.offAndToNamed(Routes.initialRoute);
-        } catch (e) {
-          Get.snackbar("Erro!", e.toString(),
-              duration: const Duration(seconds: 5));
-        }
-      },
-    );
+    ));
+    // Get.defaultDialog(
+    //   title: "Atenção!",
+    //   middleText: "Deseja realmente remover o pet?",
+    //   textCancel: "Cancelar",
+    //   textConfirm: "Remover",
+    //   backgroundColor: AppColors.primaryLightColor,
+    //   buttonColor: AppColors.buttonColor,
+    //   barrierDismissible: false,
+    //   cancelTextColor: AppColors.black,
+    //   confirmTextColor: AppColors.black,
+    //   onConfirm: () async {
+    //     try {
+    //       await PetController.deletePet(pet.id!);
+    //       Get.offAndToNamed(Routes.initialRoute);
+    //     } catch (e) {
+    //       Get.snackbar("Erro!", e.toString(),
+    //           duration: const Duration(seconds: 5));
+    //     }
+    //   },
+    // );
   }
 }

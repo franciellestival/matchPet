@@ -55,6 +55,23 @@ class ConfirmAdoptionLink extends StatelessWidget {
   }
 }
 
+class ContinueDialogLink extends StatelessWidget {
+  const ContinueDialogLink({super.key, required this.onPressed});
+
+  final Function onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed as void Function(),
+      child: Text(
+        'Continuar',
+        style: _linkTextStyle(),
+      ),
+    );
+  }
+}
+
 TextStyle _linkTextStyle() {
   return const TextStyle(
     color: AppColors.buttonColor,
