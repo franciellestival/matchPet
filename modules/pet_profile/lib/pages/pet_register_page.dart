@@ -118,7 +118,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             },
           ),
           FutureBuilder<List<String?>>(
-            future: PetController.status(),
+            future: PetController.status(only: ['available', 'missing']),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var data = snapshot.data!;

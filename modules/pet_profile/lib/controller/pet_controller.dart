@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:developer';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,8 @@ import 'package:pet_profile/widgets/pet_card.dart';
 import 'package:user_profile/model/user.dart';
 import 'package:user_profile/model/user_location.dart';
 import 'package:user_profile/repository/user_repository.dart';
+
+import '../models/pet_status.dart';
 
 class PetController {
   //Cadastra um novo pet de acordo com os parametros recebidos
@@ -219,11 +222,16 @@ class PetController {
     }
   }
 
-  static Future<List<String?>> status() async {
+  static Future<List<String?>> status({List<String>? only}) async {
     try {
       final PetRepository petRepository = Get.find();
       final statusRequested = await petRepository.getStatus();
-      var statusList = [...statusRequested.map((e) => e.displayName)];
+      List<PetStatus> filteredStatus = List.from(statusRequested);
+      //Se veio uma lista limitando os status, removemos os demais
+      if (only != null) {
+        filteredStatus.removeWhere((e) => !only.contains(e.normalizedName));
+      }
+      var statusList = [...filteredStatus.map((e) => e.displayName!)];
       return statusList;
     } catch (e) {
       rethrow;
@@ -252,6 +260,22 @@ class PetController {
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  static Future<void> changeMissingStatus(int petId,
+      {bool found = false}) async {
+    //Requisitamos o pet a partir do id
+    final PetRepository petRepository = Get.find<PetRepository>();
+
+    PetProfile? pet = await getPetByID(petId);
+    if (pet != null) {
+      var statusList = await petRepository.getStatus();
+
+      pet.status = statusList.firstWhere((element) =>
+          element.normalizedName == (found ? "available" : "missing"));
+
+      await petRepository.updatePetStatus(pet);
     }
   }
 }
@@ -311,7 +335,8 @@ Future<NewPet> _newPetInstance(
         lat: location?.lat,
         lng: location?.lng,
         address: location?.address);
-  } catch (e) {
+  } catch (e, stacktrace) {
+    log(e.toString(), stackTrace: stacktrace);
     rethrow;
   }
 }

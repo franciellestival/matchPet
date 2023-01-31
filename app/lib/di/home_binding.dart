@@ -5,12 +5,16 @@ import 'package:api_services/api_services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:matchpet/services/authentication_manager.dart';
 import 'package:pet_profile/repository/pet_repository.dart';
 import 'package:pet_profile/services/pet_services.dart';
 
 import 'package:user_profile/model/token.dart';
+import 'package:user_profile/model/user.dart';
 import 'package:user_profile/repository/user_repository.dart';
 import 'package:user_profile/services/user_services.dart';
+
+import '../routes/app_routes.dart';
 
 class HomeBinding extends Bindings {
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -29,6 +33,26 @@ class HomeBinding extends Bindings {
 
     if (Get.isRegistered<Token>(tag: "userToken")) {
       Token userToken = Get.find<Token>(tag: "userToken");
+      final AuthenticationManager _authManager =
+          Get.find<AuthenticationManager>();
+      //Garante que o usuário logado ainda seja valido
+      // Fazendo um get dele mesmo e verificando o retorno
+      try {
+        final User? thisUser = await userRepository.getUserById(userToken.id!);
+        if (thisUser == null) {
+          _authManager.logOut();
+          if (Get.isRegistered<User>(tag: "loggedInUser")) {
+            Get.delete<User>(tag: "loggedInUser", force: true);
+          }
+          Get.offAllNamed(Routes.initialRoute);
+        }
+      } catch (e) {
+        _authManager.logOut();
+        if (Get.isRegistered<User>(tag: "loggedInUser")) {
+          Get.delete<User>(tag: "loggedInUser", force: true);
+        }
+        Get.offAllNamed(Routes.initialRoute);
+      }
     }
 
     initNotificationInfo();

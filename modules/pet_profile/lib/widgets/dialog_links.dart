@@ -22,14 +22,14 @@ class GoHomeDialogLink extends StatelessWidget {
 }
 
 class GoBackDialogLink extends StatelessWidget {
-  const GoBackDialogLink({super.key});
+  const GoBackDialogLink({super.key, required this.onPressed});
+
+  final Function onPressed;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {
-        Get.back();
-      },
+      onPressed: onPressed as void Function(),
       child: Text(
         'Voltar',
         style: _linkTextStyle(),
@@ -49,6 +49,23 @@ class ConfirmAdoptionLink extends StatelessWidget {
       onPressed: onPressed as void Function(),
       child: Text(
         'Confirmar Adoção',
+        style: _linkTextStyle(),
+      ),
+    );
+  }
+}
+
+class ContinueDialogLink extends StatelessWidget {
+  const ContinueDialogLink({super.key, required this.onPressed});
+
+  final Function onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed as void Function(),
+      child: Text(
+        'Continuar',
         style: _linkTextStyle(),
       ),
     );

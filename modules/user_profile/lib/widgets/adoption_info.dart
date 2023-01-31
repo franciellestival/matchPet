@@ -1,14 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
 
 import 'package:theme/export_theme.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:user_profile/controller/interest_controller.dart';
 import 'package:user_profile/model/interest.dart';
+
+import '../controller/user_controller.dart';
 
 class AdoptionInfo extends GetView<InterestController> {
   final bool isMyWantedPets;
@@ -138,6 +137,7 @@ class AdoptionInfo extends GetView<InterestController> {
               color: Colors.transparent,
             ),
             height: MediaQuery.of(context).size.height * 0.40,
+            width: double.infinity,
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: adoptionModel.accepted ?? false
@@ -149,35 +149,13 @@ class AdoptionInfo extends GetView<InterestController> {
     );
   }
 
-  Future<void> openWhatsApp() async {
-    String phone =
-        adoptionModel.pet?.owner?.phone?.replaceAll(RegExp(r'[^\d]'), '') ?? '';
-    String message = 'Olá, ${adoptionModel.pet?.owner?.name ?? ''}.';
-    String scheme = Platform.isAndroid ? 'https' : 'whatsapp';
-    Uri waUri = Uri(
-      scheme: scheme,
-      host: 'wa.me',
-      path: 'send',
-      queryParameters: {
-        'phone': '55$phone',
-        'text': message,
-      },
-    );
-
-    if (await canLaunchUrl(waUri)) {
-      await launchUrl(waUri, mode: LaunchMode.externalApplication);
-    } else {
-      throw 'Could not launch';
-    }
-  }
-
   Widget getAuthorizedContactWidget() {
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Text(
-            '${adoptionModel.interestedUser?.name ?? 'Sem nome'} vai adotar ${adoptionModel.pet?.name ?? 'Sem nome'} ?',
+            '${adoptionModel.interestedUser?.name ?? 'Sem nome'} vai adotar ${adoptionModel.pet?.name ?? 'Sem nome'}?',
             style: const TextStyle(fontSize: 20),
             textAlign: TextAlign.center,
           ),
@@ -185,7 +163,7 @@ class AdoptionInfo extends GetView<InterestController> {
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Text(
-            'Você pode ir até o perfil do pet e confirmar a adoção, ou retirar a permissão para que ${adoptionModel.interestedUser?.name ?? 'Sem nome'} não tenha mais acesso ao seu número de telefone',
+            'Você pode ir até o perfil do pet e confirmar a adoção, ou retirar a permissão para que ${adoptionModel.interestedUser?.name ?? 'Sem nome'} não tenha mais acesso ao seus dados de contato.',
             style: const TextStyle(fontSize: 15),
             textAlign: TextAlign.center,
           ),
@@ -321,7 +299,7 @@ class AdoptionInfo extends GetView<InterestController> {
               color: AppColors.buttonColor),
           child: IconButton(
             onPressed: () async {
-              await openWhatsApp();
+              await UserController.openWhatsApp(adoptionModel.pet!);
             },
             icon: SvgPicture.asset(AppSvgs.zapIcon, color: AppColors.white),
           ),

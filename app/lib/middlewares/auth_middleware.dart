@@ -10,6 +10,7 @@ class AuthMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     final AuthenticationManager _authManager = Get.find();
+
     return _authManager.isLogged.value
         ? const RouteSettings(name: Routes.home)
         : null;

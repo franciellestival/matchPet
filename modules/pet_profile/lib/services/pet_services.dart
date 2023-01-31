@@ -138,7 +138,7 @@ class PetServices {
       final Response response = await petApi.patch("$_petEndpoint/${pet.id}",
           data: FormData.fromMap({
             "status": pet.status!.normalizedName,
-            "user": pet.owner!.toJson(),
+            // "user": pet.owner!.toJson(),
           }),
           options: Options(
             headers: {"Authorization": token.token},

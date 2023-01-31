@@ -46,33 +46,31 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onTap as void Function()?,
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(backgroundColor),
-        fixedSize: MaterialStateProperty.all(
-          Size(width, height),
-        ),
-        padding: MaterialStateProperty.all(
-          padding,
-        ),
-      ),
-      child: Obx(
-        () {
-          isLoading ??= false.obs;
-          return isLoading!.value
-              ? const CircularProgressIndicator(
-                  color: Colors.grey,
-                )
-              : Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: fontSize,
-                    color: textColor,
-                    fontWeight: fontWeight,
-                  ),
-                );
-        },
-      ),
-    );
+        onPressed: onTap as void Function()?,
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(backgroundColor),
+            fixedSize: MaterialStateProperty.all(
+              Size(width, height),
+            ),
+            padding: MaterialStateProperty.all(
+              padding,
+            )),
+        child: Obx(
+          () {
+            isLoading ??= false.obs;
+            return isLoading!.value
+                ? const CircularProgressIndicator(
+                    color: Colors.grey,
+                  )
+                : Text(
+                    text,
+                    style: TextStyle(
+                      fontSize: fontSize,
+                      color: textColor,
+                      fontWeight: fontWeight,
+                    ),
+                  );
+          },
+        ));
   }
 }

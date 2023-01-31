@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:geocoding/geocoding.dart';
@@ -7,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
 
 import 'package:matchpet/services/authentication_manager.dart';
+import 'package:pet_profile/models/pet_profile.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:user_profile/repository/user_repository.dart';
 import 'package:user_profile/model/new_user.dart';
 import 'package:user_profile/model/token.dart';
@@ -103,6 +106,33 @@ class UserController {
       await userRepository.deleteUserRequested(id!);
     } catch (e) {
       rethrow;
+    }
+  }
+
+  static Future<void> openWhatsApp(PetProfile pet,
+      {bool adoption = true}) async {
+    String phone = pet.owner?.phone?.replaceAll(RegExp(r'[^\d]'), '') ?? '';
+    if (phone.isEmpty) {
+      return;
+    }
+    String message = adoption
+        ? "Olá, ${pet.owner?.name ?? ''}!. Encontrei seu pet ${pet.name} para adoção no MatchPet e gostaria de mais infomações!"
+        : "Olá, ${pet.owner?.name ?? ''}!. Posso ter informações sobre seu pet ${pet.name} desaparecido!";
+    String scheme = Platform.isAndroid ? 'https' : 'whatsapp';
+    Uri waUri = Uri(
+      scheme: scheme,
+      host: 'wa.me',
+      path: 'send',
+      queryParameters: {
+        'phone': '55$phone',
+        'text': message,
+      },
+    );
+
+    if (await canLaunchUrl(waUri)) {
+      await launchUrl(waUri, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch';
     }
   }
 }
