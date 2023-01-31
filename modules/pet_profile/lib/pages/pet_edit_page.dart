@@ -147,29 +147,6 @@ class _PetEditPageState extends State<PetEditPage> {
               }
             },
           ),
-          // FutureBuilder<List<String?>>(
-          //   future: PetController.status(),
-          //   builder: (context, snapshot) {
-          //     if (snapshot.hasData) {
-          //       var data = snapshot.data!;
-          //       return FormDropDownInput(
-          //           backgroundColor: inputEnabled.value
-          //               ? null
-          //               : Colors.grey.withOpacity(0.5),
-          //           child: DropDownItem(
-          //             items: data,
-          //             currentValue: statusCurrentValue,
-          //             hintText: 'Status',
-          //             isEnabled: inputEnabled,
-          //           ));
-          //     } else {
-          //       if (snapshot.hasError) {
-          //         Get.snackbar('Error', snapshot.error.toString());
-          //       }
-          //       return const CircularProgressIndicator();
-          //     }
-          //   },
-          // ),
           FormDropDownInput(
             backgroundColor:
                 inputEnabled.value ? null : Colors.grey.withOpacity(0.5),
@@ -277,6 +254,7 @@ class _PetEditPageState extends State<PetEditPage> {
     });
   }
 
+  //TODO ERRO NAVIGATION GET
   Future<void> _editPet() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -298,8 +276,9 @@ class _PetEditPageState extends State<PetEditPage> {
                 ? _imageController.imagePath.value
                 : '');
 
-        pet = (await PetController.getPetByID(pet.id!))!;
-        Get.offAndToNamed(Routes.petDetailPage, arguments: pet);
+        pet = await PetController.getPetByID(pet.id!) ?? pet;
+        // Get.offAndToNamed(Routes.petDetailPage, arguments: pet);
+        // Routes.petDetailPage, arguments: pet);
         Get.defaultDialog(
             title: "Sucesso!",
             middleText: "Os dados do pet foram alterados.",
@@ -326,6 +305,7 @@ class _PetEditPageState extends State<PetEditPage> {
     }
   }
 
+  //TODO ERRO NAVIGATION GET
   Future<void> _deletePet() async {
     inputEnabled.value = false;
     Get.dialog(AlertDialog(
