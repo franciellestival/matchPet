@@ -40,6 +40,8 @@ class PetDetailPage extends StatelessWidget {
       }
     });
 
+    final bool isMissingPet = pet!.status!.normalizedName == "missing";
+
     return Scaffold(
         appBar: const GenericAppBar(title: 'Detalhes do Pet'),
         backgroundColor: AppColors.primaryLightColor,
@@ -75,7 +77,7 @@ class PetDetailPage extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: Text(
-                  '${pet?.name ?? 'Sem Nome'}  , ${pet?.breed ?? 'Sem Raça'}',
+                  '${pet?.name ?? 'Sem Nome'} (${pet?.breed ?? 'Sem Raça'})',
                   style: const TextStyle(
                       fontSize: 24, fontWeight: FontWeight.bold),
                 ),
@@ -92,9 +94,9 @@ class PetDetailPage extends StatelessWidget {
                         width: 15,
                       ),
                     ),
-                    const Text(
-                      'Curitiba/PR',
-                      style: TextStyle(fontSize: 15),
+                    Text(
+                      pet!.location!.address!,
+                      style: const TextStyle(fontSize: 15),
                     ),
                   ],
                 ),
@@ -127,56 +129,14 @@ class PetDetailPage extends StatelessWidget {
                 child: isMyPet
                     ? Column(
                         children: [
-                          PrimaryButton(
-                            width: 350,
-                            backgroundColor:
-                                pet!.status!.normalizedName != "missing"
-                                    ? AppColors.blueButton
-                                    : Colors.grey.withOpacity(0.5),
-                            onTap: pet!.status!.normalizedName != "missing"
-                                ? () => {_setMissingPet(pet)}
-                                : () => {_setFoundPet(pet)},
-                            text: pet!.status!.normalizedName != "missing"
-                                ? "Marcar como Desaparecido"
-                                : "Marcar como Disponível",
-                          ),
-                          const HeightSpacer(height: 20),
-                          PrimaryButton(
-                            width: 350,
-                            height: 50,
-                            onTap: () {
-                              // _showDialogMessage(context, true, true);
-                              _showAdoptionConfirmationDialog();
-                            },
-                            text: 'Confirmar adoção',
-                            backgroundColor: AppColors.blueButton,
-                          ),
-                          const HeightSpacer(height: 50),
+                          ..._showChangeMissingStatusButton(isMissingPet),
+                          ..._showAdoptionConfirmationButton(isMissingPet),
                         ],
                       )
                     : Column(
                         children: [
-                          PrimaryButton(
-                            width: 350,
-                            height: 50,
-                            onTap: () {
-                              _showInterestDialog(loggedInUser!.id!, pet!.id!);
-                            },
-                            text: 'Quero Adotar',
-                            backgroundColor: AppColors.blueButton,
-                          ),
-                          if (pet!.status!.normalizedName == "missing")
-                            const HeightSpacer(height: 20),
-                          PrimaryButton(
-                            width: 350,
-                            height: 50,
-                            onTap: () => {
-                              UserController.openWhatsApp(pet!, adoption: false)
-                            },
-                            text: 'Entrar em contato',
-                            backgroundColor: AppColors.blueButton,
-                          ),
-                          const HeightSpacer(height: 50)
+                          ..._showInterestButton(isMissingPet),
+                          ..._showContactButton(isMissingPet),
                         ],
                       ),
               )
@@ -235,23 +195,36 @@ class PetDetailPage extends StatelessWidget {
     );
   }
 
-  void _onTapFavorite() async {
-    try {
-      final User loggedInUser = Get.find<User>(tag: "loggedInUser");
+  List<Widget> _showInterestButton(bool missingPet) {
+    return [
+      if (!missingPet)
+        PrimaryButton(
+          width: 350,
+          height: 50,
+          onTap: () {
+            _showInterestDialog(loggedInUser!.id!, pet!.id!);
+          },
+          text: 'Quero Adotar',
+          backgroundColor: AppColors.blueButton,
+        ),
+      const HeightSpacer(height: 20),
+    ];
+  }
 
-      if (isFavorited.value) {
-        await FavoritesController.removeFromFavorites(
-            loggedInUser.id!, pet!.id!);
-        isFavorited.value = false;
-      } else {
-        await FavoritesController.addToFavorites(loggedInUser.id!, pet!.id!);
-        isFavorited.value = true;
-      }
-    } catch (e) {
-      log(e.toString());
-      Get.snackbar(
-          'Erro!', 'Erro ao mudar o status de favorito do pet ${pet!.name}!');
-    }
+  List<Widget> _showContactButton(bool missingPet) {
+    return [
+      if (missingPet)
+        PrimaryButton(
+          width: 350,
+          height: 50,
+          onTap: () {
+            UserController.openWhatsApp(pet!, adoption: false);
+          },
+          text: 'Entrar em contato sobre',
+          backgroundColor: AppColors.blueButton,
+        ),
+      const HeightSpacer(height: 20),
+    ];
   }
 
   void _showInterestDialog(int userId, int petId) async {
@@ -386,34 +359,38 @@ class PetDetailPage extends StatelessWidget {
     }
   }
 
-  Widget editIcon() {
-    return GestureDetector(
-      onTap: () {
-        Get.toNamed(Routes.petEditPage, arguments: pet);
-      },
-      child: CircleAvatar(
-        backgroundColor: AppColors.white.withOpacity(0.5),
-        child: Obx(() {
-          return SvgPicture.asset(
-            AppSvgs.menuIcon,
-            height: 24.0,
-            color: isFavorited.value ? Colors.red : Colors.black,
-          );
-        }),
-      ),
-    );
-  }
-
-  Widget _buttonConfirmAdoption(PetProfile? pet) {
-    return Obx(() => PrimaryButton(
+  List<Widget> _showAdoptionConfirmationButton(bool isMissingPet) {
+    return [
+      if (!isMissingPet)
+        PrimaryButton(
+          width: 350,
           height: 50,
           onTap: () {
-            hasInterest.value ? _showAdoptionConfirmationDialog() : null;
+            _showAdoptionConfirmationDialog();
           },
           text: 'Confirmar adoção',
           backgroundColor: AppColors.blueButton,
           disabledColor: Colors.grey.withOpacity(0.5),
-        ));
+        ),
+      const HeightSpacer(height: 20),
+    ];
+  }
+
+  List<Widget> _showChangeMissingStatusButton(bool isMissingPet) {
+    return [
+      PrimaryButton(
+        width: 350,
+        backgroundColor:
+            isMissingPet ? AppColors.blueButton : AppColors.buttonColor,
+        onTap: isMissingPet
+            ? () => {_setFoundPet(pet)}
+            : () => {_setMissingPet(pet)},
+        text: isMissingPet
+            ? "Marcar como Disponível"
+            : "Marcar como Desaparecido",
+      ),
+      const HeightSpacer(height: 20),
+    ];
   }
 
   void _setMissingPet(PetProfile? pet) {
@@ -495,9 +472,45 @@ class PetDetailPage extends StatelessWidget {
             Get.back();
           })
         ],
-
         // barrierDismissible: false,
       ));
+    }
+  }
+
+  Widget editIcon() {
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(Routes.petEditPage, arguments: pet);
+      },
+      child: CircleAvatar(
+        backgroundColor: AppColors.white.withOpacity(0.5),
+        child: Obx(() {
+          return SvgPicture.asset(
+            AppSvgs.menuIcon,
+            height: 24.0,
+            color: isFavorited.value ? Colors.red : Colors.black,
+          );
+        }),
+      ),
+    );
+  }
+
+  void _onTapFavorite() async {
+    try {
+      final User loggedInUser = Get.find<User>(tag: "loggedInUser");
+
+      if (isFavorited.value) {
+        await FavoritesController.removeFromFavorites(
+            loggedInUser.id!, pet!.id!);
+        isFavorited.value = false;
+      } else {
+        await FavoritesController.addToFavorites(loggedInUser.id!, pet!.id!);
+        isFavorited.value = true;
+      }
+    } catch (e) {
+      log(e.toString());
+      Get.snackbar(
+          'Erro!', 'Erro ao mudar o status de favorito do pet ${pet!.name}!');
     }
   }
 }

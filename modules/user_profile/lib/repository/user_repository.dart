@@ -96,7 +96,8 @@ class UserRepository {
       return null;
     }
     Placemark place = placemarks[0];
-    final String address = place.street!.toString();
+    // final String address = place.street!.toString();
+    final String address = place.subAdministrativeArea.toString();
     final UserLocation userLocation = UserLocation(
         lat: position.latitude, lng: position.longitude, address: address);
     return userLocation;

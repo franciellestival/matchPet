@@ -287,7 +287,7 @@ class _PetEditPageState extends State<PetEditPage> {
             genderCurrentValue.value,
             sizeCurrentValue.value,
             // statusCurrentValue.value,
-            pet.status!.normalizedName!,
+            pet.status!.displayName!,
             _breedController.text,
             int.parse(_ageController.text),
             double.parse(_weightController.text),
@@ -300,10 +300,27 @@ class _PetEditPageState extends State<PetEditPage> {
 
         pet = (await PetController.getPetByID(pet.id!))!;
         Get.offAndToNamed(Routes.petDetailPage, arguments: pet);
-        Get.snackbar("Sucesso!", "Pet alterado com sucesso!");
+        Get.defaultDialog(
+            title: "Sucesso!",
+            middleText: "Os dados do pet foram alterados.",
+            textConfirm: "Fechar",
+            backgroundColor: AppColors.primaryLightColor,
+            buttonColor: AppColors.buttonColor,
+            confirmTextColor: AppColors.black,
+            onConfirm: () {
+              Get.back();
+            });
       } catch (e) {
-        Get.snackbar("Erro!", e.toString(),
-            duration: const Duration(seconds: 5));
+        Get.defaultDialog(
+            title: "Erro!",
+            middleText: "Não foi possível alterar os dados do Pet.",
+            textConfirm: "Fechar",
+            backgroundColor: AppColors.primaryLightColor,
+            buttonColor: AppColors.buttonColor,
+            confirmTextColor: AppColors.black,
+            onConfirm: () {
+              Get.back();
+            });
       }
       inputEnabled.value = false;
     }
@@ -322,6 +339,9 @@ class _PetEditPageState extends State<PetEditPage> {
             Get.defaultDialog(
                 title: "Sucesso!",
                 middleText: "O pet foi deletado com sucesso!",
+                backgroundColor: AppColors.primaryLightColor,
+                buttonColor: AppColors.buttonColor,
+                confirmTextColor: AppColors.black,
                 onConfirm: () {
                   Get.back();
                 },

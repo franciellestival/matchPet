@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:developer';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -334,7 +335,8 @@ Future<NewPet> _newPetInstance(
         lat: location?.lat,
         lng: location?.lng,
         address: location?.address);
-  } catch (e) {
+  } catch (e, stacktrace) {
+    log(e.toString(), stackTrace: stacktrace);
     rethrow;
   }
 }
