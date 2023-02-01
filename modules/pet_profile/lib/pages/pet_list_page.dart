@@ -37,7 +37,7 @@ class PetListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar(title: listTitle),
+      appBar: GenericAppBar(title: listTitle, showBackArrow: false),
       backgroundColor: AppColors.primaryLightColor,
       body: SingleChildScrollView(
         child: Column(

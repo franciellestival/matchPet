@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:matchpet/pages/bottom_nav_bar.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/favorites_controller.dart';
 import 'package:user_profile/controller/interest_controller.dart';
@@ -205,7 +206,7 @@ class PetDetailPage extends StatelessWidget {
             _showInterestDialog(loggedInUser!.id!, pet!.id!);
           },
           text: 'Quero Adotar',
-          backgroundColor: AppColors.blueButton,
+          backgroundColor: AppColors.buttonColor,
         ),
       const HeightSpacer(height: 20),
     ];
@@ -214,14 +215,26 @@ class PetDetailPage extends StatelessWidget {
   List<Widget> _showContactButton(bool missingPet) {
     return [
       if (missingPet)
-        PrimaryButton(
-          width: 350,
-          height: 50,
-          onTap: () {
-            UserController.openWhatsApp(pet!, adoption: false);
-          },
-          text: 'Entrar em contato sobre',
-          backgroundColor: AppColors.blueButton,
+        Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                'Este pet está desaparecido. Se você o viu pode contatar o tutor para passar informações',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.red, fontSize: 15),
+              ),
+            ),
+            PrimaryButton(
+              width: 350,
+              height: 50,
+              onTap: () {
+                UserController.openWhatsApp(pet!, adoption: false);
+              },
+              text: 'Entrar em contato',
+              backgroundColor: AppColors.buttonColor,
+            ),
+          ],
         ),
       const HeightSpacer(height: 20),
     ];
@@ -369,7 +382,7 @@ class PetDetailPage extends StatelessWidget {
             _showAdoptionConfirmationDialog();
           },
           text: 'Confirmar adoção',
-          backgroundColor: AppColors.blueButton,
+          backgroundColor: Colors.green,
           disabledColor: Colors.grey.withOpacity(0.5),
         ),
       const HeightSpacer(height: 20),
@@ -394,40 +407,35 @@ class PetDetailPage extends StatelessWidget {
   }
 
   void _setMissingPet(PetProfile? pet) {
-    if (pet != null) {
-      Get.dialog(AlertDialog(
-        title: const Text("Atenção!"),
-        content: const Text("Deseja realmente marcar o pet como desaparecido?"),
-        actions: [
-          ContinueDialogLink(
-              onPressed: () => {
-                    Future.sync(() async {
-                      try {
-                        Get.back();
-                        await PetController.changeMissingStatus(pet.id!);
-                        Get.defaultDialog(
-                            title: "Ok!",
-                            middleText:
-                                "Seu pet foi marcado como Desaparecido. Esperamos que o encontre logo!",
-                            backgroundColor: AppColors.primaryLightColor,
-                            buttonColor: AppColors.buttonColor,
-                            confirmTextColor: AppColors.black,
-                            onConfirm: () {
-                              Get.back();
-                            });
-                      } catch (e) {
-                        Get.snackbar("Erro!", e.toString(),
-                            duration: const Duration(seconds: 5));
-                      }
-                    })
-                  }),
-          GoBackDialogLink(onPressed: () {
-            // Get.closeCurrentSnackbar();
-            Get.back();
-          })
-        ],
+    if (pet == null) {
+      return;
+    }
+
+    Get.dialog(AlertDialog(
+      title: const Text("Atenção!"),
+      content: const Text("Deseja realmente marcar o pet como desaparecido?"),
+      actions: [
+        ContinueDialogLink(onPressed: () => _changePetMissingStatus(pet)),
+        GoBackDialogLink(onPressed: () => Get.back())
+      ],
+      backgroundColor: AppColors.primaryLightColor,
+    ));
+  }
+
+  Future<void> _changePetMissingStatus(PetProfile pet) async {
+    try {
+      await PetController.changeMissingStatus(pet.id!);
+      Get.defaultDialog(
+        title: "Ok!",
+        middleText:
+            "Seu pet foi marcado como Desaparecido. Esperamos que o encontre logo!",
         backgroundColor: AppColors.primaryLightColor,
-      ));
+        buttonColor: AppColors.buttonColor,
+        confirmTextColor: AppColors.black,
+        onConfirm: () => Get.to(() => CustomBottomNavBar(selectedIndex: 4)),
+      );
+    } catch (e) {
+      Get.snackbar("Erro!", e.toString(), duration: const Duration(seconds: 5));
     }
   }
 
@@ -454,7 +462,8 @@ class PetDetailPage extends StatelessWidget {
                         backgroundColor: AppColors.primaryLightColor,
                         actions: [
                           GoBackDialogLink(onPressed: () {
-                            Get.offAllNamed(Routes.home);
+                            Get.back(closeOverlays: true);
+                            Get.to(() => CustomBottomNavBar(selectedIndex: 4));
                             // Get.back();
                           })
                         ],

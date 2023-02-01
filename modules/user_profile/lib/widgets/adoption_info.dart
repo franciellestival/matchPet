@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:matchpet/pages/bottom_nav_bar.dart';
 import 'package:matchpet/routes/app_routes.dart';
 
 import 'package:theme/export_theme.dart';
@@ -415,6 +416,7 @@ class AdoptionInfo extends GetView<InterestController> {
         buttonColor: AppColors.buttonColor,
         onConfirm: () {
           Get.back(closeOverlays: true);
+          Get.to(() => CustomBottomNavBar(selectedIndex: 4));
         },
         confirmTextColor: AppColors.black);
   }
