@@ -1,33 +1,30 @@
 part of extensions;
 
 extension ExtString on String {
-  bool get isValidEmail {
-    return true;
-    final emailRegExp = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    return emailRegExp.hasMatch(this);
-  }
+  String get isValidPassword {
+    if (length <= 8) {
+      return 'A senha deve ter ao menos 8 caracteres.';
+    }
+    var passwordRegex = RegExp(r'(?=.*[A-Z]{1,})');
+    if (!passwordRegex.hasMatch(this)) {
+      return 'A senha deve ter ao menos uma letra maiúscula';
+    }
 
-  bool get isValidName {
-    return true;
-    final nameRegExp =
-        RegExp(r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$");
-    return nameRegExp.hasMatch(this);
-  }
+    passwordRegex = RegExp(r'(?=.*[!@#$&*()+-]{1,})');
+    if (!passwordRegex.hasMatch(this)) {
+      return 'A senha deve ter ao menos um caractere especial.';
+    }
+    passwordRegex = RegExp(r'(?=.*[0-9]{1,})');
+    if (!passwordRegex.hasMatch(this)) {
+      return 'A senha deve ter ao menos um dígito numérico.';
+    }
 
-  bool get isValidPassword {
-    return true;
-    return length >= 8;
-    // final passwordRegExp = RegExp(
-    //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\>$<*~]).{8,}/pre>');
-    // return passwordRegExp.hasMatch(this);
+    return '';
   }
 
   bool get isValidPhone {
-    return true;
-    // final phoneRegExp = RegExp(r"^\+?0[0-9]{10}$");
-    // final phoneRegExp = RegExp(r"[0-9]{11}$");
-    final phoneRegExp =
+    final passwordRegex =
         RegExp(r"^\([1-9]{2}\) (?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$");
-    return phoneRegExp.hasMatch(this);
+    return passwordRegex.hasMatch(this);
   }
 }

@@ -1,4 +1,3 @@
-import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
@@ -85,8 +84,8 @@ class _UserLoginState extends State<UserLogin> {
                               hintText: 'E-mail',
                               controller: _emailLoginController,
                               validator: (String? val) {
-                                if (!val!.isValidEmail) {
-                                  return "Insira um e-mail válido";
+                                if (!GetUtils.isEmail(val!)) {
+                                  return "Insira um e-mail válido.";
                                 }
                                 return null;
                               },
@@ -108,8 +107,8 @@ class _UserLoginState extends State<UserLogin> {
                               hintText: 'Digite sua senha',
                               controller: _passwordLoginController,
                               validator: (String? val) {
-                                if (!val!.isValidPassword) {
-                                  return "Senha deve possuir ao menos 8 caracteres.";
+                                if ((val ?? '').isEmpty) {
+                                  return 'Informe a senha';
                                 }
                                 return null;
                               },
@@ -163,6 +162,8 @@ class _UserLoginState extends State<UserLogin> {
         Get.put<Token>(loggedToken, tag: "userToken", permanent: true);
         isLoading.value = false;
         Get.offAndToNamed(Routes.home);
+      } else {
+        isLoading.value = false;
       }
     } on Exception catch (e) {
       Get.snackbar("Erro!", e.toString(), duration: const Duration(seconds: 5));
