@@ -425,14 +425,22 @@ class PetDetailPage extends StatelessWidget {
   Future<void> _changePetMissingStatus(PetProfile pet) async {
     try {
       await PetController.changeMissingStatus(pet.id!);
-      Get.defaultDialog(
-        title: "Ok!",
-        middleText:
-            "Seu pet foi marcado como Desaparecido. Esperamos que o encontre logo!",
-        backgroundColor: AppColors.primaryLightColor,
-        buttonColor: AppColors.buttonColor,
-        confirmTextColor: AppColors.black,
-        onConfirm: () => Get.to(() => CustomBottomNavBar(selectedIndex: 4)),
+      Get.dialog(
+        AlertDialog(
+          title: const Text("Ok!"),
+          content: const Text(
+              "Seu pet foi marcado como Desaparecido. Esperamos que o encontre logo!"),
+          backgroundColor: AppColors.primaryLightColor,
+          actions: [
+            GoBackDialogLink(
+              onPressed: () {
+                Get.back(closeOverlays: true);
+                Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+                // Get.back();
+              },
+            )
+          ],
+        ),
       );
     } catch (e) {
       Get.snackbar("Erro!", e.toString(), duration: const Duration(seconds: 5));

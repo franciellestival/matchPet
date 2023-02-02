@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:matchpet/pages/bottom_nav_bar.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
 
@@ -218,7 +219,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             neuteredCurrentValue.value == 'Sim' ? true : false,
             specialNeedsCurrentValue.value == 'Sim' ? true : false,
             _imageController.imagePath.value);
-        Get.offAndToNamed(Routes.statusRoute);
+        Get.to(() => CustomBottomNavBar(selectedIndex: 4));
       } on Exception catch (e) {
         Get.snackbar("Erro!", e.toString(),
             duration: const Duration(seconds: 5));
