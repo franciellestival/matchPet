@@ -27,22 +27,55 @@ class MissingPetPage extends StatelessWidget {
       appBar: GenericAppBar(title: listTitle),
       backgroundColor: AppColors.primaryLightColor,
       body: SingleChildScrollView(
-        child: FutureBuilder<List<PetCard>?>(
-          future: _getPetsList(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return PetList(title: listTitle, children: snapshot.data!);
-            } else {
-              if (snapshot.hasError) {
-                Get.snackbar('Error', snapshot.error.toString());
-              }
-              return const Center(
-                  child:
-                      CircularProgressIndicator(color: AppColors.buttonColor));
-            }
-          },
+        child: Column(
+          children: [
+            const HeightSpacer(),
+            FutureBuilder<List<PetCard>?>(
+              future: _getPetsList(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data!.isEmpty
+                      ? Center(
+                          child: Column(
+                            children: const [
+                              Text(
+                                'Nenhum pet desaparecido cadastrado!',
+                                style: TextStyle(fontSize: 20),
+                              )
+                            ],
+                          ),
+                        )
+                      : PetList(
+                          title: "Pets Favoritos", children: snapshot.data!);
+                } else {
+                  if (snapshot.hasError) {
+                    Get.snackbar('Error', snapshot.error.toString());
+                  }
+                  return const Center(
+                      child: CircularProgressIndicator(
+                          color: AppColors.buttonColor));
+                }
+              },
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
+        // child: FutureBuilder<List<PetCard>?>(
+        //   future: _getPetsList(),
+        //   builder: (context, snapshot) {
+        //     if (snapshot.hasData) {
+        //       return PetList(title: listTitle, children: snapshot.data!);
+        //     } else {
+        //       if (snapshot.hasError) {
+        //         Get.snackbar('Error', snapshot.error.toString());
+        //       }
+        //       return const Center(
+        //           child:
+        //               CircularProgressIndicator(color: AppColors.buttonColor));
+        //     }
+        //   },
+        // ),

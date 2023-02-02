@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
 import 'package:pet_profile/pages/pet_filter_modal.dart';
-import 'package:pet_profile/pages/pet_search_bar.dart';
 
 import 'package:pet_profile/widgets/pet_card.dart';
 import 'package:pet_profile/widgets/pet_list.dart';
@@ -43,24 +42,38 @@ class PetListPage extends StatelessWidget {
         child: Column(
           children: [
             const HeightSpacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: PetSearchBar(),
-                  ),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(AppColors.buttonColor),
+                fixedSize: MaterialStateProperty.all(
+                  const Size(250, 50),
                 ),
-                IconButton(
-                  onPressed: () {
-                    _modalBottomSheetConfig(context);
-                  },
-                  icon: SvgPicture.asset(
+                // alignment: center,
+                padding: MaterialStateProperty.all(
+                  const EdgeInsets.all(10),
+                ),
+              ),
+              onPressed: () {
+                _modalBottomSheetConfig(context);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Text(
+                    "Filtrar",
+                    style: TextStyle(
+                      fontSize: 24,
+                    ),
+                  ),
+                  SvgPicture.asset(
                     AppSvgs.filterIcon,
+                    height: 40,
+                    width: 40,
+                    color: AppColors.white,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             FutureBuilder<List<PetCard>?>(
               future: _getPetsList(),

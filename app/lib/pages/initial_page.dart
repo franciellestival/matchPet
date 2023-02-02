@@ -48,7 +48,7 @@ class InitialPage extends StatelessWidget {
                             const Padding(
                               padding: EdgeInsets.all(20),
                               child: Text(
-                                'um textinho muito bonitinho cheio de pipipopopo pra deixar as pessoas felizes e empolgadas',
+                                'Seu novo melhor amigo pode estar bem próximo, mais do que você imagina!',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: 14),
                               ),
@@ -57,7 +57,8 @@ class InitialPage extends StatelessWidget {
                               height: 20,
                             ),
                             PrimaryButton(
-                              onTap: () => {Get.toNamed(Routes.registerRoute)},
+                              onTap: () =>
+                                  {Get.offAndToNamed(Routes.registerRoute)},
                               text: AppStrings.registerButton,
                               backgroundColor: AppColors.blueButton,
                               borderRadius: AppRadius.blueButtonRadius,
@@ -66,7 +67,7 @@ class InitialPage extends StatelessWidget {
                               padding: const EdgeInsets.all(16),
                               child: TextButton(
                                 onPressed: () =>
-                                    {Get.toNamed(Routes.loginRoute)},
+                                    {Get.offAndToNamed(Routes.loginRoute)},
                                 child: const Text('Já tenho cadastro'),
                               ),
                             )
