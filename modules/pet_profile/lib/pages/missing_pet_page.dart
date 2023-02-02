@@ -46,7 +46,8 @@ class MissingPetPage extends StatelessWidget {
                           ),
                         )
                       : PetList(
-                          title: "Pets Favoritos", children: snapshot.data!);
+                          title: "Pets Desaparecidos",
+                          children: snapshot.data!);
                 } else {
                   if (snapshot.hasError) {
                     Get.snackbar('Error', snapshot.error.toString());
@@ -63,19 +64,3 @@ class MissingPetPage extends StatelessWidget {
     );
   }
 }
-
-        // child: FutureBuilder<List<PetCard>?>(
-        //   future: _getPetsList(),
-        //   builder: (context, snapshot) {
-        //     if (snapshot.hasData) {
-        //       return PetList(title: listTitle, children: snapshot.data!);
-        //     } else {
-        //       if (snapshot.hasError) {
-        //         Get.snackbar('Error', snapshot.error.toString());
-        //       }
-        //       return const Center(
-        //           child:
-        //               CircularProgressIndicator(color: AppColors.buttonColor));
-        //     }
-        //   },
-        // ),
