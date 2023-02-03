@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
+import 'package:pet_profile/widgets/dialog_links.dart';
 import 'package:theme/export_theme.dart';
 
 import '../controller/user_controller.dart';
@@ -121,7 +122,7 @@ class _UserLoginState extends State<UserLogin> {
                               isLoading: isLoading,
                               onTap: _signIn,
                               text: AppStrings.loginButton,
-                              backgroundColor: AppColors.blueButton,
+                              backgroundColor: AppColors.buttonColor,
                             )),
                           ),
                         ],
@@ -166,7 +167,17 @@ class _UserLoginState extends State<UserLogin> {
         isLoading.value = false;
       }
     } on Exception catch (e) {
-      Get.snackbar("Erro!", e.toString(), duration: const Duration(seconds: 5));
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Erro'),
+          content: const Text('Email ou senha incorretos'),
+          actions: [
+            GoBackDialogLink(onPressed: () {
+              Get.back();
+            }),
+          ],
+        ),
+      );
       isLoading.value = false;
     }
   }

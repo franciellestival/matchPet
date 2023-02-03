@@ -48,7 +48,7 @@ class InitialPage extends StatelessWidget {
                             const Padding(
                               padding: EdgeInsets.all(20),
                               child: Text(
-                                'Seu novo melhor amigo pode estar bem próximo, mais do que você imagina!',
+                                'Não perca a oportunidade de mudar a vida de um animal e de adicionar um novo membro amoroso à sua família. Comece sua busca hoje mesmo!',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: 14),
                               ),
