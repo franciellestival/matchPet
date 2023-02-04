@@ -54,7 +54,8 @@ class _UserRegisterState extends State<UserRegister> {
         type: MaskAutoCompletionType.lazy);
 
     return Scaffold(
-      appBar: GenericAppBar(title: 'Cadastro de usuário', appBar: AppBar()),
+      appBar: const GenericAppBar(
+          title: 'Cadastro de usuário', showBackArrow: false),
       backgroundColor: AppColors.primaryColor,
       body: SingleChildScrollView(
         child: Column(
@@ -160,6 +161,12 @@ class _UserRegisterState extends State<UserRegister> {
                                 onTap: _registerUser,
                                 text: 'Salvar')),
                         const SizedBox(height: 10),
+                        Center(
+                            child: PrimaryButton(
+                                isLoading: isLoading,
+                                onTap: () => Get.toNamed(Routes.initialRoute),
+                                text: 'Voltar')),
+                        const SizedBox(height: 10)
                       ],
                     ),
                   ),

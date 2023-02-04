@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/pages/bottom_nav_bar.dart';
-import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 import 'package:pet_profile/widgets/dialog_links.dart';
-
 import 'package:theme/export_theme.dart';
 
 class PetEditPage extends StatefulWidget {
@@ -292,7 +290,7 @@ class _PetEditPageState extends State<PetEditPage> {
             textConfirm: "Fechar",
             backgroundColor: AppColors.primaryLightColor,
             buttonColor: AppColors.buttonColor,
-            confirmTextColor: AppColors.black,
+            confirmTextColor: AppColors.white,
             onConfirm: () {
               Get.to(() => CustomBottomNavBar(selectedIndex: 4));
             });
@@ -303,7 +301,7 @@ class _PetEditPageState extends State<PetEditPage> {
             textConfirm: "Fechar",
             backgroundColor: AppColors.primaryLightColor,
             buttonColor: AppColors.buttonColor,
-            confirmTextColor: AppColors.black,
+            confirmTextColor: AppColors.white,
             onConfirm: () {
               Get.back();
             });
@@ -324,20 +322,16 @@ class _PetEditPageState extends State<PetEditPage> {
           isLoading.value = true;
           try {
             await PetController.deletePet(pet.id!);
-            Get.dialog(
-              AlertDialog(
-                title: const Text("Ok!"),
-                content: const Text("Pet Excluído com sucesso"),
+            Get.defaultDialog(
+                title: "Sucesso!",
+                middleText: "O pet foi deletado com sucesso!",
                 backgroundColor: AppColors.primaryLightColor,
-                actions: [
-                  GoBackDialogLink(onPressed: () {
-                    Get.back(closeOverlays: true);
-                    Get.to(() => CustomBottomNavBar(selectedIndex: 4));
-                    // Get.back();
-                  })
-                ],
-              ),
-            );
+                buttonColor: AppColors.buttonColor,
+                confirmTextColor: AppColors.white,
+                onConfirm: () {
+                  Get.back(closeOverlays: true);
+                  Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+                });
           } catch (e) {
             Get.snackbar("Erro!", e.toString(),
                 duration: const Duration(seconds: 5));

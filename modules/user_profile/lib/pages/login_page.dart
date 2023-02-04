@@ -23,7 +23,7 @@ class _UserLoginState extends State<UserLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar(title: 'Login', appBar: AppBar()),
+      appBar: const GenericAppBar(title: 'Login', showBackArrow: false),
       body: Stack(
         children: <Widget>[
           Container(

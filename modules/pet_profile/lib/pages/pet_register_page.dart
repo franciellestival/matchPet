@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:matchpet/pages/bottom_nav_bar.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
 
@@ -40,6 +41,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
   Rx<String> specialNeedsCurrentValue = ''.obs;
 
   final inputEnabled = true.obs;
+  final isLoading = false.obs;
 
   Form _buildPetRegisterForm(GlobalKey<FormState> formKey) {
     return Form(
@@ -183,7 +185,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GenericAppBar(title: 'Cadastrar Pet'),
+      appBar: const GenericAppBar(title: 'Cadastrar Pet', showBackArrow: false),
       backgroundColor: AppColors.primaryColor,
       body: SingleChildScrollView(
         child: Column(
@@ -194,7 +196,11 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
               child: _buildPetRegisterForm(_formKey),
             ),
             PetRegisterPage.heightSpacer,
-            PrimaryButton(onTap: _registerPet, text: 'Salvar'),
+            PrimaryButton(
+              onTap: _registerPet,
+              text: 'Salvar',
+              isLoading: isLoading,
+            ),
             PetRegisterPage.heightSpacer
           ],
         ),
@@ -204,6 +210,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
 
   Future<void> _registerPet() async {
     if (_formKey.currentState!.validate()) {
+      isLoading.value = true;
       try {
         await PetController.registerPet(
             _nameController.text,
@@ -218,11 +225,12 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             neuteredCurrentValue.value == 'Sim' ? true : false,
             specialNeedsCurrentValue.value == 'Sim' ? true : false,
             _imageController.imagePath.value);
-        Get.offAndToNamed(Routes.statusRoute);
+        Get.to(() => CustomBottomNavBar(selectedIndex: 4));
       } on Exception catch (e) {
         Get.snackbar("Erro!", e.toString(),
             duration: const Duration(seconds: 5));
       }
+      isLoading.value = false;
     }
   }
 }
