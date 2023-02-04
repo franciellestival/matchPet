@@ -2,7 +2,7 @@ part of extensions;
 
 extension ExtString on String {
   String get isValidPassword {
-    if (length <= 8) {
+    if (length < 8) {
       return 'A senha deve ter ao menos 8 caracteres.';
     }
     var passwordRegex = RegExp(r'(?=.*[A-Z]{1,})');

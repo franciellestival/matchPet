@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:matchpet/pages/bottom_nav_bar.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
 import 'package:pet_profile/models/pet_profile.dart';
@@ -32,6 +33,8 @@ class _PetEditPageState extends State<PetEditPage> {
   final _imageController = Get.put<ImageController>(ImageController());
   // Rx<bool> inputEnabled = Rx<bool>(false);
   final inputEnabled = false.obs;
+
+  final isLoading = false.obs;
 
   Rx<String> speciesCurrentValue = ''.obs;
   Rx<String> genderCurrentValue = ''.obs;
@@ -205,6 +208,7 @@ class _PetEditPageState extends State<PetEditPage> {
                         width: 170,
                         onTap: () => {_editPet()},
                         text: 'Salvar',
+                        isLoading: isLoading,
                       ),
                       PrimaryButton(
                         width: 170,
@@ -223,7 +227,8 @@ class _PetEditPageState extends State<PetEditPage> {
                       PrimaryButton(
                           width: 170,
                           onTap: () => {_deletePet()},
-                          text: 'Excluir'),
+                          text: 'Excluir',
+                          isLoading: isLoading),
                     ],
                   ),
           ),
@@ -257,6 +262,8 @@ class _PetEditPageState extends State<PetEditPage> {
   //TODO ERRO NAVIGATION GET
   Future<void> _editPet() async {
     if (_formKey.currentState!.validate()) {
+      isLoading.value = true;
+
       try {
         await PetController.updatePet(
             pet.id!,
@@ -287,7 +294,7 @@ class _PetEditPageState extends State<PetEditPage> {
             buttonColor: AppColors.buttonColor,
             confirmTextColor: AppColors.black,
             onConfirm: () {
-              Get.back();
+              Get.to(() => CustomBottomNavBar(selectedIndex: 4));
             });
       } catch (e) {
         Get.defaultDialog(
@@ -302,6 +309,7 @@ class _PetEditPageState extends State<PetEditPage> {
             });
       }
       inputEnabled.value = false;
+      isLoading.value = false;
     }
   }
 
@@ -313,23 +321,28 @@ class _PetEditPageState extends State<PetEditPage> {
       content: const Text("Deseja realmente remover o pet?"),
       actions: [
         ContinueDialogLink(onPressed: () async {
+          isLoading.value = true;
           try {
             await PetController.deletePet(pet.id!);
-            Get.offAndToNamed(Routes.statusRoute);
-            Get.defaultDialog(
-                title: "Sucesso!",
-                middleText: "O pet foi deletado com sucesso!",
+            Get.dialog(
+              AlertDialog(
+                title: const Text("Ok!"),
+                content: const Text("Pet Excluído com sucesso"),
                 backgroundColor: AppColors.primaryLightColor,
-                buttonColor: AppColors.buttonColor,
-                confirmTextColor: AppColors.black,
-                onConfirm: () {
-                  Get.back();
-                },
-                textConfirm: "Fechar");
+                actions: [
+                  GoBackDialogLink(onPressed: () {
+                    Get.back(closeOverlays: true);
+                    Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+                    // Get.back();
+                  })
+                ],
+              ),
+            );
           } catch (e) {
             Get.snackbar("Erro!", e.toString(),
                 duration: const Duration(seconds: 5));
           }
+          isLoading.value = false;
         }),
         GoBackDialogLink(onPressed: () {
           Get.back();
