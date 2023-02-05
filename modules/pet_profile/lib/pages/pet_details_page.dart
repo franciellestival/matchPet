@@ -78,7 +78,7 @@ class PetDetailPage extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: Text(
-                  '${pet?.name ?? 'Sem Nome'} (${pet?.breed ?? 'Sem Raça'})',
+                  '${pet?.name ?? 'Sem Nome'} (${(pet?.breed ?? 'Sem Raça').trim()})',
                   style: const TextStyle(
                       fontSize: 24, fontWeight: FontWeight.bold),
                 ),

@@ -220,7 +220,7 @@ class _PetEditPageState extends State<PetEditPage> {
                     children: [
                       PrimaryButton(
                           width: 170,
-                          onTap: () => {inputEnabled.value = true},
+                          onTap: () => _verifyPetAdopted(),
                           text: 'Editar'),
                       PrimaryButton(
                           width: 170,
@@ -257,7 +257,6 @@ class _PetEditPageState extends State<PetEditPage> {
     });
   }
 
-  //TODO ERRO NAVIGATION GET
   Future<void> _editPet() async {
     if (_formKey.currentState!.validate()) {
       isLoading.value = true;
@@ -282,8 +281,6 @@ class _PetEditPageState extends State<PetEditPage> {
                 : '');
 
         pet = await PetController.getPetByID(pet.id!) ?? pet;
-        // Get.offAndToNamed(Routes.petDetailPage, arguments: pet);
-        // Routes.petDetailPage, arguments: pet);
         Get.defaultDialog(
             title: "Sucesso!",
             middleText: "Os dados do pet foram alterados.",
@@ -311,7 +308,6 @@ class _PetEditPageState extends State<PetEditPage> {
     }
   }
 
-  //TODO ERRO NAVIGATION GET
   Future<void> _deletePet() async {
     inputEnabled.value = false;
     Get.dialog(AlertDialog(
@@ -344,25 +340,27 @@ class _PetEditPageState extends State<PetEditPage> {
       ],
       backgroundColor: AppColors.primaryLightColor,
     ));
-    // Get.defaultDialog(
-    //   title: "Atenção!",
-    //   middleText: "Deseja realmente remover o pet?",
-    //   textCancel: "Cancelar",
-    //   textConfirm: "Remover",
-    //   backgroundColor: AppColors.primaryLightColor,
-    //   buttonColor: AppColors.buttonColor,
-    //   barrierDismissible: false,
-    //   cancelTextColor: AppColors.black,
-    //   confirmTextColor: AppColors.black,
-    //   onConfirm: () async {
-    //     try {
-    //       await PetController.deletePet(pet.id!);
-    //       Get.offAndToNamed(Routes.initialRoute);
-    //     } catch (e) {
-    //       Get.snackbar("Erro!", e.toString(),
-    //           duration: const Duration(seconds: 5));
-    //     }
-    //   },
-    // );
+  }
+
+  void _verifyPetAdopted() async {
+    if (await PetController.isPetAdopted(pet)) {
+      inputEnabled.value = false;
+      Get.dialog(
+        AlertDialog(
+          title: const Text("Ops!"),
+          // ignore: prefer_const_constructors
+          content: Text(
+              "Este pet já foi adotado. Não é possível editar suas informações."),
+          actions: [
+            GoBackDialogLink(onPressed: () {
+              Get.back();
+            })
+          ],
+          backgroundColor: AppColors.primaryLightColor,
+        ),
+      );
+    } else {
+      inputEnabled.value = true;
+    }
   }
 }
