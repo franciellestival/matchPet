@@ -42,6 +42,7 @@ class PetDetailPage extends StatelessWidget {
     });
 
     final bool isMissingPet = pet!.status!.normalizedName == "missing";
+    final bool isAdopted = pet!.status!.normalizedName == "adopted";
 
     return Scaffold(
         appBar: const GenericAppBar(title: 'Detalhes do Pet'),
@@ -131,7 +132,9 @@ class PetDetailPage extends StatelessWidget {
                     ? Column(
                         children: [
                           ..._showChangeMissingStatusButton(isMissingPet),
-                          ..._showAdoptionConfirmationButton(isMissingPet),
+                          ..._showAdoptionConfirmationButton(
+                              isMissingPet, isAdopted),
+                          ..._showChangeAvailableStatusButton(isAdopted),
                         ],
                       )
                     : Column(
@@ -258,7 +261,23 @@ class PetDetailPage extends StatelessWidget {
         ),
       );
     } catch (e) {
-      Get.snackbar("Erro!", "Erro ao notificar interesse no Pet.");
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Erro!'),
+          content: const Text(
+              'Ou o tutor já foi notificado, ou ele está inativo em nossa base. Verifique se o pet já está na sua lista de "Meus Futuros Pets." '),
+          actions: [
+            ContinueDialogLink(
+              onPressed: () => Get.to(
+                () => CustomBottomNavBar(selectedIndex: 4),
+              ),
+            ),
+            GoBackDialogLink(onPressed: () {
+              Get.back();
+            }),
+          ],
+        ),
+      );
     }
   }
 
@@ -362,7 +381,7 @@ class PetDetailPage extends StatelessWidget {
           backgroundColor: AppColors.primaryLightColor,
           actions: [
             GoBackDialogLink(onPressed: () {
-              Get.back();
+              Get.to(() => CustomBottomNavBar(selectedIndex: 4));
             })
           ],
         ),
@@ -372,9 +391,10 @@ class PetDetailPage extends StatelessWidget {
     }
   }
 
-  List<Widget> _showAdoptionConfirmationButton(bool isMissingPet) {
+  List<Widget> _showAdoptionConfirmationButton(
+      bool isMissingPet, bool isAdopted) {
     return [
-      if (!isMissingPet)
+      if (!isMissingPet && !isAdopted)
         PrimaryButton(
           width: 350,
           height: 50,
@@ -402,6 +422,18 @@ class PetDetailPage extends StatelessWidget {
             ? "Marcar como Disponível"
             : "Marcar como Desaparecido",
       ),
+      const HeightSpacer(height: 20),
+    ];
+  }
+
+  List<Widget> _showChangeAvailableStatusButton(bool isAdopted) {
+    return [
+      if (isAdopted)
+        PrimaryButton(
+            width: 350,
+            backgroundColor: Colors.green,
+            onTap: () => {_setAvailablePet(pet)},
+            text: "Marcar como Disponível"),
       const HeightSpacer(height: 20),
     ];
   }
@@ -457,6 +489,53 @@ class PetDetailPage extends StatelessWidget {
                     Get.dialog(
                       AlertDialog(
                         title: const Text("Parabéns!"),
+                        content: const Text(
+                            "O status do seu pet foi alterado para disponível para adoção!"),
+                        backgroundColor: AppColors.primaryLightColor,
+                        actions: [
+                          GoBackDialogLink(onPressed: () {
+                            Get.back(closeOverlays: true);
+                            Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+                            // Get.back();
+                          })
+                        ],
+                      ),
+                    );
+                  } catch (e) {
+                    Get.snackbar("Erro!", e.toString(),
+                        duration: const Duration(seconds: 5));
+                  }
+                },
+              )
+            },
+          ),
+          GoBackDialogLink(onPressed: () {
+            Get.back();
+          })
+        ],
+        // barrierDismissible: false,
+      ));
+    }
+  }
+
+  void _setAvailablePet(PetProfile? pet) {
+    if (pet != null) {
+      Get.dialog(AlertDialog(
+        title: const Text("Disponibilizar este pet para adoção?"),
+        // content: const Text("Seu pet foi encontrado?"),
+        backgroundColor: AppColors.primaryLightColor,
+        actions: [
+          ContinueDialogLink(
+            onPressed: () => {
+              Future.sync(
+                () async {
+                  try {
+                    Get.back();
+                    await PetController.changeMissingStatus(pet.id!,
+                        found: true);
+                    Get.dialog(
+                      AlertDialog(
+                        title: const Text("Ok!"),
                         content: const Text(
                             "O status do seu pet foi alterado para disponível para adoção!"),
                         backgroundColor: AppColors.primaryLightColor,

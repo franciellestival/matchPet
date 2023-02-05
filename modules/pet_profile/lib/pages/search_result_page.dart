@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
-
 import 'package:pet_profile/widgets/pet_card.dart';
 import 'package:pet_profile/widgets/pet_list.dart';
 import 'package:theme/export_theme.dart';
@@ -23,9 +22,9 @@ class _SearchResultPageState extends State<SearchResultPage> {
     _petList = _getPetsList();
   }
 
-  Future<List<PetCard>?> _getPetsList() async {
-    Map<String, dynamic> arguments = Get.arguments;
+  Map<String, dynamic> arguments = Get.arguments;
 
+  Future<List<PetCard>?> _getPetsList() async {
     try {
       return await PetController.getFilteredPets(arguments);
     } catch (e) {
@@ -48,6 +47,10 @@ class _SearchResultPageState extends State<SearchResultPage> {
               future: _petList,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  if (!arguments.containsValue("adopted")) {
+                    snapshot.data!.removeWhere(
+                        (card) => card.pet.status?.normalizedName == "adopted");
+                  }
                   return Column(
                     children: [
                       snapshot.data!.isEmpty

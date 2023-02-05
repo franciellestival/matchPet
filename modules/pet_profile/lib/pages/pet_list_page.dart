@@ -83,6 +83,8 @@ class _PetListPageState extends State<PetListPage> {
                   );
                 }
                 if (snapshot.hasData) {
+                  snapshot.data!.removeWhere(
+                      (card) => card.pet.status?.normalizedName == "adopted");
                   if (snapshot.data!.isEmpty) {
                     Get.dialog(
                       AlertDialog(
