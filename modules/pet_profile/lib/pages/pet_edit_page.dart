@@ -289,7 +289,7 @@ class _PetEditPageState extends State<PetEditPage> {
             buttonColor: AppColors.buttonColor,
             confirmTextColor: AppColors.white,
             onConfirm: () {
-              Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+              Get.off(() => CustomBottomNavBar(selectedIndex: 4));
             });
       } catch (e) {
         Get.defaultDialog(
@@ -326,7 +326,7 @@ class _PetEditPageState extends State<PetEditPage> {
                 confirmTextColor: AppColors.white,
                 onConfirm: () {
                   Get.back(closeOverlays: true);
-                  Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+                  Get.off(() => CustomBottomNavBar(selectedIndex: 4));
                 });
           } catch (e) {
             Get.snackbar("Erro!", e.toString(),

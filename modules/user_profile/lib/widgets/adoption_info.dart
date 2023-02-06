@@ -416,7 +416,7 @@ class AdoptionInfo extends GetView<InterestController> {
         buttonColor: AppColors.buttonColor,
         onConfirm: () {
           Get.back(closeOverlays: true);
-          Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+          Get.off(() => CustomBottomNavBar(selectedIndex: 4));
         },
         confirmTextColor: AppColors.black);
   }

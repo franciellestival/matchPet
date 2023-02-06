@@ -268,7 +268,7 @@ class PetDetailPage extends StatelessWidget {
               'Ou o tutor já foi notificado, ou ele está inativo em nossa base. Verifique se o pet já está na sua lista de "Meus Futuros Pets." '),
           actions: [
             ContinueDialogLink(
-              onPressed: () => Get.to(
+              onPressed: () => Get.off(
                 () => CustomBottomNavBar(selectedIndex: 4),
               ),
             ),
@@ -381,7 +381,7 @@ class PetDetailPage extends StatelessWidget {
           backgroundColor: AppColors.primaryLightColor,
           actions: [
             GoBackDialogLink(onPressed: () {
-              Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+              Get.off(() => CustomBottomNavBar(selectedIndex: 4));
             })
           ],
         ),
@@ -413,8 +413,7 @@ class PetDetailPage extends StatelessWidget {
     return [
       PrimaryButton(
         width: 350,
-        backgroundColor:
-            isMissingPet ? AppColors.blueButton : AppColors.buttonColor,
+        backgroundColor: isMissingPet ? Colors.green : AppColors.buttonColor,
         onTap: isMissingPet
             ? () => {_setFoundPet(pet)}
             : () => {_setMissingPet(pet)},
@@ -464,7 +463,7 @@ class PetDetailPage extends StatelessWidget {
         backgroundColor: AppColors.primaryLightColor,
         buttonColor: AppColors.buttonColor,
         confirmTextColor: AppColors.black,
-        onConfirm: () => Get.to(() => CustomBottomNavBar(selectedIndex: 4)),
+        onConfirm: () => Get.off(() => CustomBottomNavBar(selectedIndex: 4)),
       );
     } catch (e) {
       Get.snackbar("Erro!", e.toString(), duration: const Duration(seconds: 5));
@@ -495,7 +494,7 @@ class PetDetailPage extends StatelessWidget {
                         actions: [
                           GoBackDialogLink(onPressed: () {
                             Get.back(closeOverlays: true);
-                            Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+                            Get.off(() => CustomBottomNavBar(selectedIndex: 4));
                             // Get.back();
                           })
                         ],
@@ -542,7 +541,7 @@ class PetDetailPage extends StatelessWidget {
                         actions: [
                           GoBackDialogLink(onPressed: () {
                             Get.back(closeOverlays: true);
-                            Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+                            Get.off(() => CustomBottomNavBar(selectedIndex: 4));
                             // Get.back();
                           })
                         ],
