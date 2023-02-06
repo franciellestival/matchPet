@@ -65,7 +65,6 @@ class _PetEditPageState extends State<PetEditPage> {
       child: Wrap(
         runSpacing: 22,
         children: <Widget>[
-          // ImageInput(placeHolderPath: AppSvgs.pawIcon),
           ImageInput(
               placeHolderPath: pet.photoUrl!, isEnabled: inputEnabled.value),
           const Text(
@@ -268,7 +267,6 @@ class _PetEditPageState extends State<PetEditPage> {
             speciesCurrentValue.value,
             genderCurrentValue.value,
             sizeCurrentValue.value,
-            // statusCurrentValue.value,
             pet.status!.displayName!,
             _breedController.text,
             int.parse(_ageController.text),
@@ -281,27 +279,27 @@ class _PetEditPageState extends State<PetEditPage> {
                 : '');
 
         pet = await PetController.getPetByID(pet.id!) ?? pet;
-        Get.defaultDialog(
-            title: "Sucesso!",
-            middleText: "Os dados do pet foram alterados.",
-            textConfirm: "Fechar",
-            backgroundColor: AppColors.primaryLightColor,
-            buttonColor: AppColors.buttonColor,
-            confirmTextColor: AppColors.white,
-            onConfirm: () {
+        Get.dialog(AlertDialog(
+          title: const Text("Sucesso!"),
+          content: const Text("Os dados do pet foram alterados."),
+          actions: [
+            GoBackDialogLink(onPressed: () {
               Get.off(() => CustomBottomNavBar(selectedIndex: 4));
-            });
+            }),
+          ],
+          backgroundColor: AppColors.primaryLightColor,
+        ));
       } catch (e) {
-        Get.defaultDialog(
-            title: "Erro!",
-            middleText: "Não foi possível alterar os dados do Pet.",
-            textConfirm: "Fechar",
-            backgroundColor: AppColors.primaryLightColor,
-            buttonColor: AppColors.buttonColor,
-            confirmTextColor: AppColors.white,
-            onConfirm: () {
+        Get.dialog(AlertDialog(
+          title: const Text("Erro!"),
+          content: const Text("Não foi possível alterar os dados do Pet."),
+          actions: [
+            GoBackDialogLink(onPressed: () {
               Get.back();
-            });
+            }),
+          ],
+          backgroundColor: AppColors.primaryLightColor,
+        ));
       }
       inputEnabled.value = false;
       isLoading.value = false;
@@ -318,19 +316,29 @@ class _PetEditPageState extends State<PetEditPage> {
           isLoading.value = true;
           try {
             await PetController.deletePet(pet.id!);
-            Get.defaultDialog(
-                title: "Sucesso!",
-                middleText: "O pet foi deletado com sucesso!",
-                backgroundColor: AppColors.primaryLightColor,
-                buttonColor: AppColors.buttonColor,
-                confirmTextColor: AppColors.white,
-                onConfirm: () {
+
+            Get.dialog(AlertDialog(
+              title: const Text("Sucesso!"),
+              content: const Text("O pet foi removido com sucesso!"),
+              actions: [
+                GoBackDialogLink(onPressed: () {
                   Get.back(closeOverlays: true);
                   Get.off(() => CustomBottomNavBar(selectedIndex: 4));
-                });
+                }),
+              ],
+              backgroundColor: AppColors.primaryLightColor,
+            ));
           } catch (e) {
-            Get.snackbar("Erro!", e.toString(),
-                duration: const Duration(seconds: 5));
+            Get.dialog(AlertDialog(
+              title: const Text("Erro!"),
+              content: const Text("Não foi possível remover o pet."),
+              actions: [
+                GoBackDialogLink(onPressed: () {
+                  Get.back();
+                }),
+              ],
+              backgroundColor: AppColors.primaryLightColor,
+            ));
           }
           isLoading.value = false;
         }),
@@ -348,8 +356,7 @@ class _PetEditPageState extends State<PetEditPage> {
       Get.dialog(
         AlertDialog(
           title: const Text("Ops!"),
-          // ignore: prefer_const_constructors
-          content: Text(
+          content: const Text(
               "Este pet já foi adotado. Não é possível editar suas informações."),
           actions: [
             GoBackDialogLink(onPressed: () {

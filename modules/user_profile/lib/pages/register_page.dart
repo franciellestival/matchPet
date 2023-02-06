@@ -164,7 +164,8 @@ class _UserRegisterState extends State<UserRegister> {
                         Center(
                             child: PrimaryButton(
                                 isLoading: isLoading,
-                                onTap: () => Get.toNamed(Routes.initialRoute),
+                                onTap: () =>
+                                    Get.offAndToNamed(Routes.initialRoute),
                                 text: 'Voltar')),
                         const SizedBox(height: 10)
                       ],

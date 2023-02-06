@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
+import 'package:pet_profile/widgets/dialog_links.dart';
 import 'package:pet_profile/widgets/pet_card.dart';
 import 'package:pet_profile/widgets/pet_list.dart';
 import 'package:theme/export_theme.dart';
@@ -28,7 +29,16 @@ class _SearchResultPageState extends State<SearchResultPage> {
     try {
       return await PetController.getFilteredPets(arguments);
     } catch (e) {
-      Get.snackbar('Erro!', "Não foi possivel obter a lista de Animais.");
+      Get.dialog(AlertDialog(
+        title: const Text("Erro!"),
+        content: const Text("Ocorreu um erro ao exibir Pets cadastrados."),
+        backgroundColor: AppColors.primaryLightColor,
+        actions: [
+          GoBackDialogLink(onPressed: () {
+            Get.back();
+          })
+        ],
+      ));
     }
     return null;
   }
@@ -70,18 +80,27 @@ class _SearchResultPageState extends State<SearchResultPage> {
                             )
                           : Column(
                               children: [
-                                Text(
-                                  '(${snapshot.data?.length ?? 0}) resultado(s) para a busca',
-                                  style: TextStyle(fontSize: 20),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      '(${snapshot.data?.length ?? 0}) Pet(s) encontrado(s)',
+                                      style: const TextStyle(fontSize: 20),
+                                    ),
+                                    PrimaryButton(
+                                      onTap: () {
+                                        Get.offAndToNamed(Routes.home);
+                                      },
+                                      text: 'Voltar',
+                                      width: 150,
+                                      height: 50,
+                                    ),
+                                  ],
                                 ),
                                 PetList(
                                     title: listTitle, children: snapshot.data!),
                                 const HeightSpacer(),
-                                PrimaryButton(
-                                    onTap: () {
-                                      Get.toNamed(Routes.home);
-                                    },
-                                    text: 'Voltar'),
                                 const HeightSpacer()
                               ],
                             ),
@@ -89,7 +108,17 @@ class _SearchResultPageState extends State<SearchResultPage> {
                   );
                 } else {
                   if (snapshot.hasError) {
-                    Get.snackbar('Error', snapshot.error.toString());
+                    Get.dialog(AlertDialog(
+                      title: const Text("Erro!"),
+                      content: const Text(
+                          "Ocorreu um erro ao exibir Pets cadastrados."),
+                      backgroundColor: AppColors.primaryLightColor,
+                      actions: [
+                        GoBackDialogLink(onPressed: () {
+                          Get.back();
+                        })
+                      ],
+                    ));
                   }
                   return const Center(
                       child: CircularProgressIndicator(
