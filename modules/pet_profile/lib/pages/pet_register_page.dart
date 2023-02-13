@@ -58,6 +58,12 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             hintText: 'Nome',
             controller: _nameController,
             enable: inputEnabled.value,
+            validator: (String? val) {
+              if (GetUtils.isLengthLessOrEqual(val, 3)) {
+                return "Insira o nome do pet.";
+              }
+              return null;
+            },
           ),
           FutureBuilder<List<String?>>(
             future: PetController.species(),
@@ -159,23 +165,53 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             hintText: 'Raça',
             controller: _breedController,
             enable: inputEnabled.value,
+            validator: (String? val) {
+              if (GetUtils.isLengthLessOrEqual(val, 3)) {
+                return "Insira a raça do pet";
+              }
+              return null;
+            },
           ),
           FormInputBox(
             hintText: 'Idade',
             controller: _ageController,
             textInputType: TextInputType.number,
             enable: inputEnabled.value,
+            validator: (String? val) {
+              if (GetUtils.isNullOrBlank(val) ?? true) {
+                return "Insira a idade do pet";
+              } else if (!GetUtils.isNum(val!)) {
+                return "Insira um número válido";
+              } else {
+                return null;
+              }
+            },
           ),
           FormInputBox(
             hintText: 'Peso',
             controller: _weightController,
             textInputType: TextInputType.number,
             enable: inputEnabled.value,
+            validator: (String? val) {
+              if (GetUtils.isNullOrBlank(val) ?? true) {
+                return "Insira o peso do pet";
+              } else if (!GetUtils.isNum(val!)) {
+                return "Insira um número válido";
+              } else {
+                return null;
+              }
+            },
           ),
           FormInputBox(
             hintText: 'Descrição',
             controller: _descriptionController,
             enable: inputEnabled.value,
+            validator: (String? val) {
+              if (GetUtils.isLengthLessOrEqual(val, 3)) {
+                return "Insira a raça do pet";
+              }
+              return null;
+            },
           ),
         ],
       ),
