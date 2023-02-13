@@ -134,7 +134,7 @@ class PetDetailPage extends StatelessWidget {
                           ..._showChangeMissingStatusButton(isMissingPet),
                           ..._showAdoptionConfirmationButton(
                               isMissingPet, isAdopted),
-                          ..._showChangeAvailableStatusButton(isAdopted),
+                          ..._hideButtonsWhenAdopted(isAdopted),
                         ],
                       )
                     : Column(
@@ -314,48 +314,49 @@ class PetDetailPage extends StatelessWidget {
             const Text('Escolha o novo tutor:'),
             const HeightSpacer(height: 20),
             FutureBuilder<List<Interest>>(
-                future: interestController.getInterestByPet(pet!.id!),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    var data = snapshot.data!;
-                    return FormDropDownInput(
-                      child: DropdownButtonFormField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(AppRadius.buttonRadius)),
-                            borderSide:
-                                const BorderSide(color: AppColors.buttonColor),
-                          ),
-                          label: const Text.rich(
-                            TextSpan(
-                              children: <InlineSpan>[
-                                WidgetSpan(
-                                    child: Text(
-                                  'Usuário',
-                                  style: TextStyle(color: Colors.black),
-                                ))
-                              ],
-                            ),
+              future: interestController.getInterestByPet(pet!.id!),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  var data = snapshot.data!;
+                  return FormDropDownInput(
+                    child: DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppRadius.buttonRadius)),
+                          borderSide:
+                              const BorderSide(color: AppColors.buttonColor),
+                        ),
+                        label: const Text.rich(
+                          TextSpan(
+                            children: <InlineSpan>[
+                              WidgetSpan(
+                                  child: Text(
+                                'Usuário',
+                                style: TextStyle(color: Colors.black),
+                              ))
+                            ],
                           ),
                         ),
-                        dropdownColor: AppColors.editTextColor,
-                        // value: interestController.interestedUser,
-                        items: data
-                            .map((interest) => DropdownMenuItem<int>(
-                                  value: interest.interestedUser!.id,
-                                  child: Text(interest.interestedUser!.name!),
-                                ))
-                            .toList(),
-                        onChanged: (newValue) {
-                          interestController.interestedUserId = newValue!;
-                        },
                       ),
-                    );
-                  }
-                  return const CircularProgressIndicator();
-                }),
+                      dropdownColor: AppColors.editTextColor,
+                      // value: interestController.interestedUser,
+                      items: data
+                          .map((interest) => DropdownMenuItem<int>(
+                                value: interest.interestedUser!.id,
+                                child: Text(interest.interestedUser!.name!),
+                              ))
+                          .toList(),
+                      onChanged: (newValue) {
+                        interestController.interestedUserId = newValue!;
+                      },
+                    ),
+                  );
+                }
+                return const CircularProgressIndicator();
+              },
+            ),
           ],
         ),
       ),
@@ -425,15 +426,9 @@ class PetDetailPage extends StatelessWidget {
     ];
   }
 
-  List<Widget> _showChangeAvailableStatusButton(bool isAdopted) {
+  List<Widget> _hideButtonsWhenAdopted(bool isAdopted) {
     return [
-      if (isAdopted)
-        PrimaryButton(
-            width: 350,
-            backgroundColor: Colors.green,
-            onTap: () => {_setAvailablePet(pet)},
-            text: "Marcar como Disponível"),
-      const HeightSpacer(height: 20),
+      if (isAdopted) const HeightSpacer(height: 20),
     ];
   }
 
