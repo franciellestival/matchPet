@@ -126,15 +126,21 @@ class PetDetailPage extends StatelessWidget {
                   'Necessidades Especiais? ${pet!.specialNeeds ?? false ? "Sim" : "Nenhuma"}',
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  'Castrado? ${pet!.neutered ?? false ? "Sim" : "Não"}',
+                ),
+              ),
               const HeightSpacer(height: 40),
               Center(
                 child: isMyPet
                     ? Column(
                         children: [
-                          ..._showChangeMissingStatusButton(isMissingPet),
+                          ..._showChangeMissingStatusButton(
+                              isMissingPet, isAdopted),
                           ..._showAdoptionConfirmationButton(
                               isMissingPet, isAdopted),
-                          ..._hideButtonsWhenAdopted(isAdopted),
                         ],
                       )
                     : Column(
@@ -410,26 +416,27 @@ class PetDetailPage extends StatelessWidget {
     ];
   }
 
-  List<Widget> _showChangeMissingStatusButton(bool isMissingPet) {
-    return [
-      PrimaryButton(
-        width: 350,
-        backgroundColor: isMissingPet ? Colors.green : AppColors.buttonColor,
-        onTap: isMissingPet
-            ? () => {_setFoundPet(pet)}
-            : () => {_setMissingPet(pet)},
-        text: isMissingPet
-            ? "Marcar como Disponível"
-            : "Marcar como Desaparecido",
-      ),
-      const HeightSpacer(height: 20),
-    ];
-  }
-
-  List<Widget> _hideButtonsWhenAdopted(bool isAdopted) {
-    return [
-      if (isAdopted) const HeightSpacer(height: 20),
-    ];
+  List<Widget> _showChangeMissingStatusButton(
+      bool isMissingPet, bool isAdopted) {
+    return isAdopted
+        ? [
+            Text('Parabéns! Você adotou ${pet?.name ?? ''}. '),
+            const HeightSpacer(height: 20),
+          ]
+        : [
+            PrimaryButton(
+              width: 350,
+              backgroundColor:
+                  isMissingPet ? Colors.green : AppColors.buttonColor,
+              onTap: isMissingPet
+                  ? () => {_setFoundPet(pet)}
+                  : () => {_setMissingPet(pet)},
+              text: isMissingPet
+                  ? "Marcar como Disponível"
+                  : "Marcar como Desaparecido",
+            ),
+            const HeightSpacer(height: 20),
+          ];
   }
 
   void _setMissingPet(PetProfile? pet) {
