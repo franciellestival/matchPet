@@ -60,7 +60,7 @@ class PrimaryButton extends StatelessWidget {
             isLoading ??= false.obs;
             return isLoading!.value
                 ? const CircularProgressIndicator(
-                    color: Colors.grey,
+                    color: Colors.white,
                   )
                 : Text(
                     text,

@@ -127,9 +127,10 @@ class PetRepository {
     }
   }
 
-  Future<String> updatePetStatus(PetProfile pet) async {
+  Future<String> updatePetStatus(PetProfile pet, {int? userId}) async {
     try {
-      final response = await petAPIServices.updatePetStatus(pet);
+      final response =
+          await petAPIServices.updatePetStatus(pet, userId: userId);
       return response.data["message"].toString();
     } on DioError catch (e) {
       final error = APIExceptions.fromDioError(e);

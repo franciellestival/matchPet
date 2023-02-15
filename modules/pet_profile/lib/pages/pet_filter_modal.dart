@@ -286,6 +286,7 @@ class PetFilter extends GetView<FilterController> {
                     controller.isLoading.value = true;
                     var mappedFilters = await controller.getQueryMap();
                     controller.isLoading.value = false;
+                    Get.back();
                     Get.toNamed(Routes.searchResultPage,
                         arguments: mappedFilters);
                   }),

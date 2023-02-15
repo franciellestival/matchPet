@@ -41,6 +41,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
   Rx<String> specialNeedsCurrentValue = ''.obs;
 
   final inputEnabled = true.obs;
+  final isLoading = false.obs;
 
   Form _buildPetRegisterForm(GlobalKey<FormState> formKey) {
     return Form(
@@ -57,6 +58,12 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             hintText: 'Nome',
             controller: _nameController,
             enable: inputEnabled.value,
+            validator: (String? val) {
+              if (GetUtils.isLengthLessOrEqual(val, 3)) {
+                return "Insira o nome do pet.";
+              }
+              return null;
+            },
           ),
           FutureBuilder<List<String?>>(
             future: PetController.species(),
@@ -158,23 +165,53 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             hintText: 'Raça',
             controller: _breedController,
             enable: inputEnabled.value,
+            validator: (String? val) {
+              if (GetUtils.isLengthLessOrEqual(val, 3)) {
+                return "Insira a raça do pet";
+              }
+              return null;
+            },
           ),
           FormInputBox(
             hintText: 'Idade',
             controller: _ageController,
             textInputType: TextInputType.number,
             enable: inputEnabled.value,
+            validator: (String? val) {
+              if (GetUtils.isNullOrBlank(val) ?? true) {
+                return "Insira a idade do pet";
+              } else if (!GetUtils.isNum(val!)) {
+                return "Insira um número válido";
+              } else {
+                return null;
+              }
+            },
           ),
           FormInputBox(
             hintText: 'Peso',
             controller: _weightController,
             textInputType: TextInputType.number,
             enable: inputEnabled.value,
+            validator: (String? val) {
+              if (GetUtils.isNullOrBlank(val) ?? true) {
+                return "Insira o peso do pet";
+              } else if (!GetUtils.isNum(val!)) {
+                return "Insira um número válido";
+              } else {
+                return null;
+              }
+            },
           ),
           FormInputBox(
             hintText: 'Descrição',
             controller: _descriptionController,
             enable: inputEnabled.value,
+            validator: (String? val) {
+              if (GetUtils.isLengthLessOrEqual(val, 3)) {
+                return "Insira a raça do pet";
+              }
+              return null;
+            },
           ),
         ],
       ),
@@ -184,7 +221,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GenericAppBar(title: 'Cadastrar Pet'),
+      appBar: const GenericAppBar(title: 'Cadastrar Pet', showBackArrow: false),
       backgroundColor: AppColors.primaryColor,
       body: SingleChildScrollView(
         child: Column(
@@ -195,7 +232,11 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
               child: _buildPetRegisterForm(_formKey),
             ),
             PetRegisterPage.heightSpacer,
-            PrimaryButton(onTap: _registerPet, text: 'Salvar'),
+            PrimaryButton(
+              onTap: _registerPet,
+              text: 'Salvar',
+              isLoading: isLoading,
+            ),
             PetRegisterPage.heightSpacer
           ],
         ),
@@ -205,6 +246,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
 
   Future<void> _registerPet() async {
     if (_formKey.currentState!.validate()) {
+      isLoading.value = true;
       try {
         await PetController.registerPet(
             _nameController.text,
@@ -224,6 +266,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
         Get.snackbar("Erro!", e.toString(),
             duration: const Duration(seconds: 5));
       }
+      isLoading.value = false;
     }
   }
 }

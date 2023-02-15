@@ -55,14 +55,24 @@ class PetServices {
       token = getx.Get.find(tag: "userToken");
       var data = pet.toJson();
       data.remove("photo");
-      var formData = FormData.fromMap({
-        ...data,
-        if ((pet.photo ?? "").isNotEmpty)
-          "photo": await MultipartFile.fromFile(pet.photo!, filename: pet.name)
-      });
+      if ((pet.photo ?? "").isNotEmpty) {
+        data["photo"] =
+            await MultipartFile.fromFile(pet.photo!, filename: pet.name);
+      }
       final Response response = await petApi.patch("$_petEndpoint/$id",
-          data: formData,
-          options: Options(headers: {"Authorization": token.token}));
+          data: FormData.fromMap(data),
+          options: Options(headers: {
+            "Authorization": token.token,
+          }));
+
+      // var formData = FormData.fromMap({
+      //   ...data,
+      //   if ((pet.photo ?? "").isNotEmpty)
+      //     "photo": await MultipartFile.fromFile(pet.photo!, filename: pet.name)
+      // });
+      // final Response response = await petApi.patch("$_petEndpoint/$id",
+      //     data: formData,
+      //     options: Options(headers: {"Authorization": token.token}));
       return response;
     } catch (e) {
       rethrow;
@@ -132,14 +142,17 @@ class PetServices {
     }
   }
 
-  Future<Response> updatePetStatus(PetProfile pet) async {
+  Future<Response> updatePetStatus(PetProfile pet, {int? userId}) async {
     try {
       token = getx.Get.find(tag: "userToken");
+      Map<String, dynamic> data = {
+        "status": pet.status!.normalizedName,
+      };
+      if (userId != null) {
+        data["user_id"] = userId;
+      }
       final Response response = await petApi.patch("$_petEndpoint/${pet.id}",
-          data: FormData.fromMap({
-            "status": pet.status!.normalizedName,
-            // "user": pet.owner!.toJson(),
-          }),
+          data: FormData.fromMap(data),
           options: Options(
             headers: {"Authorization": token.token},
           ));
