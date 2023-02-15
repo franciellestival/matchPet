@@ -1,7 +1,7 @@
-import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/routes/app_routes.dart';
+import 'package:pet_profile/widgets/dialog_links.dart';
 import 'package:theme/export_theme.dart';
 
 import '../controller/user_controller.dart';
@@ -23,7 +23,7 @@ class _UserLoginState extends State<UserLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar(title: 'Login', appBar: AppBar()),
+      appBar: const GenericAppBar(title: 'Login', showBackArrow: false),
       body: Stack(
         children: <Widget>[
           Container(
@@ -85,8 +85,8 @@ class _UserLoginState extends State<UserLogin> {
                               hintText: 'E-mail',
                               controller: _emailLoginController,
                               validator: (String? val) {
-                                if (!val!.isValidEmail) {
-                                  return "Insira um e-mail válido";
+                                if (!GetUtils.isEmail(val!)) {
+                                  return "Insira um e-mail válido.";
                                 }
                                 return null;
                               },
@@ -108,8 +108,8 @@ class _UserLoginState extends State<UserLogin> {
                               hintText: 'Digite sua senha',
                               controller: _passwordLoginController,
                               validator: (String? val) {
-                                if (!val!.isValidPassword) {
-                                  return "Senha deve possuir ao menos 8 caracteres.";
+                                if ((val ?? '').isEmpty) {
+                                  return 'Informe a senha';
                                 }
                                 return null;
                               },
@@ -122,7 +122,7 @@ class _UserLoginState extends State<UserLogin> {
                               isLoading: isLoading,
                               onTap: _signIn,
                               text: AppStrings.loginButton,
-                              backgroundColor: AppColors.blueButton,
+                              backgroundColor: AppColors.buttonColor,
                             )),
                           ),
                         ],
@@ -163,9 +163,21 @@ class _UserLoginState extends State<UserLogin> {
         Get.put<Token>(loggedToken, tag: "userToken", permanent: true);
         isLoading.value = false;
         Get.offAndToNamed(Routes.home);
+      } else {
+        isLoading.value = false;
       }
     } on Exception catch (e) {
-      Get.snackbar("Erro!", e.toString(), duration: const Duration(seconds: 5));
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Erro'),
+          content: const Text('Email ou senha incorretos'),
+          actions: [
+            GoBackDialogLink(onPressed: () {
+              Get.back();
+            }),
+          ],
+        ),
+      );
       isLoading.value = false;
     }
   }

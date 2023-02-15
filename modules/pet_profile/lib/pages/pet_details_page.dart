@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:matchpet/pages/bottom_nav_bar.dart';
 import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/favorites_controller.dart';
 import 'package:user_profile/controller/interest_controller.dart';
@@ -41,6 +42,7 @@ class PetDetailPage extends StatelessWidget {
     });
 
     final bool isMissingPet = pet!.status!.normalizedName == "missing";
+    final bool isAdopted = pet!.status!.normalizedName == "adopted";
 
     return Scaffold(
         appBar: const GenericAppBar(title: 'Detalhes do Pet'),
@@ -77,7 +79,7 @@ class PetDetailPage extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: Text(
-                  '${pet?.name ?? 'Sem Nome'} (${pet?.breed ?? 'Sem Raça'})',
+                  '${pet?.name ?? 'Sem Nome'} (${(pet?.breed ?? 'Sem Raça').trim()})',
                   style: const TextStyle(
                       fontSize: 24, fontWeight: FontWeight.bold),
                 ),
@@ -124,13 +126,21 @@ class PetDetailPage extends StatelessWidget {
                   'Necessidades Especiais? ${pet!.specialNeeds ?? false ? "Sim" : "Nenhuma"}',
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  'Castrado? ${pet!.neutered ?? false ? "Sim" : "Não"}',
+                ),
+              ),
               const HeightSpacer(height: 40),
               Center(
                 child: isMyPet
                     ? Column(
                         children: [
-                          ..._showChangeMissingStatusButton(isMissingPet),
-                          ..._showAdoptionConfirmationButton(isMissingPet),
+                          ..._showChangeMissingStatusButton(
+                              isMissingPet, isAdopted),
+                          ..._showAdoptionConfirmationButton(
+                              isMissingPet, isAdopted),
                         ],
                       )
                     : Column(
@@ -205,7 +215,7 @@ class PetDetailPage extends StatelessWidget {
             _showInterestDialog(loggedInUser!.id!, pet!.id!);
           },
           text: 'Quero Adotar',
-          backgroundColor: AppColors.blueButton,
+          backgroundColor: AppColors.buttonColor,
         ),
       const HeightSpacer(height: 20),
     ];
@@ -214,14 +224,26 @@ class PetDetailPage extends StatelessWidget {
   List<Widget> _showContactButton(bool missingPet) {
     return [
       if (missingPet)
-        PrimaryButton(
-          width: 350,
-          height: 50,
-          onTap: () {
-            UserController.openWhatsApp(pet!, adoption: false);
-          },
-          text: 'Entrar em contato sobre',
-          backgroundColor: AppColors.blueButton,
+        Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                'Este pet está desaparecido. Se você o viu pode contatar o tutor para passar informações',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.red, fontSize: 15),
+              ),
+            ),
+            PrimaryButton(
+              width: 350,
+              height: 50,
+              onTap: () {
+                UserController.openWhatsApp(pet!, adoption: false);
+              },
+              text: 'Entrar em contato',
+              backgroundColor: AppColors.buttonColor,
+            ),
+          ],
         ),
       const HeightSpacer(height: 20),
     ];
@@ -245,7 +267,23 @@ class PetDetailPage extends StatelessWidget {
         ),
       );
     } catch (e) {
-      Get.snackbar("Erro!", "Erro ao notificar interesse no Pet.");
+      Get.dialog(
+        AlertDialog(
+          title: const Text('Erro!'),
+          content: const Text(
+              'Ou o tutor já foi notificado, ou ele está inativo em nossa base. Verifique se o pet já está na sua lista de "Meus Futuros Pets." '),
+          actions: [
+            ContinueDialogLink(
+              onPressed: () => Get.off(
+                () => CustomBottomNavBar(selectedIndex: 4),
+              ),
+            ),
+            GoBackDialogLink(onPressed: () {
+              Get.back();
+            }),
+          ],
+        ),
+      );
     }
   }
 
@@ -282,48 +320,49 @@ class PetDetailPage extends StatelessWidget {
             const Text('Escolha o novo tutor:'),
             const HeightSpacer(height: 20),
             FutureBuilder<List<Interest>>(
-                future: interestController.getInterestByPet(pet!.id!),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    var data = snapshot.data!;
-                    return FormDropDownInput(
-                      child: DropdownButtonFormField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(AppRadius.buttonRadius)),
-                            borderSide:
-                                const BorderSide(color: AppColors.buttonColor),
-                          ),
-                          label: const Text.rich(
-                            TextSpan(
-                              children: <InlineSpan>[
-                                WidgetSpan(
-                                    child: Text(
-                                  'Usuário',
-                                  style: TextStyle(color: Colors.black),
-                                ))
-                              ],
-                            ),
+              future: interestController.getInterestByPet(pet!.id!),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  var data = snapshot.data!;
+                  return FormDropDownInput(
+                    child: DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppRadius.buttonRadius)),
+                          borderSide:
+                              const BorderSide(color: AppColors.buttonColor),
+                        ),
+                        label: const Text.rich(
+                          TextSpan(
+                            children: <InlineSpan>[
+                              WidgetSpan(
+                                  child: Text(
+                                'Usuário',
+                                style: TextStyle(color: Colors.black),
+                              ))
+                            ],
                           ),
                         ),
-                        dropdownColor: AppColors.editTextColor,
-                        // value: interestController.interestedUser,
-                        items: data
-                            .map((interest) => DropdownMenuItem<int>(
-                                  value: interest.interestedUser!.id,
-                                  child: Text(interest.interestedUser!.name!),
-                                ))
-                            .toList(),
-                        onChanged: (newValue) {
-                          interestController.interestedUserId = newValue!;
-                        },
                       ),
-                    );
-                  }
-                  return const CircularProgressIndicator();
-                }),
+                      dropdownColor: AppColors.editTextColor,
+                      // value: interestController.interestedUser,
+                      items: data
+                          .map((interest) => DropdownMenuItem<int>(
+                                value: interest.interestedUser!.id,
+                                child: Text(interest.interestedUser!.name!),
+                              ))
+                          .toList(),
+                      onChanged: (newValue) {
+                        interestController.interestedUserId = newValue!;
+                      },
+                    ),
+                  );
+                }
+                return const CircularProgressIndicator();
+              },
+            ),
           ],
         ),
       ),
@@ -349,7 +388,7 @@ class PetDetailPage extends StatelessWidget {
           backgroundColor: AppColors.primaryLightColor,
           actions: [
             GoBackDialogLink(onPressed: () {
-              Get.back();
+              Get.off(() => CustomBottomNavBar(selectedIndex: 4));
             })
           ],
         ),
@@ -359,9 +398,10 @@ class PetDetailPage extends StatelessWidget {
     }
   }
 
-  List<Widget> _showAdoptionConfirmationButton(bool isMissingPet) {
+  List<Widget> _showAdoptionConfirmationButton(
+      bool isMissingPet, bool isAdopted) {
     return [
-      if (!isMissingPet)
+      if (!isMissingPet && !isAdopted)
         PrimaryButton(
           width: 350,
           height: 50,
@@ -369,65 +409,66 @@ class PetDetailPage extends StatelessWidget {
             _showAdoptionConfirmationDialog();
           },
           text: 'Confirmar adoção',
-          backgroundColor: AppColors.blueButton,
+          backgroundColor: Colors.green,
           disabledColor: Colors.grey.withOpacity(0.5),
         ),
       const HeightSpacer(height: 20),
     ];
   }
 
-  List<Widget> _showChangeMissingStatusButton(bool isMissingPet) {
-    return [
-      PrimaryButton(
-        width: 350,
-        backgroundColor:
-            isMissingPet ? AppColors.blueButton : AppColors.buttonColor,
-        onTap: isMissingPet
-            ? () => {_setFoundPet(pet)}
-            : () => {_setMissingPet(pet)},
-        text: isMissingPet
-            ? "Marcar como Disponível"
-            : "Marcar como Desaparecido",
-      ),
-      const HeightSpacer(height: 20),
-    ];
+  List<Widget> _showChangeMissingStatusButton(
+      bool isMissingPet, bool isAdopted) {
+    return isAdopted
+        ? [
+            Text('Parabéns! Você adotou ${pet?.name ?? ''}. '),
+            const HeightSpacer(height: 20),
+          ]
+        : [
+            PrimaryButton(
+              width: 350,
+              backgroundColor:
+                  isMissingPet ? Colors.green : AppColors.buttonColor,
+              onTap: isMissingPet
+                  ? () => {_setFoundPet(pet)}
+                  : () => {_setMissingPet(pet)},
+              text: isMissingPet
+                  ? "Marcar como Disponível"
+                  : "Marcar como Desaparecido",
+            ),
+            const HeightSpacer(height: 20),
+          ];
   }
 
   void _setMissingPet(PetProfile? pet) {
-    if (pet != null) {
-      Get.dialog(AlertDialog(
-        title: const Text("Atenção!"),
-        content: const Text("Deseja realmente marcar o pet como desaparecido?"),
-        actions: [
-          ContinueDialogLink(
-              onPressed: () => {
-                    Future.sync(() async {
-                      try {
-                        Get.back();
-                        await PetController.changeMissingStatus(pet.id!);
-                        Get.defaultDialog(
-                            title: "Ok!",
-                            middleText:
-                                "Seu pet foi marcado como Desaparecido. Esperamos que o encontre logo!",
-                            backgroundColor: AppColors.primaryLightColor,
-                            buttonColor: AppColors.buttonColor,
-                            confirmTextColor: AppColors.black,
-                            onConfirm: () {
-                              Get.back();
-                            });
-                      } catch (e) {
-                        Get.snackbar("Erro!", e.toString(),
-                            duration: const Duration(seconds: 5));
-                      }
-                    })
-                  }),
-          GoBackDialogLink(onPressed: () {
-            // Get.closeCurrentSnackbar();
-            Get.back();
-          })
-        ],
+    if (pet == null) {
+      return;
+    }
+
+    Get.dialog(AlertDialog(
+      title: const Text("Atenção!"),
+      content: const Text("Deseja realmente marcar o pet como desaparecido?"),
+      actions: [
+        ContinueDialogLink(onPressed: () => _changePetMissingStatus(pet)),
+        GoBackDialogLink(onPressed: () => Get.back())
+      ],
+      backgroundColor: AppColors.primaryLightColor,
+    ));
+  }
+
+  Future<void> _changePetMissingStatus(PetProfile pet) async {
+    try {
+      await PetController.changeMissingStatus(pet.id!);
+      Get.defaultDialog(
+        title: "Ok!",
+        middleText:
+            "Seu pet foi marcado como Desaparecido. Esperamos que o encontre logo!",
         backgroundColor: AppColors.primaryLightColor,
-      ));
+        buttonColor: AppColors.buttonColor,
+        confirmTextColor: AppColors.black,
+        onConfirm: () => Get.off(() => CustomBottomNavBar(selectedIndex: 4)),
+      );
+    } catch (e) {
+      Get.snackbar("Erro!", e.toString(), duration: const Duration(seconds: 5));
     }
   }
 
@@ -454,7 +495,55 @@ class PetDetailPage extends StatelessWidget {
                         backgroundColor: AppColors.primaryLightColor,
                         actions: [
                           GoBackDialogLink(onPressed: () {
-                            Get.offAllNamed(Routes.home);
+                            Get.back(closeOverlays: true);
+                            Get.off(() => CustomBottomNavBar(selectedIndex: 4));
+                            // Get.back();
+                          })
+                        ],
+                      ),
+                    );
+                  } catch (e) {
+                    Get.snackbar("Erro!", e.toString(),
+                        duration: const Duration(seconds: 5));
+                  }
+                },
+              )
+            },
+          ),
+          GoBackDialogLink(onPressed: () {
+            Get.back();
+          })
+        ],
+        // barrierDismissible: false,
+      ));
+    }
+  }
+
+  void _setAvailablePet(PetProfile? pet) {
+    if (pet != null) {
+      Get.dialog(AlertDialog(
+        title: const Text("Disponibilizar este pet para adoção?"),
+        // content: const Text("Seu pet foi encontrado?"),
+        backgroundColor: AppColors.primaryLightColor,
+        actions: [
+          ContinueDialogLink(
+            onPressed: () => {
+              Future.sync(
+                () async {
+                  try {
+                    Get.back();
+                    await PetController.changeMissingStatus(pet.id!,
+                        found: true);
+                    Get.dialog(
+                      AlertDialog(
+                        title: const Text("Ok!"),
+                        content: const Text(
+                            "O status do seu pet foi alterado para disponível para adoção!"),
+                        backgroundColor: AppColors.primaryLightColor,
+                        actions: [
+                          GoBackDialogLink(onPressed: () {
+                            Get.back(closeOverlays: true);
+                            Get.off(() => CustomBottomNavBar(selectedIndex: 4));
                             // Get.back();
                           })
                         ],

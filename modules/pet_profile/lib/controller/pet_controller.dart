@@ -252,11 +252,10 @@ class PetController {
       if ((pet != null) && (user != null)) {
         var statusList = await petRepository.getStatus();
 
-        pet.owner = user;
         pet.status = statusList
             .firstWhere((element) => element.normalizedName == "adopted");
 
-        await petRepository.updatePetStatus(pet);
+        await petRepository.updatePetStatus(pet, userId: user.id);
       }
     } catch (e) {
       rethrow;
@@ -277,6 +276,15 @@ class PetController {
 
       await petRepository.updatePetStatus(pet);
     }
+  }
+
+  static Future<bool> isPetAdopted(PetProfile pet) async {
+    var petStatus = pet.status != null ? pet.status!.normalizedName : "adopted";
+
+    if (petStatus == "adopted") return true;
+
+    petStatus = (await getPetByID(pet.id!))!.status!.normalizedName;
+    return petStatus == "adopted";
   }
 }
 

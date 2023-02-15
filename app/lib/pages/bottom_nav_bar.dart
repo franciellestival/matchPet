@@ -14,7 +14,10 @@ import 'package:user_profile/pages/status_page.dart';
 import 'package:pet_profile/pages/favorites_page.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
-  CustomBottomNavBar({super.key});
+  final int selectedIndex;
+
+  CustomBottomNavBar({super.key, this.selectedIndex = 0});
+
   @override
   State<CustomBottomNavBar> createState() => _CustomBottomNavBarState();
 }
@@ -30,6 +33,12 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
     MissingPetPage(),
     StatusPage()
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
+  }
 
   void _onItemTapped(int index) {
     setState(() {

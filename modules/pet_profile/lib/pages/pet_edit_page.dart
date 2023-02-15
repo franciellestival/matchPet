@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:matchpet/routes/app_routes.dart';
+import 'package:matchpet/pages/bottom_nav_bar.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
 import 'package:pet_profile/models/pet_profile.dart';
 import 'package:pet_profile/widgets/dialog_links.dart';
-
 import 'package:theme/export_theme.dart';
 
 class PetEditPage extends StatefulWidget {
@@ -32,6 +31,8 @@ class _PetEditPageState extends State<PetEditPage> {
   final _imageController = Get.put<ImageController>(ImageController());
   // Rx<bool> inputEnabled = Rx<bool>(false);
   final inputEnabled = false.obs;
+
+  final isLoading = false.obs;
 
   Rx<String> speciesCurrentValue = ''.obs;
   Rx<String> genderCurrentValue = ''.obs;
@@ -64,7 +65,6 @@ class _PetEditPageState extends State<PetEditPage> {
       child: Wrap(
         runSpacing: 22,
         children: <Widget>[
-          // ImageInput(placeHolderPath: AppSvgs.pawIcon),
           ImageInput(
               placeHolderPath: pet.photoUrl!, isEnabled: inputEnabled.value),
           const Text(
@@ -205,6 +205,7 @@ class _PetEditPageState extends State<PetEditPage> {
                         width: 170,
                         onTap: () => {_editPet()},
                         text: 'Salvar',
+                        isLoading: isLoading,
                       ),
                       PrimaryButton(
                         width: 170,
@@ -218,12 +219,13 @@ class _PetEditPageState extends State<PetEditPage> {
                     children: [
                       PrimaryButton(
                           width: 170,
-                          onTap: () => {inputEnabled.value = true},
+                          onTap: () => _verifyPetAdopted(),
                           text: 'Editar'),
                       PrimaryButton(
                           width: 170,
                           onTap: () => {_deletePet()},
-                          text: 'Excluir'),
+                          text: 'Excluir',
+                          isLoading: isLoading),
                     ],
                   ),
           ),
@@ -254,9 +256,10 @@ class _PetEditPageState extends State<PetEditPage> {
     });
   }
 
-  //TODO ERRO NAVIGATION GET
   Future<void> _editPet() async {
     if (_formKey.currentState!.validate()) {
+      isLoading.value = true;
+
       try {
         await PetController.updatePet(
             pet.id!,
@@ -264,7 +267,6 @@ class _PetEditPageState extends State<PetEditPage> {
             speciesCurrentValue.value,
             genderCurrentValue.value,
             sizeCurrentValue.value,
-            // statusCurrentValue.value,
             pet.status!.displayName!,
             _breedController.text,
             int.parse(_ageController.text),
@@ -277,35 +279,33 @@ class _PetEditPageState extends State<PetEditPage> {
                 : '');
 
         pet = await PetController.getPetByID(pet.id!) ?? pet;
-        // Get.offAndToNamed(Routes.petDetailPage, arguments: pet);
-        // Routes.petDetailPage, arguments: pet);
-        Get.defaultDialog(
-            title: "Sucesso!",
-            middleText: "Os dados do pet foram alterados.",
-            textConfirm: "Fechar",
-            backgroundColor: AppColors.primaryLightColor,
-            buttonColor: AppColors.buttonColor,
-            confirmTextColor: AppColors.black,
-            onConfirm: () {
-              Get.back();
-            });
+        Get.dialog(AlertDialog(
+          title: const Text("Sucesso!"),
+          content: const Text("Os dados do pet foram alterados."),
+          actions: [
+            GoBackDialogLink(onPressed: () {
+              Get.off(() => CustomBottomNavBar(selectedIndex: 4));
+            }),
+          ],
+          backgroundColor: AppColors.primaryLightColor,
+        ));
       } catch (e) {
-        Get.defaultDialog(
-            title: "Erro!",
-            middleText: "Não foi possível alterar os dados do Pet.",
-            textConfirm: "Fechar",
-            backgroundColor: AppColors.primaryLightColor,
-            buttonColor: AppColors.buttonColor,
-            confirmTextColor: AppColors.black,
-            onConfirm: () {
+        Get.dialog(AlertDialog(
+          title: const Text("Erro!"),
+          content: const Text("Não foi possível alterar os dados do Pet."),
+          actions: [
+            GoBackDialogLink(onPressed: () {
               Get.back();
-            });
+            }),
+          ],
+          backgroundColor: AppColors.primaryLightColor,
+        ));
       }
       inputEnabled.value = false;
+      isLoading.value = false;
     }
   }
 
-  //TODO ERRO NAVIGATION GET
   Future<void> _deletePet() async {
     inputEnabled.value = false;
     Get.dialog(AlertDialog(
@@ -313,23 +313,34 @@ class _PetEditPageState extends State<PetEditPage> {
       content: const Text("Deseja realmente remover o pet?"),
       actions: [
         ContinueDialogLink(onPressed: () async {
+          isLoading.value = true;
           try {
             await PetController.deletePet(pet.id!);
-            Get.offAndToNamed(Routes.statusRoute);
-            Get.defaultDialog(
-                title: "Sucesso!",
-                middleText: "O pet foi deletado com sucesso!",
-                backgroundColor: AppColors.primaryLightColor,
-                buttonColor: AppColors.buttonColor,
-                confirmTextColor: AppColors.black,
-                onConfirm: () {
-                  Get.back();
-                },
-                textConfirm: "Fechar");
+
+            Get.dialog(AlertDialog(
+              title: const Text("Sucesso!"),
+              content: const Text("O pet foi removido com sucesso!"),
+              actions: [
+                GoBackDialogLink(onPressed: () {
+                  Get.back(closeOverlays: true);
+                  Get.off(() => CustomBottomNavBar(selectedIndex: 4));
+                }),
+              ],
+              backgroundColor: AppColors.primaryLightColor,
+            ));
           } catch (e) {
-            Get.snackbar("Erro!", e.toString(),
-                duration: const Duration(seconds: 5));
+            Get.dialog(AlertDialog(
+              title: const Text("Erro!"),
+              content: const Text("Não foi possível remover o pet."),
+              actions: [
+                GoBackDialogLink(onPressed: () {
+                  Get.back();
+                }),
+              ],
+              backgroundColor: AppColors.primaryLightColor,
+            ));
           }
+          isLoading.value = false;
         }),
         GoBackDialogLink(onPressed: () {
           Get.back();
@@ -337,25 +348,26 @@ class _PetEditPageState extends State<PetEditPage> {
       ],
       backgroundColor: AppColors.primaryLightColor,
     ));
-    // Get.defaultDialog(
-    //   title: "Atenção!",
-    //   middleText: "Deseja realmente remover o pet?",
-    //   textCancel: "Cancelar",
-    //   textConfirm: "Remover",
-    //   backgroundColor: AppColors.primaryLightColor,
-    //   buttonColor: AppColors.buttonColor,
-    //   barrierDismissible: false,
-    //   cancelTextColor: AppColors.black,
-    //   confirmTextColor: AppColors.black,
-    //   onConfirm: () async {
-    //     try {
-    //       await PetController.deletePet(pet.id!);
-    //       Get.offAndToNamed(Routes.initialRoute);
-    //     } catch (e) {
-    //       Get.snackbar("Erro!", e.toString(),
-    //           duration: const Duration(seconds: 5));
-    //     }
-    //   },
-    // );
+  }
+
+  void _verifyPetAdopted() async {
+    if (await PetController.isPetAdopted(pet)) {
+      inputEnabled.value = false;
+      Get.dialog(
+        AlertDialog(
+          title: const Text("Ops!"),
+          content: const Text(
+              "Este pet já foi adotado. Não é possível editar suas informações."),
+          actions: [
+            GoBackDialogLink(onPressed: () {
+              Get.back();
+            })
+          ],
+          backgroundColor: AppColors.primaryLightColor,
+        ),
+      );
+    } else {
+      inputEnabled.value = true;
+    }
   }
 }

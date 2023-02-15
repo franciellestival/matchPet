@@ -71,7 +71,7 @@ class _ProfilePage extends State<ProfilePage> {
                             hintText: 'Nome Completo',
                             controller: _nameController,
                             validator: (String? val) {
-                              if (!val!.isValidName) {
+                              if (GetUtils.isLengthLessOrEqual(val, 3)) {
                                 return "Insira o nome completo.";
                               }
                               return null;
@@ -102,8 +102,8 @@ class _ProfilePage extends State<ProfilePage> {
                             hintText: 'E-mail',
                             controller: _emailController,
                             validator: (String? val) {
-                              if (!val!.isValidEmail) {
-                                return "Insira um e-mail válido";
+                              if (!GetUtils.isEmail(val!)) {
+                                return "Insira um e-mail válido.";
                               }
                               return null;
                             },
@@ -116,8 +116,12 @@ class _ProfilePage extends State<ProfilePage> {
                             hintText: 'Senha',
                             controller: _pwController,
                             validator: (String? val) {
-                              if (!val!.isValidPassword) {
-                                return "Senha deve possuir ao menos 8 caracteres.";
+                              if (val == null) {
+                                return 'Senha inválida.';
+                              }
+                              var passwordValidation = val.isValidPassword;
+                              if (passwordValidation.isNotEmpty) {
+                                return passwordValidation.toString();
                               }
                               return null;
                             },
@@ -130,8 +134,12 @@ class _ProfilePage extends State<ProfilePage> {
                             hintText: 'Confirme sua senha',
                             controller: _pwConfirmationController,
                             validator: (String? val) {
-                              if (!val!.isValidPassword) {
-                                return "Confirmação de senha não é válida.";
+                              if (val == null) {
+                                return 'Senha inválida.';
+                              }
+                              var passwordValidation = val.isValidPassword;
+                              if (passwordValidation.isNotEmpty) {
+                                return passwordValidation.toString();
                               }
                               return null;
                             },

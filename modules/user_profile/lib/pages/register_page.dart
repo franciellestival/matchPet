@@ -54,7 +54,8 @@ class _UserRegisterState extends State<UserRegister> {
         type: MaskAutoCompletionType.lazy);
 
     return Scaffold(
-      appBar: GenericAppBar(title: 'Cadastro de usuário', appBar: AppBar()),
+      appBar: const GenericAppBar(
+          title: 'Cadastro de usuário', showBackArrow: false),
       backgroundColor: AppColors.primaryColor,
       body: SingleChildScrollView(
         child: Column(
@@ -90,9 +91,6 @@ class _UserRegisterState extends State<UserRegister> {
                     child: Wrap(
                       runSpacing: 22,
                       children: <Widget>[
-                        // Center(
-                        //     child:
-                        //         ImageInput(placeHolderPath: AppSvgs.userIcon)),
                         const SizedBox(height: 20),
                         const Text(
                           'Informações pessoais',
@@ -102,14 +100,14 @@ class _UserRegisterState extends State<UserRegister> {
                           hintText: 'Nome Completo',
                           controller: _nameController,
                           validator: (String? val) {
-                            if (!val!.isValidName) {
+                            if (GetUtils.isLengthLessOrEqual(val, 3)) {
                               return "Insira o nome completo.";
                             }
                             return null;
                           },
                         ),
                         FormInputBox(
-                          hintText: 'Telefone',
+                          hintText: 'Telefone (com DDD)',
                           controller: _phoneController,
                           inputFormatters: [phoneFormatter],
                           validator: (String? val) {
@@ -123,8 +121,8 @@ class _UserRegisterState extends State<UserRegister> {
                           hintText: 'E-mail',
                           controller: _emailController,
                           validator: (String? val) {
-                            if (!val!.isValidEmail) {
-                              return "Insira um e-mail válido";
+                            if (!GetUtils.isEmail(val!)) {
+                              return "Insira um e-mail válido.";
                             }
                             return null;
                           },
@@ -133,8 +131,12 @@ class _UserRegisterState extends State<UserRegister> {
                           hintText: 'Senha',
                           controller: _pwController,
                           validator: (String? val) {
-                            if (!val!.isValidPassword) {
-                              return "Senha deve possuir ao menos 8 caracteres.";
+                            if (val == null) {
+                              return 'Senha inválida.';
+                            }
+                            var passwordValidation = val.isValidPassword;
+                            if (passwordValidation.isNotEmpty) {
+                              return passwordValidation.toString();
                             }
                             return null;
                           },
@@ -143,8 +145,12 @@ class _UserRegisterState extends State<UserRegister> {
                           hintText: 'Confirme sua senha',
                           controller: _pwConfirmationController,
                           validator: (String? val) {
-                            if (!val!.isValidPassword) {
-                              return "Confirmação de senha não é válida.";
+                            if (val == null) {
+                              return 'Senha inválida.';
+                            }
+                            var passwordValidation = val.isValidPassword;
+                            if (passwordValidation.isNotEmpty) {
+                              return passwordValidation.toString();
                             }
                             return null;
                           },
@@ -155,6 +161,13 @@ class _UserRegisterState extends State<UserRegister> {
                                 onTap: _registerUser,
                                 text: 'Salvar')),
                         const SizedBox(height: 10),
+                        Center(
+                            child: PrimaryButton(
+                                isLoading: isLoading,
+                                onTap: () =>
+                                    Get.offAndToNamed(Routes.initialRoute),
+                                text: 'Voltar')),
+                        const SizedBox(height: 10)
                       ],
                     ),
                   ),
