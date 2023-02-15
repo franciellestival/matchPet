@@ -219,7 +219,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             neuteredCurrentValue.value == 'Sim' ? true : false,
             specialNeedsCurrentValue.value == 'Sim' ? true : false,
             _imageController.imagePath.value);
-        Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+        Get.off(() => CustomBottomNavBar(selectedIndex: 4));
       } on Exception catch (e) {
         Get.snackbar("Erro!", e.toString(),
             duration: const Duration(seconds: 5));

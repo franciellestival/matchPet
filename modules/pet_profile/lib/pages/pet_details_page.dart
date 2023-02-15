@@ -435,7 +435,7 @@ class PetDetailPage extends StatelessWidget {
             GoBackDialogLink(
               onPressed: () {
                 Get.back(closeOverlays: true);
-                Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+                Get.off(() => CustomBottomNavBar(selectedIndex: 4));
                 // Get.back();
               },
             )
@@ -471,7 +471,7 @@ class PetDetailPage extends StatelessWidget {
                         actions: [
                           GoBackDialogLink(onPressed: () {
                             Get.back(closeOverlays: true);
-                            Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+                            Get.off(() => CustomBottomNavBar(selectedIndex: 4));
                             // Get.back();
                           })
                         ],

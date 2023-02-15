@@ -289,7 +289,7 @@ class _PetEditPageState extends State<PetEditPage> {
               GoBackDialogLink(
                 onPressed: () {
                   Get.back(closeOverlays: true);
-                  Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+                  Get.off(() => CustomBottomNavBar(selectedIndex: 4));
                   // Get.back();
                 },
               )
@@ -316,7 +316,7 @@ class _PetEditPageState extends State<PetEditPage> {
               GoBackDialogLink(
                 onPressed: () {
                   Get.back(closeOverlays: true);
-                  Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+                  Get.off(() => CustomBottomNavBar(selectedIndex: 4));
                   // Get.back();
                 },
               )
@@ -348,7 +348,7 @@ class _PetEditPageState extends State<PetEditPage> {
         ContinueDialogLink(onPressed: () async {
           try {
             Get.back(closeOverlays: true);
-            Get.to(() => CustomBottomNavBar(selectedIndex: 4));
+            Get.off(() => CustomBottomNavBar(selectedIndex: 4));
             await PetController.deletePet(pet.id!);
 
             // Get.offAndToNamed(Routes.statusRoute);
@@ -362,7 +362,6 @@ class _PetEditPageState extends State<PetEditPage> {
             //       Get.back();
             //     },
             //     textConfirm: "Fechar");
-
           } catch (e) {
             Get.snackbar("Erro!", e.toString(),
                 duration: const Duration(seconds: 5));
