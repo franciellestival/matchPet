@@ -139,7 +139,7 @@ class PetCard extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 15),
           child: Text(
-            '${pet.age} ano(s)',
+            "${pet.age} ano ${pet.age! > 1 ? "s" : ""}",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(

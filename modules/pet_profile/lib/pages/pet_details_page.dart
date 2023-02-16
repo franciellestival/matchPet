@@ -108,8 +108,10 @@ class PetDetailPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   buildCardInfo('Sexo', pet!.gender?.displayName ?? ''),
-                  buildCardInfo('Idade', '${pet!.age.toString()} anos'),
-                  buildCardInfo('Peso', '${pet!.weight.toString()} kg'),
+                  buildCardInfo('Idade',
+                      '${pet!.age.toString()} ano${pet!.age! > 1 ? "s" : ""}'),
+                  buildCardInfo(
+                      'Peso', '${pet!.weight!.toStringAsFixed(3)} kg'),
                   buildCardInfo('Porte', pet!.size?.displayName ?? ''),
                 ],
               ),

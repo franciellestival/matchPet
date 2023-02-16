@@ -174,7 +174,7 @@ class _PetEditPageState extends State<PetEditPage> {
                 inputEnabled.value ? null : Colors.grey.withOpacity(0.5),
           ),
           FormInputBox(
-            hintText: 'Idade',
+            hintText: 'Idade (em anos)',
             controller: _ageController,
             textInputType: TextInputType.number,
             enable: inputEnabled.value,
@@ -182,7 +182,7 @@ class _PetEditPageState extends State<PetEditPage> {
                 inputEnabled.value ? null : Colors.grey.withOpacity(0.5),
           ),
           FormInputBox(
-            hintText: 'Peso',
+            hintText: 'Peso (em kg)',
             controller: _weightController,
             textInputType: TextInputType.number,
             enable: inputEnabled.value,
@@ -279,8 +279,6 @@ class _PetEditPageState extends State<PetEditPage> {
                 : '');
 
         pet = await PetController.getPetByID(pet.id!) ?? pet;
-        // Get.offAndToNamed(Routes.petDetailPage, arguments: pet);
-        // Routes.petDetailPage, arguments: pet);
         Get.dialog(
           AlertDialog(
             title: const Text("Sucesso!"),
@@ -297,16 +295,6 @@ class _PetEditPageState extends State<PetEditPage> {
             ],
           ),
         );
-        // Get.defaultDialog(
-        //     title: "Sucesso!",
-        //     middleText: "Os dados do pet foram alterados.",
-        //     textConfirm: "Fechar",
-        //     backgroundColor: AppColors.primaryLightColor,
-        //     buttonColor: AppColors.buttonColor,
-        //     confirmTextColor: AppColors.black,
-        //     onConfirm: () {
-        //       Get.back();
-        //     });
       } catch (e) {
         Get.dialog(
           AlertDialog(
@@ -324,16 +312,6 @@ class _PetEditPageState extends State<PetEditPage> {
             ],
           ),
         );
-        // Get.defaultDialog(
-        //     title: "Erro!",
-        //     middleText: "Não foi possível alterar os dados do Pet.",
-        //     textConfirm: "Fechar",
-        //     backgroundColor: AppColors.primaryLightColor,
-        //     buttonColor: AppColors.buttonColor,
-        //     confirmTextColor: AppColors.black,
-        //     onConfirm: () {
-        //       Get.back();
-        //     });
       }
       inputEnabled.value = false;
       isLoading.value = false;
@@ -347,36 +325,7 @@ class _PetEditPageState extends State<PetEditPage> {
       content: const Text("Deseja realmente remover o pet?"),
       actions: [
         ContinueDialogLink(onPressed: () async {
-          isLoading.value = true;
-          try {
-            Get.back(closeOverlays: true);
-            Get.off(() => CustomBottomNavBar(selectedIndex: 4));
-            await PetController.deletePet(pet.id!);
-
-            Get.dialog(AlertDialog(
-              title: const Text("Sucesso!"),
-              content: const Text("O pet foi removido com sucesso!"),
-              actions: [
-                GoBackDialogLink(onPressed: () {
-                  Get.back(closeOverlays: true);
-                  Get.off(() => CustomBottomNavBar(selectedIndex: 4));
-                }),
-              ],
-              backgroundColor: AppColors.primaryLightColor,
-            ));
-          } catch (e) {
-            Get.dialog(AlertDialog(
-              title: const Text("Erro!"),
-              content: const Text("Não foi possível remover o pet."),
-              actions: [
-                GoBackDialogLink(onPressed: () {
-                  Get.back();
-                }),
-              ],
-              backgroundColor: AppColors.primaryLightColor,
-            ));
-          }
-          isLoading.value = false;
+          _confirmPetDelete();
         }),
         GoBackDialogLink(onPressed: () {
           Get.back();
@@ -384,6 +333,46 @@ class _PetEditPageState extends State<PetEditPage> {
       ],
       backgroundColor: AppColors.primaryLightColor,
     ));
+  }
+
+  void _confirmPetDelete() async {
+    isLoading.value = true;
+    try {
+      Get.back(closeOverlays: true);
+      await PetController.deletePet(pet.id!);
+      isLoading.value = false;
+      // Get.off(() => CustomBottomNavBar(selectedIndex: 4));
+      Get.dialog(
+          barrierDismissible: false,
+          AlertDialog(
+            title: const Text("Sucesso!"),
+            content: const Text("O pet foi removido com sucesso!"),
+            actions: [
+              GoBackDialogLink(onPressed: () {
+                Get.back(closeOverlays: true);
+                Get.off(() => CustomBottomNavBar(selectedIndex: 4));
+              }),
+            ],
+            backgroundColor: AppColors.primaryLightColor,
+          ));
+    } catch (e) {
+      isLoading.value = false;
+      Get.back(closeOverlays: true);
+      Get.dialog(
+          barrierDismissible: false,
+          AlertDialog(
+            title: const Text("Erro!"),
+            content: const Text("Não foi possível remover o pet."),
+            actions: [
+              GoBackDialogLink(onPressed: () {
+                // Get.back();
+                Get.off(() => CustomBottomNavBar(selectedIndex: 4));
+              }),
+            ],
+            backgroundColor: AppColors.primaryLightColor,
+          ));
+    }
+    isLoading.value = false;
   }
 
   void _verifyPetAdopted() async {

@@ -163,5 +163,8 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         Get.put<User>(user, tag: "loggedInUser", permanent: true);
       }
     }
+    if (Get.isRegistered<ImageController>()) {
+      Get.delete<ImageController>();
+    }
   }
 }

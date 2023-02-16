@@ -129,7 +129,7 @@ class APIServices {
   }
 
   // Delete:--------------------------------------------------------------------
-  Future<dynamic> delete(
+  Future<Response> delete(
     String url, {
     data,
     Map<String, dynamic>? queryParameters,
@@ -146,7 +146,7 @@ class APIServices {
         options: options,
         cancelToken: cancelToken,
       );
-      return response.data;
+      return response;
     } catch (e) {
       rethrow;
     }
