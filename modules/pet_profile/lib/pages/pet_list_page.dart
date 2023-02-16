@@ -137,7 +137,12 @@ class _PetListPageState extends State<PetListPage> {
                         ),
                       ),
                       if ((data != null) && (data.isNotEmpty))
-                        PetList(title: listTitle, children: data),
+                        PetList(title: listTitle, children: data)
+                      else
+                        const Text(
+                          "Não há pets cadastrados próximo a você. Altere alguns filtros e boa sorte!",
+                          style: TextStyle(fontSize: 20),
+                        )
                     ],
                   );
                 } else {
