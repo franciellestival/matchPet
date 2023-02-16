@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/pages/bottom_nav_bar.dart';
-import 'package:matchpet/routes/app_routes.dart';
 import 'package:pet_profile/controller/pet_controller.dart';
 
 import 'package:theme/export_theme.dart';
+
+import '../widgets/dialog_links.dart';
 
 class PetRegisterPage extends StatefulWidget {
   static const heightSpacer = HeightSpacer();
@@ -173,7 +174,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             },
           ),
           FormInputBox(
-            hintText: 'Idade',
+            hintText: 'Idade (em anos)',
             controller: _ageController,
             textInputType: TextInputType.number,
             enable: inputEnabled.value,
@@ -188,7 +189,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             },
           ),
           FormInputBox(
-            hintText: 'Peso',
+            hintText: 'Peso (em kg)',
             controller: _weightController,
             textInputType: TextInputType.number,
             enable: inputEnabled.value,
@@ -208,7 +209,7 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             enable: inputEnabled.value,
             validator: (String? val) {
               if (GetUtils.isLengthLessOrEqual(val, 3)) {
-                return "Insira a raça do pet";
+                return "Insira a descrição do pet";
               }
               return null;
             },
@@ -261,10 +262,45 @@ class _PetRegisterPageState extends State<PetRegisterPage> {
             neuteredCurrentValue.value == 'Sim' ? true : false,
             specialNeedsCurrentValue.value == 'Sim' ? true : false,
             _imageController.imagePath.value);
-        Get.off(() => CustomBottomNavBar(selectedIndex: 4));
-      } on Exception catch (e) {
-        Get.snackbar("Erro!", e.toString(),
-            duration: const Duration(seconds: 5));
+        // Get.off(() => CustomBottomNavBar(selectedIndex: 4));
+        Get.dialog(
+          barrierDismissible: false,
+          AlertDialog(
+            title: const Text('Sucesso!'),
+            content: RichText(
+              text: TextSpan(
+                style: const TextStyle(fontSize: 20, color: AppColors.black),
+                children: [
+                  const TextSpan(text: "Seu pet "),
+                  TextSpan(
+                    text: _nameController.text,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const TextSpan(text: " foi cadastrado com sucesso!"),
+                ],
+              ),
+            ),
+            actions: [
+              ContinueDialogLink(onPressed: () {
+                Get.back();
+                Get.off(() => CustomBottomNavBar(selectedIndex: 4));
+              }),
+            ],
+          ),
+        );
+      } on Exception {
+        Get.dialog(
+          barrierDismissible: false,
+          AlertDialog(
+            title: const Text('Erro'),
+            content: const Text('Ocorreu um erro ao registrar seu Pet!'),
+            actions: [
+              GoBackDialogLink(onPressed: () {
+                Get.back();
+              }),
+            ],
+          ),
+        );
       }
       isLoading.value = false;
     }

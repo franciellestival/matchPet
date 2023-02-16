@@ -108,8 +108,10 @@ class PetDetailPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   buildCardInfo('Sexo', pet!.gender?.displayName ?? ''),
-                  buildCardInfo('Idade', '${pet!.age.toString()} anos'),
-                  buildCardInfo('Peso', '${pet!.weight.toString()} kg'),
+                  buildCardInfo('Idade',
+                      '${pet!.age.toString()} ano${pet!.age! > 1 ? "s" : ""}'),
+                  buildCardInfo(
+                      'Peso', '${pet!.weight!.toStringAsFixed(3)} kg'),
                   buildCardInfo('Porte', pet!.size?.displayName ?? ''),
                 ],
               ),
@@ -458,14 +460,22 @@ class PetDetailPage extends StatelessWidget {
   Future<void> _changePetMissingStatus(PetProfile pet) async {
     try {
       await PetController.changeMissingStatus(pet.id!);
-      Get.defaultDialog(
-        title: "Ok!",
-        middleText:
-            "Seu pet foi marcado como Desaparecido. Esperamos que o encontre logo!",
-        backgroundColor: AppColors.primaryLightColor,
-        buttonColor: AppColors.buttonColor,
-        confirmTextColor: AppColors.black,
-        onConfirm: () => Get.off(() => CustomBottomNavBar(selectedIndex: 4)),
+      Get.dialog(
+        AlertDialog(
+          title: const Text("Ok!"),
+          content: const Text(
+              "Seu pet foi marcado como Desaparecido. Esperamos que o encontre logo!"),
+          backgroundColor: AppColors.primaryLightColor,
+          actions: [
+            GoBackDialogLink(
+              onPressed: () {
+                Get.back(closeOverlays: true);
+                Get.off(() => CustomBottomNavBar(selectedIndex: 4));
+                // Get.back();
+              },
+            )
+          ],
+        ),
       );
     } catch (e) {
       Get.snackbar("Erro!", e.toString(), duration: const Duration(seconds: 5));
@@ -490,53 +500,6 @@ class PetDetailPage extends StatelessWidget {
                     Get.dialog(
                       AlertDialog(
                         title: const Text("Parabéns!"),
-                        content: const Text(
-                            "O status do seu pet foi alterado para disponível para adoção!"),
-                        backgroundColor: AppColors.primaryLightColor,
-                        actions: [
-                          GoBackDialogLink(onPressed: () {
-                            Get.back(closeOverlays: true);
-                            Get.off(() => CustomBottomNavBar(selectedIndex: 4));
-                            // Get.back();
-                          })
-                        ],
-                      ),
-                    );
-                  } catch (e) {
-                    Get.snackbar("Erro!", e.toString(),
-                        duration: const Duration(seconds: 5));
-                  }
-                },
-              )
-            },
-          ),
-          GoBackDialogLink(onPressed: () {
-            Get.back();
-          })
-        ],
-        // barrierDismissible: false,
-      ));
-    }
-  }
-
-  void _setAvailablePet(PetProfile? pet) {
-    if (pet != null) {
-      Get.dialog(AlertDialog(
-        title: const Text("Disponibilizar este pet para adoção?"),
-        // content: const Text("Seu pet foi encontrado?"),
-        backgroundColor: AppColors.primaryLightColor,
-        actions: [
-          ContinueDialogLink(
-            onPressed: () => {
-              Future.sync(
-                () async {
-                  try {
-                    Get.back();
-                    await PetController.changeMissingStatus(pet.id!,
-                        found: true);
-                    Get.dialog(
-                      AlertDialog(
-                        title: const Text("Ok!"),
                         content: const Text(
                             "O status do seu pet foi alterado para disponível para adoção!"),
                         backgroundColor: AppColors.primaryLightColor,

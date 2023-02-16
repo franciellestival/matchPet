@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:matchpet/pages/bottom_nav_bar.dart';
 import 'package:matchpet/routes/app_routes.dart';
+import 'package:pet_profile/widgets/dialog_links.dart';
 
 import 'package:theme/export_theme.dart';
 import 'package:user_profile/controller/interest_controller.dart';
@@ -409,15 +410,21 @@ class AdoptionInfo extends GetView<InterestController> {
   }
 
   void dialog(String title, String message) {
-    Get.defaultDialog(
-        title: title,
-        middleText: message,
+    Get.dialog(
+      AlertDialog(
+        title: Text(title),
+        content: Text(message),
         backgroundColor: AppColors.primaryLightColor,
-        buttonColor: AppColors.buttonColor,
-        onConfirm: () {
-          Get.back(closeOverlays: true);
-          Get.off(() => CustomBottomNavBar(selectedIndex: 4));
-        },
-        confirmTextColor: AppColors.black);
+        actions: [
+          GoBackDialogLink(
+            onPressed: () {
+              Get.back(closeOverlays: true);
+              Get.off(() => CustomBottomNavBar(selectedIndex: 4));
+              // Get.back();
+            },
+          )
+        ],
+      ),
+    );
   }
 }

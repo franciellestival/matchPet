@@ -83,24 +83,14 @@ class _PetListPageState extends State<PetListPage> {
                   );
                 }
                 if (snapshot.hasData) {
-                  snapshot.data!.removeWhere(
-                      (card) => card.pet.status?.normalizedName == "adopted");
-                  if (snapshot.data!.isEmpty) {
-                    Get.dialog(
-                      AlertDialog(
-                        title: const Text('Erro'),
-                        content:
-                            const Text('Não foi possível carregar a lista'),
-                        actions: [
-                          GoBackDialogLink(onPressed: () {
-                            Get.back();
-                          }),
-                        ],
-                      ),
-                    );
+                  final data = snapshot.data;
+
+                  if (data != null) {
+                    data.removeWhere(
+                        (card) => card.pet.status?.normalizedName == "adopted");
                   }
                   return Column(
-                    children: [
+                    children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
@@ -146,12 +136,29 @@ class _PetListPageState extends State<PetListPage> {
                           ],
                         ),
                       ),
-                      PetList(title: listTitle, children: snapshot.data!),
+                      if ((data != null) && (data.isNotEmpty))
+                        PetList(title: listTitle, children: data)
+                      else
+                        const Text(
+                          "Não há pets cadastrados próximo a você. Altere alguns filtros e boa sorte!",
+                          style: TextStyle(fontSize: 20),
+                        )
                     ],
                   );
                 } else {
                   if (snapshot.hasError) {
-                    Get.snackbar('Error', snapshot.error.toString());
+                    Get.dialog(
+                      AlertDialog(
+                        title: const Text('Erro'),
+                        content:
+                            const Text('Não foi possível carregar a lista'),
+                        actions: [
+                          GoBackDialogLink(onPressed: () {
+                            Get.back();
+                          }),
+                        ],
+                      ),
+                    );
                   }
                 }
                 return Container();
