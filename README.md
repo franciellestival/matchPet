@@ -89,10 +89,10 @@ As seguintes ferramentas foram usadas na construção do projeto:
 
 #### **Bibliotecas** 
 
--   Get
--   Geolocator
--   Firebase
--   Dio
+-   Get - Gerenciador de estado
+-   Geolocator - Features de localização
+-   Firebase - Features de notificação e messages in app
+-   Dio - acesso a API 
 
 ---
 
